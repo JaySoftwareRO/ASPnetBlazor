@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TreeCat Inventory</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container"> <a class="navbar-brand" href="#">TreeCat</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"> <a class="nav-link" href="#">Dashboard </a> </li>
+          <li class="nav-item"> <a class="nav-link" href="Inventory.html">Inventory <span class="sr-only">(current)</span></a> </li>
+          <li class="nav-item active"> <a class="nav-link" href="#">Item Detail</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="#">Category Mapping</a> </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Settings</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+  <hr>
+  <h2>Edit Item</h2>
+  <table width="100%" border="1" cellspacing="1" cellpadding="5">
+    <tbody>
+      <tr>
+        <td width="15px"></td>
+        <th scope="row">TreeCat Details</th>
+        <td colspan="6" align="right">
+          <table cellspacing="1" cellpadding="2">
+            <tbody align="right">
+              <tr>
+                <th scope="col">TreeCat ID</th>
+                <th scope="col">Created</th>
+                <th scope="col">Updated</th>
+                <th scope="col">Status</th>
+              </tr>
+              <tr>
+                <td>KHUEPK5YLCOQEM4YPYAP</td>
+                <td>2020-03-13</td>
+                <td>2020-04-23</td>
+                <td>Complete</td>
+              </tr>
+            </tbody>
+          </table></td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <th width="150px">Listings</th>
+          <td colspan="6"> <strong>EBay</strong> | Etsy | Poshmart | Mercari |&nbsp;(replace with image thumbnails)</td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <th scope="row" class="dataLabels">Photos</th>
+          <td colspan="6">
+            <table width="100%" cellspacing="1" cellpadding="1">
+              <tbody align="right">
+                <tr>
+
+                  <td><img src="images/Toshiba remote control 1.jpg" width="163.84" height="122.88" alt=""/></td>
+                  <td><img src="images/Toshiba remote control 2.jpg" width="163.84" height="122.88" alt=""/></td>
+                  <td><img src="images/Toshiba remote control 1.jpg" width="163.84" height="122.88" alt=""/></td>
+                  <td><img src="images/Toshiba remote control 2.jpg" width="163.84" height="122.88" alt=""/></td>
+                  <td>+ Add Photos</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <th width="150px">General Details</th>
+          <th scope="row" width="150px">Title *</th>
+          <td colspan="5"><input type="text" maxlength="40" placeholder="Toshiba Remote Control CT-8027 for 24v4210u 24v4260u"></td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <td></td>
+          <th scope="row">Description *</th>
+          <td colspan="5"><textarea spellcheck="true">Toshiba Remote Control CT-8027 for 24v4210u 24v4260u. Condition is Used. Successfully tested on 10 March 2020. Shipped with USPS First Class Package.</textarea></td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <td></td>
+          <th scope="row">SKU (optional)</th>
+          <td colspan="5"><input type="text"></td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <td></td>
+          <th scope="row">Package Details</th>
+          <td colspan="5">
+            <table cellspacing="1" cellpadding="2">
+              <tbody>
+                <tr>
+                  <th colspan="3">
+                    Package Weight *
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="text" placeholder="lb">
+
+                  </td>
+                  <td>
+                    <input type="text" placeholder="oz">
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="3">
+                    Package Dimensions (optional)
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="text" placeholder="height">
+                  </td>
+                  <td>
+                    <input type="text" placeholder="width">
+                  </td>
+                  <td>
+                    <input type="text" placeholder="depth">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <td></td>
+          <th scope="row">Price</th>
+          <td colspan="5">
+            <table cellspacing="1" cellpadding="2">
+              <tbody>
+                <tr>
+                  <th>
+                    Listing Price *
+                  </th>
+                  <th>
+                    Cost (optional)
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="text">
+
+                  </td>
+                  <td>
+                    <input type="text">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <td></td>
+          <th scope="row">TreeCat Category</th>
+          <td colspan="5">
+            <table cellspacing="1" cellpadding="2">
+              <tbody>
+                <tr>
+                  <td colspan="2">
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Electronics</a></li>
+                        <li class="breadcrumb-item"><a href="#">Accessories</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Remote Controls</li>
+                      </ol>
+                    </nav>
+
+                  </td>
+
+                </tr>
+                <tr>
+                  <th>
+                    Choose New Category:
+
+                  </th>
+                  <td>
+                    <input type="text">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <th>EBay Details</th>
+          <td><button type="button">List Now</button>&nbsp;<button type="button">Delist</button></td>
+          <td colspan="5" align="right">
+            <table cellspacing="1" cellpadding="2">
+              <tbody align="right">
+                <tr>
+                  <th scope="col">EBay ID</th>
+                  <th scope="col">First Posted</th>
+                  <th scope="col">Last Updated</th>
+                  <th scope="col">Status</th>
+                </tr>
+                <tr>
+                  <td>KHUEPK5YLCOQEM4YPYAP</td>
+                  <td>2020-03-13</td>
+                  <td>2020-04-23</td>
+                  <td>Complete</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <th></th>
+          <th scope="row">EBay Category</th>
+          <td colspan="5">
+            <table cellspacing="1" cellpadding="2">
+              <tbody>
+                <tr>
+                  <td colspan="3">
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Electronics</a></li>
+                        <li class="breadcrumb-item"><a href="#">Televisions</a></li>
+                        <li class="breadcrumb-item"><a href="#">Accessories</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Remote Controls</li>
+                      </ol>
+                    </nav>
+
+                  </td>
+
+                </tr>
+                <tr>
+                  <th>
+                    Choose New EBay Category:
+
+                  </th>
+                  <td>
+                    <input type="text">
+                  </td>
+                  <td>
+                    &nbsp;&nbsp;&nbsp;<input type="checkbox"> Override TreeCat to EBay Category Mapping<br>
+                    &nbsp;&nbsp;&nbsp;<input type="checkbox"> Use as universal to TreeCat EBay Mapping
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <th></th>
+          <th scope="row">Shipping</th>
+          <td colspan="5">
+            <table cellspacing="1" cellpadding="2">
+              <tbody>
+                <tr>
+                  <td>
+                    Shipping Type *<br>
+                    <input type="text" placeholder="Flat Rate">
+                  </td>
+                  <td>
+                    <input type="checkbox"> Revert to EBay default shipping type <br>
+                    <input type="checkbox"> Free Shipping
+
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>
+                    Handling Time *<br>
+                    <input type="text" placeholder="5-10 Days">
+                  </td>
+                  <td>
+                    <input type="checkbox"> Revert to default EBay handling time
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Shipping Service *<br>
+                    <input type="text" placeholder="USPS First Class Package (2 to 3 business days)">
+                  </td>
+                  <td>
+                    <input type="checkbox"> Revert to default EBay shipping service
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td width="15px"></td>
+        </tr>
+        <tr>
+          <td width="15px"></td>
+          <th></th>
+          <th scope="row">Pricing</th>
+          <td colspan="5">
+            <table cellspacing="1" cellpadding="2">
+              <tbody>
+                <tr>
+                  <td>
+                    Pricing Format *<br>
+                    <input type="text" placeholder="Fixed Price">
+                  </td>
+                  <td>
+                    <input type="checkbox"> Revert to EBay default pricing format
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Duration *<br>
+                    <input type="text" placeholder="Good 'Till Cancelled">
+                  </td>
+                  <td>
+                    <input type="checkbox"> Revert to default EBay duration
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Buy It Now Price *<br>
+                    <input type="text" placeholder="$15">
+                  </td>
+                  <td>
+                    <input type="checkbox"> Revert to original item price
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <input type="checkbox">Allow Best Offer (Optional)
+                  </td>
+                </tr>
+                <td>
+
+                  Accept offers of at least (Optional)<br>
+                  <input type="text" placeholder="$10">
+                </td>
+                <td>
+                  Decline offer lower than (Optional)<br>
+                  <input type="text" placeholder="$10">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td width="15px"></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <hr>
+  <footer class="text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <p>Copyright © TreeCat. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap-4.4.1.js"></script>
+</body>
+</html>
