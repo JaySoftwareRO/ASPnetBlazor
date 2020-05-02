@@ -4,11 +4,28 @@
     <RootNamespace>ui_agent</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ElectronNET.API" Version="7.30.2" />
+    <Compile Remove="html-design\**" />
+    <Compile Remove="wwwroot\images\raw\**" />
+    <Content Remove="html-design\**" />
+    <Content Remove="wwwroot\images\raw\**" />
+    <EmbeddedResource Remove="html-design\**" />
+    <EmbeddedResource Remove="wwwroot\images\raw\**" />
+    <None Remove="html-design\**" />
+    <None Remove="wwwroot\images\raw\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ElectronNET.API" Version="8.31.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="electron.manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\lib.csproj" />
   </ItemGroup>
 </Project>

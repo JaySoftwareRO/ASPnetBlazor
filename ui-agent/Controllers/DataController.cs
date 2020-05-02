@@ -9,17 +9,22 @@ using ui_agent.Models;
 
 namespace ui_agent.Controllers
 {
-    public class HomeController : Controller
+    public class DataController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<DataController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public DataController(ILogger<DataController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Mapping()
         {
+            lib.listers.EbayLister ebayLister = new lib.listers.EbayLister();
+            var allCategories = ebayLister.Categories().Result;
+
+            this.ViewBag.Categories = allCategories.Select( c => new CategoryModel { Name = c.Name } ).ToArray();
+
             return View();
         }
 

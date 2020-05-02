@@ -51,7 +51,7 @@ namespace ui_agent
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Data}/{action=Mapping}/{id?}");
             });
 
             // Open the Electron-Window here
