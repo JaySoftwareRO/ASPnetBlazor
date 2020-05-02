@@ -8,8 +8,9 @@ namespace tests
         [Fact]
         public void List()
         {
-            string body = new lib.listers.EbayLister().Categories();
-            Console.WriteLine(body);
+            var categories = new lib.listers.EbayLister().Categories().Result;
+            Console.WriteLine(categories.Count);
+            Assert.True(categories.Count > 0);
         }
     }
 }
