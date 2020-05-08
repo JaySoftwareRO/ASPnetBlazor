@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Field Mapping</title>
+	<!-- Bootstrap -->
+	<link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+</head>
+
+<body>
+
+
+<!-- Bootstrap -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container"><a class="navbar-brand" href="#">TreeCat</a> <button class="navbar-toggler" type="button"
+				data-toggle="collapse" data-target="#navbarSupportedContent"> </button>
+			<div id="navbarSupportedContent" class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a class="nav-link" href="#">Dashboard </a></li>
+					<li class="nav-item"><a class="nav-link" href="Inventory.html">Inventory</a></li>
+					<li class="nav-item"><a class="nav-link" href="ItemDetail.html">Item Detail</a></li>
+					<li class="nav-item active"><a class="nav-link" href="#">Field Mapping</a></li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0"><button class="btn btn-outline-success my-2 my-sm-0"
+						type="submit">Settings</button></form>
+			</div>
+		</div>
+	</nav>
+
+<!-- Start of Unique page content -->
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col text-center">
+				<h2>Field Mapping</h2>
+			</div>
+		</div>
+		<div class="row align-items-center">
+			<div class="col-3 text-center">
+				<div>
+					<h3>
+						TreeCat Field
+					</h3>
+				</div>
+			</div>
+			<div class="col-6 text-center">
+				Select target listing platform:<br />
+				<img src="images/amazon-thumb.png" alt="" />
+				<img src="images/ebay-thumb-selected-2.png" alt="" />
+				<img src="images/etsy-thumb.png" alt="" />
+				<img src="images/poshmark-thumb.PNG" alt="" />
+				<img src="images/mercari-thumb.png" alt="" />
+				<img src="images/emag-thumb.png" alt="" />
+			</div>
+			<div class="col-3 text-center">
+				<div>
+					<h3>
+						eBay Field
+					</h3>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-3 align-items-center">
+				<div id="source-field" class="bg-success">
+					<!-- in this example the tree is populated from inline HTML -->
+					<ul>
+						<li>Title</li>
+						<li>Description</li>
+						<li>Price</li>
+						<li>Women
+							<ul>
+								<li id="child_node_1">Intimates & Sleepwear
+									<ul>
+										<li>Bras
+											<ul>
+												<li>Sizes
+													<ul>
+														<li>Cup Size
+															<ul>
+																<li>B</li>
+																<li>C</li>
+																<li>D</li>
+																<li>DD</li>
+																<li>E</li>
+																<li>F</li>
+																<li>FF</li>
+																<li>G</li>
+															</ul>
+														</li>
+														<li>Band Size
+															<ul>
+																<li>28</li>
+																<li>30</li>
+																<li>32</li>
+																<li>34</li>
+																<li>36</li>
+																<li>38</li>
+															</ul>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+										<li>Panties</li>
+										<li>Lingere</li>
+									</ul>
+								</li>
+
+								<li>Blouses</li>
+								<li>Trousers</li>
+							</ul>
+						</li>
+						<li>Men
+							<ul>
+								<li>Socks</li>
+								<li>Pants</li>
+								<li>Shirts</li>
+							</ul>
+						</li>
+						<li>Colors
+							<ul>
+								<li>Brown</li>
+								<li>Black</li>
+								<li>White</li>
+								<li>Fushia</li>
+								<li>Purple</li>
+								<li>Yellow</li>
+								<li>Blue</li>
+								<li>Green</li>
+								<li>Orange</li>
+								<li>Teal</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<nav aria-label="TreeCat-breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#">Women</a></li>
+							<li class="breadcrumb-item"><a href="#">Intimates & Sleepwear</a></li>
+							<li class="breadcrumb-item active" aria-current="page">Bras</li>
+						</ol>
+					</nav>
+				</div>
+				<div>
+					<button type="button" class="btn btn-secondary">Delete Mapping</button>
+				</div>
+			</div>
+			<div class="col-6">
+				<div class="container-fluid">
+					<div class="row my-3 justify-content-center">
+						<div>
+							<input type="checkbox" class="form-check-input" id="exampleCheck2">
+							<label class="form-check-label" for="exampleCheck2">Display only Active Mappings</label><br />
+							<input type="checkbox" class="form-check-input" id="exampleCheck1">
+							<label class="form-check-label" for="exampleCheck1">Display only Broken Mappings</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-5 my-2">
+							<div class="btn-group" role="group" aria-label="Mapping Type">
+								<button type="button" class="btn btn-primary">1:1 Mapping</button>
+								<button type="button" class="btn btn-primary active">Equation</button>
+							</div>
+						</div>
+						<div class="col-7 my-2">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text" id="btnGroupAddon2">Equation</div>
+								</div>
+
+								<input type="text" class="form-control" placeholder="[price]*1.2" aria-label="Equation"
+									aria-describedby="btnGroupAddon2">
+							</div>
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-7 offset-5 my-2">
+							<button type="button" class="btn btn-primary">Insert Selected TreeCat Field</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-3">
+				<div id="target-field" class="bg-info">
+					<!-- in this example the tree is populated from inline HTML -->
+					<ul>
+						<li>Title</li>
+						<li>Description</li>
+						<li>Price</li>
+						<li>Women
+							<ul>
+								<li id="child_node_1">Intimates & Sleepwear
+									<ul>
+										<li>Bras
+											<ul>
+												<li>Sizes
+													<ul>
+														<li>Cup Size
+															<ul>
+																<li>B</li>
+																<li>C</li>
+																<li>D</li>
+																<li>DD</li>
+																<li>E</li>
+																<li>F</li>
+																<li>FF</li>
+																<li>G</li>
+															</ul>
+														</li>
+														<li>Band Size
+															<ul>
+																<li>28</li>
+																<li>30</li>
+																<li>32</li>
+																<li>34</li>
+																<li>36</li>
+																<li>38</li>
+															</ul>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+										<li>Panties</li>
+										<li>Lingere</li>
+									</ul>
+								</li>
+
+								<li>Blouses</li>
+								<li>Trousers</li>
+							</ul>
+						</li>
+						<li>Men
+							<ul>
+								<li>Socks</li>
+								<li>Pants</li>
+								<li>Shirts</li>
+							</ul>
+						</li>
+						<li>Colors
+							<ul>
+								<li>Brown</li>
+								<li>Black</li>
+								<li>White</li>
+								<li>Fushia</li>
+								<li>Purple</li>
+								<li>Yellow</li>
+								<li>Blue</li>
+								<li>Green</li>
+								<li>Orange</li>
+								<li>Teal</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#">Clothing</a></li>
+							<li class="breadcrumb-item"><a href="#">Women's Clothing</a></li>
+							<li class="breadcrumb-item" aria-current="page">Lingerie</li>
+							<li class="breadcrumb-item active" aria-current="page">Bras</li>
+						</ol>
+					</nav>
+				</div>
+				<div>
+					<button type="button" class="btn btn-primary">Save Mapping</button>
+					<button type="button" class="btn btn-secondary">Undo Changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr />
+
+	<footer class="text-center">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<p>Copyright &copy; TreeCat. All rights reserved.</p>
+				</div>
+			</div>
+		</div>
+	</footer><!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap-4.4.1.js"></script>
+	<!-- 4 include the jQuery library -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+	<!-- 5 include the minified jstree source -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+	<script>
+		$(function () {
+			// 6 create an instance when the DOM is ready
+			$('#source-field').jstree();
+			// 7 bind to events triggered on the tree
+			$('#source-field').on("changed.jstree", function (e, data) {
+				console.log(data.selected);
+			});
+			// 8 interact with the tree - either way is OK
+			$('button').on('click', function () {
+				$('#source-field').jstree(true).select_node('child_node_1');
+				$('#source-field').jstree('select_node', 'child_node_1');
+				$.jstree.reference('#source-field').select_node('child_node_1');
+			});
+		});
+		$(function () {
+			// 6 create an instance when the DOM is ready
+			$('#target-field').jstree();
+			// 7 bind to events triggered on the tree
+			$('#target-field').on("changed.jstree", function (e, data) {
+				console.log(data.selected);
+			});
+			// 8 interact with the tree - either way is OK
+			$('button').on('click', function () {
+				$('#target-field').jstree(true).select_node('child_node_1');
+				$('#target-field').jstree('select_node', 'child_node_1');
+				$.jstree.reference('#target-field').select_node('child_node_1');
+			});
+		});
+	</script>
+</body>
+
+</html>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
