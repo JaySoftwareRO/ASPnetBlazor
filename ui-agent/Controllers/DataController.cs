@@ -21,9 +21,11 @@ namespace ui_agent.Controllers
         public IActionResult Mapping()
         {
             lib.listers.EbayLister ebayLister = new lib.listers.EbayLister();
-            var allCategories = ebayLister.Categories().Result;
+            var allCategories = ebayLister.CategoryTree().Result;
 
-            this.ViewBag.Categories = allCategories.Select( c => new CategoryModel { Name = c.Name } ).ToArray();
+            this.ViewBag.Categories =  new CategoryModel[] { 
+                new CategoryModel() { Name = "foo" } 
+            };
 
             return View();
         }
