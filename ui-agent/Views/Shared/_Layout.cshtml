@@ -1,62 +1,80 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ui_agent</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-    <style>
-        th {
-            text-align: right;
-        }
-    </style>
+
+    <link rel="stylesheet" href="~/css/app.css" />
+    <link rel="stylesheet" href="~/css/debug.css" />
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">TreeCat</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"> <a class="nav-link" href="#">Dashboard </a> </li>
-                    <li class="nav-item"> <a class="nav-link" href="Inventory.html">Inventory</a> </li>
-                    <li class="nav-item"> <a class="nav-link" href="ItemDetail.html">Item Detail</a> </li>
-                    <li class="nav-item"> <a class="nav-link" href="CategoryMapping.html">Category Mapping</a> </li>
-                    <li class="nav-item active"> <a class="nav-link" href="#">Title Mapping</a> </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Settings</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-    <hr>
-
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-
-    <hr>
-    <footer class="text-center">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <p>Copyright © TreeCat. All rights reserved.</p>
+    <div class="grid-y grid-frame">
+        <div class="cell shrink header medium-cell-block-container">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li class="menu-text thin-border-right"><i class="fas fa-cat"></i> TreeCat</li>
+                        <li><a href="#">Inventory</a></li>
+                        <li>
+                            <a href="#">Sync</a>
+                            <ul class="menu vertical">
+                                <li><a href="#">EBay</a></li>
+                                <li><a href="#">Mercari</a></li>
+                                <li><a href="#">Poshmark</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Mappings</a></li>
+                    </ul>
+                </div>
+                <div class="top-bar-right">
+                    <ul class="menu">
+                    </ul>
                 </div>
             </div>
         </div>
-    </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="cell medium-auto medium-cell-block-container">
+            @RenderBody()
+        </div>
+
+        <div class="cell shrink footer">
+            <div class="grid-x">
+                <div class="cell">
+                    <span class="label success data-tooltip" title="Logged in as Odin.">
+                        <i class="fas fa-lock-open"></i> Odin
+                    </span>
+                    <span class="label alert float-right">
+                        <i class="fas fa-exclamation-triangle"></i> Failed to sync items.
+                    </span>
+                    <span class="label warning data-tooltip float-right" title="12 items left to sync.">
+                        <i class="fas fa-info"></i> 12
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/foundation/dist/js/foundation.js"></script>
+    <script src="~/lib/font-awesome/js/all.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    <script src="~/js/resizable-panel.js" asp-append-version="true"></script>
+
+    <script>if (window.module) module = window.module;</script>
+
+    <script>
+        $(document).ready(function () {
+            $(document).foundation();
+        })
+    </script>
+
+    @RenderSection("scripts", required: false)
 </body>
 
 </html>

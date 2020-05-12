@@ -21,7 +21,6 @@ namespace ui_agent.Controllers
         public IActionResult Mapping()
         {
             lib.listers.EbayLister ebayLister = new lib.listers.EbayLister();
-            var allCategories = ebayLister.CategoryTree().Result;
 
             this.ViewBag.Categories =  new CategoryModel[] { 
                 new CategoryModel() { Name = "foo" } 

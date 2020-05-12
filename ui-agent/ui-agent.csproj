@@ -14,6 +14,7 @@
     <None Remove="wwwroot\images\raw\**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
     <PackageReference Include="ElectronNET.API" Version="8.31.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
@@ -24,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\lib\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\lib.csproj" />
