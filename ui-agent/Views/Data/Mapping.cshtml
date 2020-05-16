@@ -5,8 +5,8 @@
 }
 <div class="grid-x full-height">
     <div class="cell medium-2 medium-cell-block-y">
-        <div class="grid-y">
-            <div class="cell small-1">
+        <div class="grid-y full-height">
+            <div class="cell medium-6 medium-cell-block">
                 <div class="input-group">
                     <input class="input-group-field" placeholder="Search" type="text" />
                     <div class="input-group-button">
@@ -28,6 +28,19 @@
                         <li><a href="#">Item 2</a></li>
                     </ul>
                 </div>
+            </div>
+            <div class="cell resizable-up-panel-handle">...</div>
+            <div class="cell auto medium-cell-block">
+                <ul class="vertical menu accordion-menu" data-accordion-menu>
+                    <li>
+                        <a href="#">Item 1</a>
+                        <ul class="menu vertical nested">
+                            <li><a href="#">Item 1A</a></li>
+                            <li><a href="#">Item 1B</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Item 2</a></li>
+                </ul>
             </div>
         </div>
     </div>
@@ -87,122 +100,3 @@
         </div>
     </div>
 </div>
-
-@*<div class="grid-x grid-margin-x">
-        <div class="cell small-2 debug resizable-panel">
-            <ul class="vertical menu accordion-menu" data-accordion-menu>
-                <li>
-                    <a href="#">Item 1</a>
-                    <ul class="menu vertical nested">
-                        <li><a href="#">Item 1A</a></li>
-                        <li><a href="#">Item 1B</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item 2</a></li>
-            </ul>
-            <div class="resizable-panel-handle"></div>
-        </div>
-        <div class="cell auto">
-            <table>
-                <thead>
-                    <tr>
-                        <th width="200">Table Header</th>
-                        <th>Table Header</th>
-                        <th width="150">Table Header</th>
-                        <th width="150">Table Header</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Content Goes Here</td>
-                        <td>This is longer content Donec id elit non mi porta gravida at eget metus.</td>
-                        <td>Content Goes Here</td>
-                        <td>Content Goes Here</td>
-                    </tr>
-                    <tr>
-                        <td>Content Goes Here</td>
-                        <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td>
-                        <td>Content Goes Here</td>
-                        <td>Content Goes Here</td>
-                    </tr>
-                    <tr>
-                        <td>Content Goes Here</td>
-                        <td>This is longer Content Goes Here Donec id elit non mi porta gravida at eget metus.</td>
-                        <td>Content Goes Here</td>
-                        <td>Content Goes Here</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="cell small-2">
-            <ul class="vertical menu accordion-menu" data-accordion-menu>
-                <li>
-                    <a href="#">Item 1</a>
-                    <ul class="menu vertical nested">
-                        <li><a href="#">Item 1A</a></li>
-                        <li><a href="#">Item 1B</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Item 2</a></li>
-            </ul>
-        </div>
-    </div>*@
-
-@*<h2 class="text-center">Title Mapping Algorithm</h2>
-    <table width="100%" cellspacing="1" cellpadding="5">
-        <tbody>
-            @if (ViewBag.Categories != null)
-            {
-                foreach (var category in (CategoryModel[])ViewBag.Categories)
-                {
-                    <tr>
-                        <th></th>
-                        <td>
-                            @Html.DisplayFor(modelItem => category.Name) (Max 140 characters)
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Choose target listing platform:
-                        </th>
-                        <td>
-                            <img src="images/amazon-thumb.png">
-                            <img src="images/ebay-thumb.png">
-                            <img src="images/etsy-thumb.png">
-                            <img src="images/poshmark-thumb.PNG">
-                            <img src="images/mercari-thumb-selected.png">
-                            <img src="images/emag-thumb.png">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>
-                            Mapping Algorithm:
-                        </th>
-                        <td>
-                            <input type="radio" id="algorithm"> Direct 1:1 mapping (truncated if necessary)<br>
-                            <input type="radio" id="algorithm"> Equation: <input type="text"
-                                                                                 placeholder="[color] + [size] + [title]">
-                            <button type="submit">Add Title</button>&nbsp;
-                            <button type="submit">Add Size</button>&nbsp;
-                            <button type="submit">Add Color</button>&nbsp;
-                            <button type="submit">Add Category</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <td>
-                            Mercari Title - Max 40 characters
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="text-align: center;">
-                            <button type="submit">Save Mapping</button>&nbsp;
-                            <button type="submit">Cancel</button>
-                        </td>
-                    </tr>
-                }
-            }
-
-        </tbody>
-    </table>*@

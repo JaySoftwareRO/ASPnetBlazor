@@ -4755,18 +4755,29 @@ html.is-reveal-open {
 body {
   overflow-x: hidden; }
 
-.resizable-panel {
-  background-color: red; }
-
 .resizable-left-panel-handle {
   background-color: #1e1f1c;
-  width: 0.5em;
+  width: 0.5rem;
   cursor: ew-resize; }
 
 .resizable-right-panel-handle {
   background-color: #1e1f1c;
-  width: 0.5em;
+  width: 0.5rem;
   cursor: ew-resize; }
+
+.resizable-up-panel-handle {
+  background-color: #1e1f1c;
+  height: 0.2rem;
+  line-height: 0.2rem;
+  cursor: ns-resize;
+  overflow: auto;
+  display: block; }
+
+.resizable-down-panel-handle {
+  background-color: #1e1f1c;
+  height: 0.2rem;
+  line-height: 0.2rem;
+  cursor: ns-resize; }
 
 .footer {
   background-color: #1e1f1c; }

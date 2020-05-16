@@ -20,7 +20,7 @@ namespace ui_agent.Controllers
 
         public IActionResult Mapping()
         {
-            lib.listers.EbayLister ebayLister = new lib.listers.EbayLister();
+            //lib.listers.EbayLister ebayLister = new lib.listers.EbayLister();
 
             this.ViewBag.Categories =  new CategoryModel[] { 
                 new CategoryModel() { Name = "foo" } 

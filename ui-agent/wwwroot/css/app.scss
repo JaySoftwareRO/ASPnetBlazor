@@ -8,21 +8,32 @@ body{
     overflow-x: hidden;
 }
 
-
-.resizable-panel {
-    background-color: red;
-}
-
 .resizable-left-panel-handle {
     background-color: $light-gray;
-    width: 0.5em;
+    width: 0.5rem;
     cursor: ew-resize;
 }
 
 .resizable-right-panel-handle {
     background-color: $light-gray;
-    width: 0.5em;
+    width: 0.5rem;
     cursor: ew-resize;
+}
+
+.resizable-up-panel-handle {
+    background-color: $light-gray;
+    height: 0.2rem;
+    line-height: 0.2rem;
+    cursor: ns-resize;
+    overflow: auto;
+    display: block;
+}
+
+.resizable-down-panel-handle {
+    background-color: $light-gray;
+    height: 0.2rem;
+    line-height: 0.2rem;
+    cursor: ns-resize;
 }
 
 .footer {
