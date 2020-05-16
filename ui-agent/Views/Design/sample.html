@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample Page</title>
+
+    <link rel="stylesheet" href="../../wwwroot/css/app.css" />
+    <link rel="stylesheet" href="../../wwwroot/css/debug.css" />
+</head>
+
+<body>
+    <div class="grid-y grid-frame">
+        <div class="cell shrink header medium-cell-block-container">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li class="menu-text thin-border-right"><i class="fas fa-cat"></i> TreeCat</li>
+                        <li><a href="#">Inventory</a></li>
+                        <li>
+                            <a href="#">Sync</a>
+                            <ul class="menu vertical">
+                                <li><a href="#">EBay</a></li>
+                                <li><a href="#">Mercari</a></li>
+                                <li><a href="#">Poshmark</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Mappings</a></li>
+                    </ul>
+                </div>
+                <div class="top-bar-right">
+                    <ul class="menu">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="cell medium-auto medium-cell-block-container">
+
+            <!--THIS IS WHERE PAGE-SPECIFIC CONTENT STARTS-->
+            
+            <div class="grid-x full-height">
+                <div class="cell medium-2 medium-cell-block-y">
+                    <div class="grid-y full-height">
+                        <div class="cell medium-6 medium-cell-block">
+                            <div class="input-group">
+                                <input class="input-group-field" placeholder="Search" type="text" />
+                                <div class="input-group-button">
+                                    <button type="button" class="button full-height float-right">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="cell small-11">
+                                <ul class="vertical menu accordion-menu" data-accordion-menu>
+                                    <li>
+                                        <a href="#">Item 1</a>
+                                        <ul class="menu vertical nested">
+                                            <li><a href="#">Item 1A</a></li>
+                                            <li><a href="#">Item 1B</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Item 2</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cell resizable-up-panel-handle">...</div>
+                        <div class="cell auto medium-cell-block">
+                            <ul class="vertical menu accordion-menu debug" data-accordion-menu>
+                                <li>
+                                    <a href="#">Item 1</a>
+                                    <ul class="menu vertical nested">
+                                        <li><a href="#">Item 1A</a></li>
+                                        <li><a href="#">Item 1B</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Item 2</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell resizable-left-panel-handle"></div>
+                <div class="cell auto medium-cell-block-y">
+                    <form>
+                        <div class="grid-container">
+                            <div class="grid-y">
+                                <div class="cell">
+                                    <label>
+                                        Direct Mapping
+                                    </label>
+                                    <div class="switch small">
+                                        <input class="switch-input" id="yes-no" type="checkbox" name="exampleSwitch">
+                                        <label class="switch-paddle" for="yes-no">
+                                            <span class="switch-active" aria-hidden="true">Yes</span>
+                                            <span class="switch-inactive" aria-hidden="true">No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="cell">
+                                    <label>
+                                        Equation
+                                    </label>
+                                    <input type="text" placeholder="please input an equation">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="cell resizable-right-panel-handle"></div>
+                <div class="cell medium-2 medium-cell-block-y">
+                    <div class="grid-y">
+                        <div class="cell small-1">
+                            <div class="input-group">
+                                <input class="input-group-field" placeholder="Search" type="text" />
+                                <div class="input-group-button">
+                                    <button type="button" class="button full-height float-right">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="cell small-11">
+                                <ul class="vertical menu accordion-menu" data-accordion-menu>
+                                    <li>
+                                        <a href="#">Item 1</a>
+                                        <ul class="menu vertical nested">
+                                            <li><a href="#">Item 1A</a></li>
+                                            <li><a href="#">Item 1B</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Item 2</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="cell shrink footer">
+            <div class="grid-x">
+                <div class="cell">
+                    <span class="label success data-tooltip" title="Logged in as Odin.">
+                        <i class="fas fa-lock-open"></i> Odin
+                    </span>
+                    <span class="label alert float-right">
+                        <i class="fas fa-exclamation-triangle"></i> Failed to sync items.
+                    </span>
+                    <span class="label warning data-tooltip float-right" title="12 items left to sync.">
+                        <i class="fas fa-info"></i> 12
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+
+    <script src="../../wwwroot/lib/jquery/dist/jquery.js"></script>
+    <script src="../../wwwroot/lib/foundation/dist/js/foundation.js"></script>
+    <script src="../../wwwroot/lib/font-awesome/js/all.js"></script>
+
+    <script src="../../wwwroot/js/site.js" asp-append-version="true"></script>
+    <script src="../../wwwroot/js/resizable-panel.js" asp-append-version="true"></script>
+
+    <script>if (window.module) module = window.module;</script>
+
+    <script>
+        $(document).ready(function () {
+            $(document).foundation();
+        })
+    </script>
+</body>
+
+</html>
