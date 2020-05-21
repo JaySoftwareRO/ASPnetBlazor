@@ -334,7 +334,8 @@ label {
 .input-group-button button,
 .input-group-button label {
   margin: 0;
-  white-space: nowrap; }
+  white-space: nowrap; 
+}
 
 .input-group-label {
   padding: 0 1rem;
@@ -359,7 +360,7 @@ label {
 .input-group-button {
   padding-top: 0;
   padding-bottom: 0;
-  text-align: center;
+  align-items: middle;
   display: flex;
   flex: 0 0 auto; }
   .input-group-button a,
@@ -2227,7 +2228,7 @@ ul.no-bullet, ol.no-bullet {
   text-align: center;
   cursor: pointer; }
   [data-whatinput='mouse'] .button {
-    outline: 0; }
+	outline: 0; }
   .button.tiny {
     font-size: 0.6rem; }
   .button.small {
@@ -3523,7 +3524,7 @@ a.thumbnail {
     .menu.align-center li .submenu li {
       justify-content: flex-start; }
   .menu .menu-text {
-    padding: 0.2rem 0.5rem;
+ /*   padding: 0.2rem 0.5rem; */
     font-weight: bold;
     line-height: 1;
     color: inherit; }
