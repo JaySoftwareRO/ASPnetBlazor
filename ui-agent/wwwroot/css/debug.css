@@ -5,3 +5,10 @@
     background-color: greenyellow;
 }
 
+.thumb40 {
+	max-height: 40px;
+}
+
+.veritcal-center {
+	align-content: stretch;
+}

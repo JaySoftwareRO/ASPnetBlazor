@@ -20,6 +20,7 @@
 						<li class="menu-text thin-border-right"><a href="dashboard.html"><i class="fas fa-cat"></i>
 								TreeCat</a></li>
 						<li><a href="inventory.html">Inventory</a></li>
+						<li><a href="ImportData.html">Import Data</a></li>
 						<li><a href="#">Field Mappings</a></li>
 					</ul>
 				</div>
@@ -41,10 +42,10 @@
 						<div class="cell medium-6 medium-cell-block">
 							<div class="input-group">
 								<input class="input-group-field" placeholder="Search" type="text" />
-								<div class="input-group-button">
-									<a class="button float-right">
+								<div class="input-group-button auto" style="align-items: middle;">
+									<button type="button" class="button full-height float-right">
 										<i class="fas fa-search"></i>
-									</a>
+									</button>
 								</div>
 							</div>
 
@@ -73,12 +74,18 @@
 										Select Target Platform
 									</label>
 									<div class="button-group">
-										<a class="button"><img src="../../wwwroot/images/amazon-thumb.png" alt="Amazon" /></a>
-										<a class="button active"><img src="../../wwwroot/images/ebay-thumb.png" alt="eBay" /></a>
-										<a class="button"><img src="../../wwwroot/images/etsy-thumb.png" alt="Etsy" /></a>
-										<a class="button"><img src="../../wwwroot/images/poshmark-thumb.PNG" alt="Poshmark" /></a>
-										<a class="button"><img src="../../wwwroot/images/mercari-thumb.png" alt="Mercari" /></a>
-										<a class="button"><img src="../../wwwroot/images/emag-thumb.png" alt="Emag" /></a>
+										<a class="button"><img src="../../wwwroot/images/amazon-thumb.png"
+												alt="Amazon" /></a>
+										<a class="button active"><img src="../../wwwroot/images/ebay-thumb.png"
+												alt="eBay" /></a>
+										<a class="button"><img src="../../wwwroot/images/etsy-thumb.png"
+												alt="Etsy" /></a>
+										<a class="button"><img src="../../wwwroot/images/poshmark-thumb.PNG"
+												alt="Poshmark" /></a>
+										<a class="button"><img src="../../wwwroot/images/mercari-thumb.png"
+												alt="Mercari" /></a>
+										<a class="button"><img src="../../wwwroot/images/emag-thumb.png"
+												alt="Emag" /></a>
 									</div>
 								</div>
 								<div class="cell">
@@ -112,13 +119,13 @@
 											<li><a href="#">Item 2</a></li>
 										</ul>
 									</div>
-		
 								</div>
 								<div class="cell">
-									<div class="input-group-button">
-										<a class="button">Insert TreeCat Field</a>
+									<div class="input-group-button" style="padding: stretch;">
+										<button type="button" class="button full-height float-right">
+											<i class="fas fa-search"></i>
+										</button>
 									</div>
-
 								</div>
 							</div>
 						</div>
@@ -175,20 +182,15 @@
 
 	<script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
 
-	<script src="../../wwwroot/lib/jquery/dist/jquery.js"></script>
-	<script src="../../wwwroot/lib/foundation/dist/js/foundation.js"></script>
+	<script src="../../wwwroot/lib/jquery/src/jquery.js"></script>
+	<script src="../../wwwroot/lib/foundation/js/foundation.js"></script>
+
 	<script src="../../wwwroot/lib/font-awesome/js/all.js"></script>
 
 	<script src="../../wwwroot/js/site.js" asp-append-version="true"></script>
 	<script src="../../wwwroot/js/resizable-panel.js" asp-append-version="true"></script>
 
 	<script>if (window.module) module = window.module;</script>
-
-	<script>
-		$(document).ready(function () {
-			$(document).foundation();
-		})
-	</script>
 </body>
 
 </html>
