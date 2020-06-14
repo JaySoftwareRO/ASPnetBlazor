@@ -1,4 +1,5 @@
 using lib.cache;
+using lib.token_getters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
@@ -13,15 +14,17 @@ namespace tests
 {
     public class EbayListerTests
     {
-        string token = "v^1.1#i^1#r^0#I^3#p^3#f^0#t^H4sIAAAAAAAAAOVYa2wUVRTu9qVNragQ5WWyDJKIzeze2dmZ3Rm7m2y7W7tA26XbViBguTtzpzsyL2futl2CWioBAf0hicovLGgksWmkohgwxpCgKJEfQsCgmPioQkg0xhAlAYwz2wfbqtAHMU3cP5s59zy+851z7ty5oLu07JGtdVv/qHDdUdjbDboLXS6qHJSVllTeXVQ4v6QA5Cm4ersf6i7uKbpYZUFVMfgmZBm6ZiF3l6poFp8ThoiMqfE6tGSL16CKLB4LfDJSv4L3eQBvmDrWBV0h3PFoiKA5yAicxNBMihMEWrSl2ojPZj1EBAXIiSmJCiCGSzF+2l63rAyKaxaGGg4RPuADJGBIim2m/DygeYrzUMHAGsLdikxL1jVbxQOIcA4un7M187DeHCq0LGRi2wkRjkdqk42ReDTW0FzlzfMVHuYhiSHOWGOfanQRuVuhkkE3D2PltPlkRhCQZRHe8FCEsU75yAiYKcDPUS0FOEgFKJrlAJDo20RlrW6qEN8chyORRVLKqfJIwzLO3opRm43Uk0jAw08Ntot41O38rcxARZZkZIaIWHVkdUsy1kS4k4mEqXfIIhKdTCnW5w/QgKFstB0KlPUOqOltYDjMkK9hksfFqdE1UXYos9wNOq5GNmY0lhmaZ/KYsZUatUYzImEHT74eO8JgILjGKelQDTM4rTlVRapNgzv3eGv+RxriRgvcrpaguCDkAn6OFVIBmmH8/9ASzqxPui3CTmUiiYTXwYJSMEuq0NyAsKFAAZGCTW9GRaYs8jQj+eighEiR5STSz0kSmWJElqQkhABCqZTABf8/3YGxKacyGI12yPiFXIohwmGUl6HEY30D0pqzBiLGa+a2neG26LJCRBpjg/d6Ozs7PZ20RzfbvT4AKO+q+hVJIY1USIzqyrdWJuVcgwjItrJkHtsAQkSX3X92cK2dCDfFaptiybq25sblsYaR3h2DLDxe+i+ZJpFgIjyzspNqs2qNsbxB5BpZtbWlXjNYugFFoy2P6Q2VstoOYHXSiMNIOm6Fppe8oBsooSuykP1vGHBmfaIs0KaYgCbOJpGi2IJpJWo5ic6sIjv2lu0AGrLHGTePoKteHdobtiNqyyF2T0TJa9kEeYa2P9uzx0RQ1DUlOxXjSdjIWoe9f+hmdioBR40nYQMFQc9oeCrhhk0nYSFlFElWFGeLnErAPPPJwNSgksWyYE0ppKw53WZNwsSA2VyComwZzqxMyNKW2W9WAXnst13uoDUKdtwsOrM+uSmNGEZcVTMYphQUF2fWuPopX5BlprUJOenNsKxaFSjG7eMJ2WwiJEBMJpqipD8liFAUU5AMcqzfJ/rYaaVd3y7PsKwpjgP2wZSigwDQ08otijpmWklZUfRxIMiSQkryk37RPvoGmSBFMizyQ8BAAIXp1bNGke3BH3smLN7880zIvU63MBInmt04Qd6Z+G8fQ96xdxHhgtyP6nG9B3pcA4UuF/CCJdRisKi0qKW46K75loztDRJKHktu1+xPbBN5NqCsAWWzsNRltMBLS/JuP3rXgbmj9x9lRVR53mUIWHhjpYSa9UCFTQhDsZQf0BS3Biy+sVpM3V8854nrZZVtP/b+uvXUupWMFN125Gz3MVAxquRylRQU97gKqurOrkizc9JHzME3j6lfMu47X11Wffr7xtLCtSsfP0B8U9F3708lA8DYvb/r+UUtX6DO1c+gbz8Y3PhnVV/62e7+ZW8tqO69Wnn4uRcPL73v1OHjB2Z/fOKT+LuJd37rv7bg3MPXojUbS67v3PTLy/POvbKlqr+3LqglvWT13PJ9nQe7Dp10nd87uGV9+a61fTXlA5+u33pxz/Er54vd2+vvmV11Ql2Y/npfbew0+v3Cpr4P95+6tnPV3uiDbx9/YwC3vk9fjj0VfG130foXys+c7D+360L4yNLTH63eUcJsO/PdoRM7vhosPL8LhsVtRz/74crizy+9VF7w6MWrVfHXL4fnbT+w+aj/6fY9ZMXBWUPl+wtAvob+lxIAAA==";
+        string token = "v^1.1#i^1#p^3#r^0#f^0#I^3#t^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";
 
         [Fact]
         public void List()
         {
             var logger = TestLogger.NewLogger("ebay-categories-tests");
-            var cache = new DiskCache(@"D:\code\bifrost\data\ebay\aspect-cache", logger);
+            var cache = new DiskCache(@"D:\code\bifrost\data\ebay\item-cache", logger);
 
-            var categories = new lib.listers.EbayLister(cache, logger, 1000, () => { return token; }).CategoryTree().Result;
+            var tokenGetter = new EbayHardcodedTokenGetter();
+            tokenGetter.Set(token);
+            var items = new lib.listers.EbayLister(cache, logger, 10000, tokenGetter).List().Result;
 
             JsonSerializer serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
@@ -30,10 +33,10 @@ namespace tests
             using (StreamWriter sw = new StreamWriter(@"D:\code\bifrost\data\ebay\categories.json"))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
-                serializer.Serialize(writer, categories);
+                serializer.Serialize(writer, items);
             }
 
-            Assert.True(categories.SubCategories.Count > 0);
+            Assert.True(items.Count > 0);
         }
     }
 }

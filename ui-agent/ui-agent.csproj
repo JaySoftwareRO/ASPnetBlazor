@@ -5,12 +5,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="html-design\**" />
+    <Compile Remove="Views\Design\**" />
     <Compile Remove="wwwroot\images\raw\**" />
     <Content Remove="html-design\**" />
+    <Content Remove="Views\Design\**" />
     <Content Remove="wwwroot\images\raw\**" />
     <EmbeddedResource Remove="html-design\**" />
+    <EmbeddedResource Remove="Views\Design\**" />
     <EmbeddedResource Remove="wwwroot\images\raw\**" />
     <None Remove="html-design\**" />
+    <None Remove="Views\Design\**" />
     <None Remove="wwwroot\images\raw\**" />
   </ItemGroup>
   <ItemGroup>

@@ -8,41 +8,44 @@ namespace lib
 {
     public interface Lister
     {
-        Task<Category> CategoryTree();
+        Task<List<Item>> List();
     }
 
-    public class Category
+    public class Item
     {
-        public string Name { get; set; }
-        public List<Category> SubCategories { get; set; }
-        public List<Feature> Features { get; set; }
-    }
+        public string ID
+        {
+            get; set;
+        }
 
-    public class Feature
-    {
-        public string Name { get; set; }
-        public FeatureType FeatureType { get; set; }
-    }
+        public string Title
+        {
+            get; set;
+        }
 
-    public class FeatureType
-    {
-        public BaseType BaseType { get; set; }
+        public string Description
+        {
+            get; set;
+        }
 
-        public FeatureTypeOptions Options { get; set; }
-    }
+        public double Price
+        {
+            get; set;
+        }
 
-    public enum BaseType : ushort
-    {
-        Integer = 0,
-        Decimal = 1,
-        String = 2,
-        Boolean = 3,
-        Enum = 4,
-    }
+        public Dictionary<Feature, object> Value
+        {
+            get; set;
+        }
 
-    public class FeatureTypeOptions
-    {
-        public string Regex { get; set; }
-        public Dictionary<string, object> ProviderDefinition { get; set; } 
+        public string Status
+        {
+            get; set;
+        }
+
+        public int Stock
+        {
+            get; set;
+        }
     }
 }

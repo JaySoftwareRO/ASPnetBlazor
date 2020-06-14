@@ -5,7 +5,7 @@ using System.Text;
 
 namespace lib.listers
 {
-    class MercariLister 
+    class MercariSchemaReader 
     {
         public static void List()
         {

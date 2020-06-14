@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ui_agent</title>
+    <title>@ViewData["Title"] - TreeCat</title>
 
     <link rel="stylesheet" href="~/css/app.css" />
     <link rel="stylesheet" href="~/css/debug.css" />
+
+    <link rel="import" href="menus">
 </head>
 
 <body>
@@ -21,12 +23,12 @@
                         <li>
                             <a href="#">Sync</a>
                             <ul class="menu vertical">
-                                <li><a href="#">EBay</a></li>
+                                <li><a href="~/items/ebaylistings">EBay</a></li>
                                 <li><a href="#">Mercari</a></li>
                                 <li><a href="#">Poshmark</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">Mappings</a></li>
+                        <li><a href="~/data/mapping">Mappings</a></li>
                     </ul>
                 </div>
                 <div class="top-bar-right">
