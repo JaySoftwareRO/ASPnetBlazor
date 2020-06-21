@@ -21,7 +21,10 @@ jobs:
       run: |
         cd ui-agent
         dotnet restore
-        ls ~/.dotnet/tools
+
+    - name: Install electronize tool
+      run: |
+        dotnet tool install ElectronNET.CLI -g
 
     - name: Build client apps
       run: |
