@@ -28,4 +28,4 @@ jobs:
 
     - name: Build client apps
       run: |
-        electronize build /target osx
+        electronize build /target linux
