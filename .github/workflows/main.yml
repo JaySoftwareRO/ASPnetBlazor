@@ -21,6 +21,7 @@ jobs:
       run: |
         cd ui-agent
         dotnet restore
+        ls ~/.dotnet/tools
 
     - name: Build client apps
       run: |
