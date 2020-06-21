@@ -1,17 +1,17 @@
-﻿using ebayinventory;
+﻿using ebayws;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using Microsoft.Rest;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace lib.listers
 {
-    public class EbayLister: Lister
+    public class EbayLister : Lister
     {
         // https://developer.ebay.com/api-docs/commerce/taxonomy/static/supportedmarketplaces.html
         private const string MarketplaceUSA = "EBAY_US";
@@ -21,48 +21,87 @@ namespace lib.listers
         int liveCallLimit;
         int liveCalls = 0;
         ITokenGetter tokenGetter;
+        string accountID;
 
-        public EbayLister(IDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
+        public EbayLister(IDistributedCache cache, ILogger logger, int liveCallLimit, string accountID, ITokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;
             this.liveCallLimit = liveCallLimit;
             this.tokenGetter = tokenGetter;
+            this.accountID = accountID;
         }
         public async Task<List<Item>> List()
         {
-            string eBayOAuthToken = this.tokenGetter.Get();
+            // TODO: vladi: all of these should be configurable
 
-            HttpClient httpClient = new HttpClient(new HttpClientHandler
+            // Define the endpoint (e.g., the Sandbox Gateway URI)
+            String endpoint = "https://api.ebay.com/wsapi";
+
+            // Define the query string parameters.
+            String queryString = "?callname=GetMyeBaySelling"
+                                + "&siteid=0"
+                                + "&appid=VladIova-Treecat-SBX-6bce464fb-92785135"
+                                + "&version=1149"
+                                + "&Routing=new";
+
+            String requestURL = endpoint + queryString; // "https://api.ebay.com/wsapi";
+
+
+            ebayws.eBayAPIInterfaceClient client = new ebayws.eBayAPIInterfaceClient();
+            client.Endpoint.Address = new EndpointAddress(requestURL);
+
+
+
+            var cachedSellingItems = await this.cache.GetAsync(this.accountID);
+            GetMyeBaySellingResponse sellingItems = new GetMyeBaySellingResponse();
+
+            if (cachedSellingItems == null && liveCalls < this.liveCallLimit)
             {
-                AutomaticDecompression = DecompressionMethods.GZip
-            });
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {eBayOAuthToken}");
-            httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
+                liveCalls += 1;
 
-            EbayinventoryClient client = new EbayinventoryClient(new TokenCredentials(eBayOAuthToken));
-            client.BaseUri = new Uri("https://api.ebay.com/sell/inventory/v1");
+                using (OperationContextScope scope = new OperationContextScope(client.InnerChannel))
+                {
+                    var httpRequestProperty = new HttpRequestMessageProperty();
+                    httpRequestProperty.Headers["X-EBAY-API-IAF-TOKEN"] = tokenGetter.Get();
 
+                    OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
-            var inventoryProducts = await client.GetInventoryItemsAsync();
+                    sellingItems = client.GetMyeBaySellingAsync(null, new GetMyeBaySellingRequestType()
+                    {
+                        Version = "1149",
+                        ActiveList = new ItemListCustomizationType() { Sort = ItemSortTypeCodeType.TimeLeft, Pagination = new PaginationType() { EntriesPerPage = 3, PageNumber = 1 } }
+                    }).GetAwaiter().GetResult();
+                }
+
+                await this.cache.SetAsync(
+                    this.accountID,
+                    ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(sellingItems)),
+                    new DistributedCacheEntryOptions()
+                    {
+                        AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                    });
+            }
+            else if (cachedSellingItems != null)
+            {
+                sellingItems = JsonConvert.DeserializeObject<GetMyeBaySellingResponse>(
+                    ASCIIEncoding.UTF8.GetString(cachedSellingItems));
+            }
+
             List<Item> result = new List<Item>();
 
-            foreach (var inventoryProduct in inventoryProducts.InventoryItemsProperty)
+            foreach (var item in sellingItems.GetMyeBaySellingResponse1.ActiveList.ItemArray)
             {
-                var items = await client.GetOffersAsync(inventoryProduct.Sku);
-
-                foreach (var offer in items.OffersProperty)
+                result.Add(new Item()
                 {
-                    result.Add(new Item()
-                    {
-                        Title = inventoryProduct.Product.Title,
-                        ID = offer.Sku,
-                        Description = offer.ListingDescription,
-                        Price = Double.Parse(offer.PricingSummary.Price.Value),
-                        Status = offer.Status,
-                        Stock = offer.AvailableQuantity == null ? 0 : (int)offer.AvailableQuantity,
-                    });
-                }
+                    Title = item.Title,
+                    ID = item.ItemID,
+                    Description = "BFRST-NPY",
+                    Price = item.BuyItNowPrice.Value,
+                    Status = "BFRST-NPY",
+                    Stock = item.QuantityAvailable,
+                    MainImageURL = item.PictureDetails.GalleryURL
+                });
             }
 
             return result;

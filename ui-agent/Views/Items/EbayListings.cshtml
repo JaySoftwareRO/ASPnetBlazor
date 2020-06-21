@@ -26,40 +26,52 @@
             <div class="grid-container">
                 <div class="grid-y">
                     <div class="cell">
-                        <table>
-                            <tr>
-                                <td>Title</td>
-                                <td>Description</td>
-                                <td>ID</td>
-                                <td>Price</td>
-                                <td>Status</td>
-                                <td>Stock</td>
-                            </tr>
 
-                            @foreach (var item in ViewBag.Items)
-                            {
+                        <table class="scroll">
+                            <thead>
                                 <tr>
+                                    <th><input type="checkbox"></th>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Listings</th>
+                                    <th>SKU</th>
+                                    <th>Qty</th>
+                                    <th>Created</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.Items)
+                                {
+                                <tr>
+                                    <td>
+                                       <input type="checkbox" />
+                                    </td>
+                                    <td>
+                                        <img src="@item.MainImageURL" />
+                                    </td>
                                     <td>
                                         @item.Title
                                     </td>
                                     <td>
-                                        @Html.Raw(@item.Description)
+                                        LISTINGS?
                                     </td>
                                     <td>
                                         @item.ID
                                     </td>
                                     <td>
-                                        @item.Price
+                                        @item.Stock
                                     </td>
                                     <td>
+                                        CREATED?
                                         @item.Status
                                     </td>
                                     <td>
-                                        @item.Stock
+                                        @item.Price
                                     </td>
                                 </tr>
-                            }
-
+                                }
+                            </tbody>
                         </table>
                     </div>
                 </div>

@@ -115,6 +115,7 @@ namespace lib.cache
 
         private async Task SetFile(string key, byte[] value, DistributedCacheEntryOptions options, CancellationToken token = default)
         {
+            Directory.CreateDirectory(this.dir);
             string filePath = Path.Join(this.dir, this.KeyHash(key));
             await File.WriteAllBytesAsync(filePath, value, token);
             File.WriteAllText($"{filePath}.json", JsonConvert.SerializeObject(options));

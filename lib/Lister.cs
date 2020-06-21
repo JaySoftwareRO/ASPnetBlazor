@@ -47,5 +47,10 @@ namespace lib
         {
             get; set;
         }
+
+        public string MainImageURL
+        {
+            get; set;
+        }
     }
 }

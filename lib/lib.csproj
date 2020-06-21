@@ -1,36 +1,54 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.0.0">
+    <None Remove="cache\postgresql\scripts\Create_Function_DateDiff.sql" />
+    <None Remove="cache\postgresql\scripts\Create_Function_DeleteCacheItemFormat.sql" />
+    <None Remove="cache\postgresql\scripts\Create_Function_DeleteExpiredCacheItemsFormat.sql" />
+    <None Remove="cache\postgresql\scripts\Create_Function_GetCacheItemFormat.sql" />
+    <None Remove="cache\postgresql\scripts\Create_Function_SetCache.sql" />
+    <None Remove="cache\postgresql\scripts\Create_Function_UpdateCacheItemFormat.sql" />
+    <None Remove="cache\postgresql\scripts\Create_Table_DistCache.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_DateDiff.sql" />
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_DeleteCacheItemFormat.sql" />
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_DeleteExpiredCacheItemsFormat.sql" />
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_GetCacheItemFormat.sql" />
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_SetCache.sql" />
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_UpdateCacheItemFormat.sql" />
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Table_DistCache.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5">
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.21" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Npgsql" Version="4.1.3.1" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.6.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="RestSharp" Version="106.10.1" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
     <PackageReference Include="SimpleBase" Version="3.0.1" />
-    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
-    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Connected Services\" />
   </ItemGroup>
 
 </Project>

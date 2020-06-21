@@ -1,0 +1,38 @@
+﻿{
+  "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
+  "Version": "15.0.40203.910",
+  "ExtendedData": {
+    "inputs": [
+      "ebaysvc.wsdl"
+    ],
+    "collectionTypes": [
+      "System.Array",
+      "System.Collections.Generic.Dictionary`2"
+    ],
+    "namespaceMappings": [
+      "*, ebayws"
+    ],
+    "references": [
+      "Microsoft.Extensions.Caching.Abstractions, {Microsoft.Extensions.Caching.Abstractions, 3.1.5}",
+      "Microsoft.Extensions.Logging.Abstractions, {Microsoft.Extensions.Logging.Abstractions, 3.1.5}",
+      "Microsoft.Extensions.Primitives, {Microsoft.Extensions.Primitives, 3.1.5}",
+      "Microsoft.Rest.ClientRuntime, {Microsoft.Rest.ClientRuntime, 2.3.21}",
+      "Newtonsoft.Json, {Newtonsoft.Json, 12.0.3}",
+      "RestSharp, {RestSharp, 106.11.4}",
+      "SimpleBase, {SimpleBase, 3.0.1}",
+      "System.Reflection.DispatchProxy, {System.Reflection.DispatchProxy, 4.5.0}",
+      "System.Security.AccessControl, {System.Security.AccessControl, 4.5.0}",
+      "System.Security.Cryptography.Xml, {System.Security.Cryptography.Xml, 4.5.0}",
+      "System.Security.Permissions, {System.Security.Permissions, 4.5.0}",
+      "System.Security.Principal.Windows, {System.Security.Principal.Windows, 4.5.0}",
+      "System.ServiceModel, {System.ServiceModel.Primitives, 4.7.0}",
+      "System.ServiceModel.Duplex, {System.ServiceModel.Duplex, 4.7.0}",
+      "System.ServiceModel.Http, {System.ServiceModel.Http, 4.7.0}",
+      "System.ServiceModel.NetTcp, {System.ServiceModel.NetTcp, 4.7.0}",
+      "System.ServiceModel.Primitives, {System.ServiceModel.Primitives, 4.7.0}",
+      "System.ServiceModel.Security, {System.ServiceModel.Security, 4.7.0}"
+    ],
+    "targetFramework": "netcoreapp3.1",
+    "typeReuseMode": "All"
+  }
+}
