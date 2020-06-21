@@ -33,4 +33,6 @@ jobs:
 
     - name: Build client apps
       run: |
+        pwd
+        dotnet build
         electronize build /target linux
