@@ -19,7 +19,7 @@ jobs:
 
     - name: Restore nuget packages
       run: |
-        cd bifrost/ui-agent
+        cd ui-agent
         dotnet restore
 
     - name: Build client apps
