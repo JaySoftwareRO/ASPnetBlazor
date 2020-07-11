@@ -36,7 +36,7 @@ jobs:
         cd ui-agent
         electronize build /target win
         electronize build /target linux
-        electronize build /target osx
+        # electronize build /target osx
   server:
     runs-on: ubuntu-16.04
     steps:
