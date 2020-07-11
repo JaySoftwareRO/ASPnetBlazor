@@ -7,8 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-    runs-on: ubuntu-16.04
+  clients:
+    runs-on: windows-2019
 
     steps:
     - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: 12.x
 
-    - name: Restore nuget packages
+    - name: Restore packages and build
       run: |
         dotnet restore
         dotnet build
@@ -31,7 +31,17 @@ jobs:
       run: |
         dotnet tool install ElectronNET.CLI -g
 
-    - name: Build client apps
+    - name: Build client app packages
       run: |
         cd ui-agent
-        electronize build /target windows
+        electronize build /target win
+        electronize build /target linux
+        electronize build /target osx
+  server:
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Docker Image
+      uses: docker/build-push-action@v1
+      with:
+        tags: latest
+        path: ./bifrost
