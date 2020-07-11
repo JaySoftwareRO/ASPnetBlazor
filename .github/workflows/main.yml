@@ -40,8 +40,9 @@ jobs:
   server:
     runs-on: ubuntu-16.04
     steps:
+    - uses: actions/checkout@v2
     - name: Docker Image
       uses: docker/build-push-action@v1
       with:
         tags: latest
-        path: bifrost/bifrost
+        path: bifrost
