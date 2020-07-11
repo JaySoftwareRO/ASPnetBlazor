@@ -35,7 +35,7 @@ jobs:
       run: |
         cd ui-agent
         electronize build /target windows
-        mv "bin\Desktop\ui-agent Setup 1.0.0.exe" "bin\Desktop\ui-agent-${{ github.ref }}.exe"
+        mv "bin\Desktop\ui-agent Setup 1.0.0.exe" "bin\Desktop\ui-agent-${{ github.run_number }}.exe"
         # electronize build /target linux
         # electronize build /target osx
     - name: Create Release
