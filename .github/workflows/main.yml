@@ -35,7 +35,7 @@ jobs:
       run: |
         cd ui-agent
         electronize build /target windows
-        mv "bin/Desktop/ui-agent Setup 1.0.0.exe" "bin/Desktop/ui-agent-${{ github.ref }}.exe"
+        mv "bin\Desktop\ui-agent Setup 1.0.0.exe" "bin\Desktop\ui-agent-${{ github.ref }}.exe"
         # electronize build /target linux
         # electronize build /target osx
     - name: Create Release
@@ -55,7 +55,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: "bin/Desktop/ui-agent-${{ github.run_number }}.exe"
+        asset_path: 'bin\Desktop\ui-agent-${{ github.run_number }}.exe'
         asset_name: ui-agent-${{ github.run_number }}.exe
         asset_content_type: application/octet-stream
   server:
