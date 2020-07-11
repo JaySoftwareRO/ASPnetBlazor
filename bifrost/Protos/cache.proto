@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option csharp_namespace = "bifrost";
+
+package cache;
+
+service Cache {
+  rpc Get (GetRequest) returns (GetReply);
+  rpc Refresh (RefreshRequest) returns (RefreshReply);
+  rpc Remove (RemoveRequest) returns (RemoveReply);
+  rpc Set (SetRequest) returns (SetReply);
+}
+
+message GetRequest {
+  string key = 1;
+}
+
+message GetReply {
+  bool hasValue = 2;
+  bytes value = 1;
+}
+
+message RefreshRequest {
+  string key = 1;
+}
+
+message RefreshReply {
+}
+
+message RemoveRequest {
+  string key = 1;
+}
+
+message RemoveReply {
+}
+
+message SetRequest {
+  string key = 1;
+  bytes value = 2;
+  CacheOptions cacheOptions = 3;
+}
+
+message SetReply {
+}
+
+message CacheOptions {
+  string AbsoluteExpiration = 1;
+  string AbsoluteExpirationRelativeToNow = 2;
+  string SlidingExpiration = 3;
+}

@@ -1,12 +1,12 @@
--- FUNCTION: public.setcache(text, text, text, bytea, double precision, timestamp with time zone, timestamp with time zone)
+-- FUNCTION: public.setcache(text, text, text, jsonb, double precision, timestamp with time zone, timestamp with time zone)
 
--- DROP FUNCTION public.setcache(text, text, text, bytea, double precision, timestamp with time zone, timestamp with time zone);
+-- DROP FUNCTION public.setcache(text, text, text, jsonb, double precision, timestamp with time zone, timestamp with time zone);
 
 CREATE OR REPLACE FUNCTION [schemaName].setcache(
 	"SchemaName" text,
 	"TableName" text,
 	"DistCacheId" text,
-	"DistCacheValue" bytea,
+	"DistCacheValue" jsonb,
 	"DistCacheSlidingExpirationInSeconds" double precision,
 	"DistCacheAbsoluteExpiration" timestamp with time zone,
 	"UtcNow" timestamp with time zone)

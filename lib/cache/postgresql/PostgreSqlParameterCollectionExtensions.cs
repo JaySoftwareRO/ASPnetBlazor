@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace lib.cache.postgresql
 {
@@ -25,14 +26,14 @@ namespace lib.cache.postgresql
             {
                 return parameters.AddParamWithValue(
                     Columns.Names.CacheItemValue,
-                    NpgsqlTypes.NpgsqlDbType.Bytea,
+                    NpgsqlTypes.NpgsqlDbType.Jsonb,
                     DefaultValueColumnWidth,
                     value);
             }
             else
             {
                 // do not mention the size
-                return parameters.AddParamWithValue(Columns.Names.CacheItemValue, NpgsqlTypes.NpgsqlDbType.Bytea, value);
+                return parameters.AddParamWithValue(Columns.Names.CacheItemValue, NpgsqlTypes.NpgsqlDbType.Jsonb, value);
             }
         }
 
@@ -76,10 +77,10 @@ namespace lib.cache.postgresql
             var parameter = new NpgsqlParameter(parameterName, dbType);
             parameter.Value = value;
             parameters.Add(parameter);
-            if (value != DBNull.Value)
-            {
-                parameter.ResetDbType();
-            }
+            //if (value != DBNull.Value)
+            //{
+            //    parameter.ResetDbType();
+            //}
             
             return parameters;
         }
@@ -94,10 +95,10 @@ namespace lib.cache.postgresql
             var parameter = new NpgsqlParameter(parameterName, dbType, size);
             parameter.Value = value;
             parameters.Add(parameter);
-            if (value != DBNull.Value)
-            {
-                parameter.ResetDbType();
-            }
+            //if (value != DBNull.Value)
+            //{
+            //    parameter.ResetDbType();
+            //}
             return parameters;
         }
     }

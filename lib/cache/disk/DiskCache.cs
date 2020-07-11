@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace lib.cache
+namespace lib.cache.disk
 {
     public class DiskCache : IDistributedCache
     {

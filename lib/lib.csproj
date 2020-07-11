@@ -25,6 +25,18 @@
   </ItemGroup>
 
   <ItemGroup>
+  <Protobuf Include="..\bifrost\Protos\cache.proto">
+    <Link>bifrost_client\cache.proto</Link>
+  </Protobuf>
+</ItemGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.12.3" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.29.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.30.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -49,6 +61,10 @@
 
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bifrost_client\" />
   </ItemGroup>
 
 </Project>

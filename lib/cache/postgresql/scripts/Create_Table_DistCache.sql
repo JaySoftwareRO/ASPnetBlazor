@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS [schemaName].[tableName]
 (
     "Id" text COLLATE pg_catalog."default" NOT NULL,
-    "Value" bytea,
+    "Value" jsonb,
     "ExpiresAtTime" timestamp with time zone,
     "SlidingExpirationInSeconds" double precision,
     "AbsoluteExpiration" timestamp with time zone,

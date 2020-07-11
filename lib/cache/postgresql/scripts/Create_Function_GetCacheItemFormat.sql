@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION [schemaName].getcacheitemformat(
 	"TableName" text,
 	"DistCacheId" text,
 	"UtcNow" timestamp with time zone)
-    RETURNS TABLE(distcache_id text, distcache_value bytea, distcache_expiresattime timestamp with time zone, distcache_slidingexpirationinseconds bigint, distcache_absoluteexpiration timestamp with time zone)
+    RETURNS TABLE(distcache_id text, distcache_value jsonb, distcache_expiresattime timestamp with time zone, distcache_slidingexpirationinseconds bigint, distcache_absoluteexpiration timestamp with time zone)
     LANGUAGE 'plpgsql'
     COST 100.0
     VOLATILE NOT LEAKPROOF 

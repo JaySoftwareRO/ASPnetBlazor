@@ -48,6 +48,7 @@ namespace lib.schema_readers
             httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
 
             EbaytaxonomyClient client = new ebaytaxonomy.EbaytaxonomyClient(new TokenCredentials(eBayOAuthToken));
+            client.HttpClient.Timeout = new TimeSpan(1, 0, 0);
             client.BaseUri = new Uri("https://api.sandbox.ebay.com/commerce/taxonomy/v1_beta");
 
             var defaultCategoryTree = await client.GetDefaultCategoryTreeIdAsync(MarketplaceUSA);
