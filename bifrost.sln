@@ -9,11 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests", "tests\tests.csproj", "{EE66153E-BC1E-4F5E-9E49-98AEF38777AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ui-agent", "ui-agent\ui-agent.csproj", "{F9298D83-E609-490F-94CC-74BD6F856475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ui-agent", "ui-agent\ui-agent.csproj", "{F9298D83-E609-490F-94CC-74BD6F856475}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project-files", "project-files", "{011CF6DA-A659-401D-9385-FD010A219FF3}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.github\workflows\main.yml = .github\workflows\main.yml
 	EndProjectSection
 EndProject
 Global
