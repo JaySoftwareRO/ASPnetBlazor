@@ -24,8 +24,8 @@ jobs:
 
     - name: Restore nuget packages
       run: |
-        cd ui-agent
         dotnet restore
+        dotnet build
 
     - name: Install electronize tool
       run: |
@@ -33,5 +33,5 @@ jobs:
 
     - name: Build client apps
       run: |
-        dotnet build
+        cd ui-agent
         electronize build /target windows
