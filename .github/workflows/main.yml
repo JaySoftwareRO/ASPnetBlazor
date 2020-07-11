@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: windows-2019
 
     steps:
     - uses: actions/checkout@v2
@@ -33,6 +33,5 @@ jobs:
 
     - name: Build client apps
       run: |
-        pwd
         dotnet build
-        electronize build /target linux
+        electronize build /target windows
