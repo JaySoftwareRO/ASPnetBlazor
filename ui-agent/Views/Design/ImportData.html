@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Inventory</title>
+	<title>Import Data</title>
 
 	<link rel="stylesheet" href="../../wwwroot/css/app.css" />
 	<link rel="stylesheet" href="../../wwwroot/lib/foundation-icons/foundation-icons.css" />
@@ -27,10 +27,11 @@
 						<li><a href="Inventory.html">Inventory</a></li>
 						<li><a href="#">Import Data</a></li>
 						<li><a href="FieldMapping.html">Field Mappings</a></li>
+						<li><a href="CreateItem.html">Create Item</a></li>
 					</ul>
 				</div>
 				<div class="top-bar-right">
-					<i class="fi-widget" style="font-size: 20px"></i>
+					<a href="Setup.html"><i class="fi-widget" style="font-size: 20px"></i></a>
 				</div>
 			</div>
 		</div>
@@ -38,11 +39,12 @@
 		<!--THIS IS WHERE PAGE-SPECIFIC CONTENT STARTS-->
 
 		<!-- Controls -->
+		<!-- Row of search criteria -->
+
 		<div class="cell medium-auto medium-cell-block-container">
 			<div class="grid-x full-height">
-				<div class="cell medium-3 medium-cell-block-y">
-
-					<div class="cell medium-auto">
+				<div class="grid-y full-height">
+					<div class="grid-x grid-margin-x">
 						<div class="cell shrink">
 
 							<div class="input-group">
@@ -59,109 +61,214 @@
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="cell medium-auto">
-						<fieldset class="cell medium-7">
-							<legend>Search Criteria</legend>
-							<input name="WhichItems" id="NewItems" type="radio"><label for="NewItems">New
-								Items</label><br />
-							<input name="WhichItems" id="DateRange" type="radio"><label for="DateRange">Existing
-								Items</label>
-						</fieldset>
-						<div class="input-group medium-auto">
-							<span class="input-group-label">Start Date</span>
-							<input class="input-group-field" type="date">
-						</div>
-						<div class="input-group medium-auto">
-							<span class="input-group-label">End Date</span>
-							<input class="input-group-field" type="date">
-						</div>
-					</div>
-					<div class="input-group">
-						<input class="input-group-field" placeholder="Title Filter" type="text" />
-					</div>
-					<div>
-						<input type="submit" class="button " value="Retrieve List">
-					</div>
-					<div class="cell resizable-up-panel-handle">...</div>
-					<div>
-						<fieldset class="cell medium-7">
-							<legend>Import Criteria</legend>
-							<input id="Re-Import" type="checkbox"><label for="Re-Import">Re-Import and Overwrite Previously Imported Items</label><br />
-						</fieldset>
-					</div>
-					<div>
-						<input type="submit" class="button " value="Import Selected">
-					</div>
-				</div>
 
-				<div class="cell resizable-left-panel-handle"></div>
-
-				<div class="cell full-height medium-auto medium-cell-block-container">
+						<div class="cell shrink">
+							<div class="input-group">
+								<div class="input-group-label">Filter:</div>
+								<div>
+									<input class="input-group-field" placeholder="Keyword" type="text" />
+								</div>
+							</div>
+						</div>
+						<div class="cell shrink">
+							<div class="input-group">
+								<input type="submit" class="button" value="Refresh List">
+								<div class="input-group-label">Last Refreshed: 2020-07-20 @ 14h30</div>
+								<input type="submit" class="button" value="Import Selected">
+							</div>
+						</div>
+					</div>
+				<div class="cell medium-6 medium-cell-block">
 					<!-- Main data section -->
-
 					<table class="scroll">
 						<thead>
 							<tr>
 								<th><input type="checkbox"></th>
 								<th>Image</th>
 								<th>Product Name</th>
-								<th>Listings</th>
-								<th>SKU</th>
+								<th>Source ID</th>
 								<th>Qty</th>
 								<th>Created</th>
+								<th>Src</th>
+								<th>TreeCat Title</th>
+								<th>TC SKU</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr style="background-color:greenyellow; color:black;">
 								<td scope="col"><input type="checkbox"></td>
-								<td><img class="thumb40" src="../../wwwroot/images/Toshiba remote control 1.jpg"></td>
-								<td>Toshiba Remote Control CT-8027</td>
-								<td>
-									<img src="../../wwwroot/images/amazon-thumb.png">
-									<img src="../../wwwroot/images/ebay-thumb.png">
+								<td><img class="thumb40" src="../../wwwroot/images/Toshiba remote control 1.jpg">
 								</td>
-								<td>RSW002</td>
+								<td>Toshiba Remote Control CT-8027</td>
+								<td>74290384923</td>
 								<td>1</td>
 								<td>2020-02-04</td>
+								<td><a style="color:blue;"
+										href="https://www.ebay.com/itm/TOSHIBA-Genuine-OEM-CT-8027-Remote-Control-TESTED/193498913565?hash=item2d0d6f1b1d:g:B0UAAOSw-gBe2ZqN"
+										target="_blank"><img src="../../wwwroot/images/ebay-thumb.png"></a></td>
+								<td>Toshiba Remote Control CT-8027</td>
+								<td>24998348564</td>
 							</tr>
-							<tr>
-								<td><input type="checkbox"></td>
+							<tr style="background-color:yellowgreen;">
+								<td><input type="checkbox" checked></td>
 								<td><img class="thumb40" src="../../wwwroot/images/Sony_remote controle 2.jpg"></td>
-								<td>Sony Remote Control RMT-811 sempor delorum ipser</td>
-								<td>
-									<img src="../../wwwroot/images/ebay-thumb.png">
-									<img src="../../wwwroot/images/etsy-thumb.png">
-								</td>
-								<td>RSW003</td>
+								<td>Sony Remote Control RMT-811</td>
+								<td>24998348564</td>
 								<td>1</td>
 								<td>2020-04-02</td>
+								<td><a style="color:blue;"
+										href="https://www.ebay.com/itm/Genuine-Sony-Camcorder-Camera-Remote-Control-RMT-811-Tested-And-Works/184131178352?hash=item2adf12cf70:g:T~MAAOSwQLZeIPp8:sc:USPSFirstClass!02465!US!-1"
+										target="_blank"><img src="../../wwwroot/images/ebay-thumb.png">
+									</a></td>
+								<td colspan="2">[No TreeCat Match Found] <a style="color:blue;" href="#">item
+										details</a></td>
 							</tr>
 
 						</tbody>
 					</table>
 				</div>
-			</div>
-
-		</div>
-
-		<!-- THIS IS WHERE PAGE-SPECIFIC CONTENT ENDS -->
-
-		<div class="cell shrink footer">
-			<div class="grid-x">
+				<div class="cell resizable-up-panel-handle">...</div>
 				<div class="cell">
-					<span class="label success data-tooltip" title="Logged in as Odin.">
-						<i class="fi-unlock" style="font-size: 14px;"></i> Odin
-					</span>
-					<span class="label alert float-right">
-						<i class="fi-alert" style="font-size: 14px;"></i> Failed to sync items.
-					</span>
-					<span class="label warning data-tooltip float-right" title="14 items left to sync.">
-						<i class="fi-info" style="font-size: 14px;"></i> 14
-					</span>
+					<div class="grid-container fluid">
+						<div class="grid-x grid-padding-x">
+							<div class="large-12 cell">
+								<div class="callout">
+									<h3>Sony Remote Control RMT-811</h3>
+									<p>Genuine Sony Camcorder Camera Remote Control RMT-811 Tested And
+										Works<br />
+										Model: RMT-811<br />
+										Good preowned condition. Tested and works. Remote may show some signs of
+										wear and use.<br />
+										Batteries Not Included</p>
+									<div class="grid-x grid-padding-x">
+										<div class="large-4 medium-4 cell">
+											<p><strong>Category</strong><br />
+												Electronics->Remote Controls</p>
+										</div>
+										<div class="large-4 medium-4 cell">
+											<p><strong>Color</strong><br />
+												Black</p>
+										</div>
+										<div class="large-4 medium-4 cell">
+											<p><strong>Quantity @ Price</strong><br />
+												1 @ $7.99</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="cell resizable-left-panel-handle"></div>
+			<div class="cell full-height medium-auto medium-cell-block-container">
+				<div class="grid-y full-height">
+					<!-- Main data section -->
+					<div class="grid-x grid-margin-x align-middle">
+						<div class="cell shrink">
+							<h4>TreeCat Lookup</h4>
+						</div>
+						<div class="cell shrink">
+							<div class="input-group">
+								<div class="input-group-label">Filter:</div>
+								<div>
+									<input class="input-group-field" placeholder="Keyword" type="text" />
+								</div>
+							</div>
+						</div>
+						<div class="cell shrink">
+							<input type="submit" class="button " value="Find Potential Matches">
+						</div>
+						<div class="cell shrink">
+							<input type="submit" class="button " value="Link Selected" disabled>
+						</div>
+					</div>
+					<div class="cell medium-6 medium-cell-block">
+						<table class="scroll">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Image</th>
+									<th>Product Name</th>
+									<th>Listings</th>
+									<th>TreeCat SKU</th>
+									<th>Qty</th>
+									<th>Created</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="radio" checked></td>
+									<td><img class="thumb40" src="../../wwwroot/images/Sony_remote controle 2.jpg">
+									</td>
+									<td>Sony Remote Control RMT-811</td>
+									<td>
+										<img src="../../wwwroot/images/etsy-thumb.png">
+									</td>
+									<td>RSW003</td>
+									<td>1</td>
+									<td>2020-04-02</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+					<div class="cell resizable-up-panel-handle">...</div>
+					<div class="cell">
+						<div class="grid-container fluid">
+							<div class="grid-x grid-padding-x">
+								<div class="large-12 cell">
+									<div class="callout">
+										<h3>Sony Remote Control RMT-811</h3>
+										<p>Genuine Sony Camcorder Camera Remote Control RMT-811 Tested And
+											Works<br />
+											Model: RMT-811<br />
+											Good preowned condition. Tested and works. Remote may show some signs of
+											wear and use.<br />
+											Batteries Not Included</p>
+										<div class="grid-x grid-padding-x">
+											<div class="large-4 medium-4 cell">
+												<p><strong>Category</strong><br />
+													Electronics->Remote Controls</p>
+											</div>
+											<div class="large-4 medium-4 cell">
+												<p><strong>Color</strong><br />
+													Black</p>
+											</div>
+											<div class="large-4 medium-4 cell">
+												<p><strong>Quantity @ Price</strong><br />
+													1 @ $7.99</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+
+
+	</div>
+
+	<!-- THIS IS WHERE PAGE-SPECIFIC CONTENT ENDS -->
+
+	<div class="cell shrink footer">
+		<div class="grid-x">
+			<div class="cell">
+				<span class="label success data-tooltip" title="Logged in as Odin.">
+					<i class="fi-unlock" style="font-size: 14px;"></i> Odin
+				</span>
+				<span class="label alert float-right">
+					<i class="fi-alert" style="font-size: 14px;"></i> Failed to sync items.
+				</span>
+				<span class="label warning data-tooltip float-right" title="14 items left to sync.">
+					<i class="fi-info" style="font-size: 14px;"></i> 14
+				</span>
+			</div>
+		</div>
+	</div>
 	</div>
 
 	<script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>

@@ -8,6 +8,43 @@
 	max-height: 40px;
 }
 
-.veritcal-center {
-	align-content: stretch;
+.thumb100 {
+    max-height: 100px;
+}
+
+.callout {
+    background-color: black;
+    color: white;
+}
+
+td a {
+    color: blue;
+}
+
+.blue-link {
+    color: blue;
+}
+
+.status-sold {
+    background-color: chartreuse; 
+    color: black;
+}
+
+.status-problem {
+    background-color: red; 
+    color: white;
+}
+
+.status-unlisted {
+    background-color: yellow; 
+    color: black;
+}
+
+.selected { 
+    background-color: white;
+    color: black;
+}
+
+.required { 
+    color: red;
 }
