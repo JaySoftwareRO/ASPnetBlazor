@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.181
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project-files", "project-files", "{011CF6DA-A659-401D-9385-FD010A219FF3}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.github\workflows\main.yml = .github\workflows\main.yml
+	EndProjectSection
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bifrost", "bifrost\bifrost.csproj", "{7025A6FE-14E9-408D-8DFF-2FB0D78C2ED0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{257CB8F9-0A1A-4CA4-973A-DD3AD08B85F4}"
@@ -10,12 +16,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests", "tests\tests.csproj", "{EE66153E-BC1E-4F5E-9E49-98AEF38777AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ui-agent", "ui-agent\ui-agent.csproj", "{F9298D83-E609-490F-94CC-74BD6F856475}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project-files", "project-files", "{011CF6DA-A659-401D-9385-FD010A219FF3}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		.github\workflows\main.yml = .github\workflows\main.yml
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

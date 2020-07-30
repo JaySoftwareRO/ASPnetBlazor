@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>C:\Users\DanyN\Desktop\TreeCat\bifrost\Backup\lib\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="cache\postgresql\scripts\Create_Function_DateDiff.sql" />
     <None Remove="cache\postgresql\scripts\Create_Function_DeleteCacheItemFormat.sql" />
@@ -13,7 +14,6 @@
     <None Remove="cache\postgresql\scripts\Create_Function_UpdateCacheItemFormat.sql" />
     <None Remove="cache\postgresql\scripts\Create_Table_DistCache.sql" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_DateDiff.sql" />
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_DeleteCacheItemFormat.sql" />
@@ -23,13 +23,11 @@
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_UpdateCacheItemFormat.sql" />
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Table_DistCache.sql" />
   </ItemGroup>
-
   <ItemGroup>
-  <Protobuf Include="..\bifrost\Protos\cache.proto">
-    <Link>bifrost_client\cache.proto</Link>
-  </Protobuf>
-</ItemGroup>
-    
+    <Protobuf Include="..\bifrost\Protos\cache.proto">
+      <Link>bifrost_client\cache.proto</Link>
+    </Protobuf>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.12.3" />
     <PackageReference Include="Grpc.Net.Client" Version="2.29.0" />
@@ -37,6 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -58,13 +57,10 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
   </ItemGroup>
-
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="bifrost_client\" />
   </ItemGroup>
-
 </Project>
