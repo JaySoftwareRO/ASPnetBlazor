@@ -29,28 +29,28 @@ namespace ui_agent.Controllers
 
         public IActionResult EbayListings()
         {
-            string token = configuration.GetValue<string>("Authentication:EBay:Token");
-            var connectionString = configuration.GetValue<string>("Data:PSQLCache:ConnectionString");
+            //string token = configuration.GetValue<string>("Authentication:EBay:Token");
+            //var connectionString = configuration.GetValue<string>("Data:PSQLCache:ConnectionString");
 
-            var schemaName = "bifrost";
-            var tableName = "ebay_items";
-            var createInfrastructure = true;
+            //var schemaName = "bifrost";
+            //var tableName = "ebay_items";
+            //var createInfrastructure = true;
 
-            var cache = new PostgreSqlCache(new PostgreSqlCacheOptions()
-            {
-                ConnectionString = connectionString,
-                SchemaName = schemaName,
-                TableName = tableName,
-                CreateInfrastructure = createInfrastructure,
-            });
+            //var cache = new PostgreSqlCache(new PostgreSqlCacheOptions()
+            //{
+            //    ConnectionString = connectionString,
+            //    SchemaName = schemaName,
+            //    TableName = tableName,
+            //    CreateInfrastructure = createInfrastructure,
+            //});
 
-            cache.Set("init",
-                Encoding.UTF8.GetBytes(DateTime.UtcNow.ToLongDateString()),
-                new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddDays(700)));
+            //cache.Set("init",
+            //    Encoding.UTF8.GetBytes(DateTime.UtcNow.ToLongDateString()),
+            //    new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddDays(700)));
 
-            var tokenGetter = new EbayHardcodedTokenGetter();
-            tokenGetter.Set(token);
-            this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
+            //var tokenGetter = new EbayHardcodedTokenGetter();
+            //tokenGetter.Set(token);
+            this.ViewBag.Items = new List<Item>();//  lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
 
             return View();
         }
