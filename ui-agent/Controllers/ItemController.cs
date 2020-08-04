@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ui_agent.Models;
+using lib.poshmark_client;
 
 namespace ui_agent.Controllers
 {
@@ -18,10 +19,41 @@ namespace ui_agent.Controllers
             _logger = logger;
         }
 
-        public IActionResult Create()
+        public IActionResult Add()
         {
-            this.ViewBag.ExampleFoo = "foo";
+            return View();
+        }
 
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
+        public IActionResult FieldMapping()
+        {
+            return View();
+        }
+
+        public IActionResult FrameTest()
+        {
+            return View();
+        }
+
+        public IActionResult ImportData()
+        {
+            return View();
+        }
+
+        public IActionResult Inventory()
+        {
+            var items = new PoshmarkClient();
+            this.ViewBag.Items = items.List();
+
+            return View();
+        }
+
+        public IActionResult Setup()
+        {
             return View();
         }
 

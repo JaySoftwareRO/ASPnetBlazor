@@ -1,0 +1,163 @@
+﻿<!-- Controls -->
+<div class="cell shrink medium-cell-block-container">
+	<div class="grid-x grid-margin-x align-middle">
+		<div class="cell shrink">
+			<div class="button-group">
+				<span class="input-group-label">Bulk Action</span>
+				<button class="dropdown button arrow-only" data-toggle="bulk-action-dropdown" />
+				<div class="dropdown-pane" data-position="bottom" data-alignment="right"
+					style="text-align: left;" id="bulk-action-dropdown" data-dropdown>
+					<a href="#">Bulk Delete</a><br />
+					<a href="#">Bulk Edit</a><br />
+					<hr />
+					<a href="#">Unlist Everywhere</a><br />
+					<a href="#">Relist on Same Platforms</a><br />
+				</div>
+			</div>
+		</div>
+		<div class="cell shrink">
+			<div class="input-group">
+				<span class="input-group-label">Platform Filter</span>
+				<select class="input-group-field">
+					<option value="*">All</option>
+					<option value="amazon">Amazon</option>
+					<option value="eBay">eBay</option>
+					<option value="Etsy">Etsy</option>
+					<option value="Poshmart">Poshmart</option>
+					<option value="Mercari">Mercari</option>
+					<option value="Emag">Emag</option>
+				</select>
+			</div>
+		</div>
+		<div class="cell shrink">
+			<div class="input-group">
+				<span class="input-group-label">Show</span>
+				<select class="input-group-field">
+					<option value="10">10</option>
+					<option value="25">25</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
+				</select>
+				<span class="input-group-label">Rows</span>
+			</div>
+		</div>
+		<div class="cell shrink">
+			<div class="primary button-group">
+				<a class="button"><i class="fi-arrow-up" style="font-size: 24px"></i></a>
+				<a class="button"><i class="fi-arrow-down" style="font-size: 24px"></i></a>
+			</div>
+		</div>
+		<div class="cell shrink">
+			<div class="input-group">
+				<input class="input-group-field" placeholder="Search" type="text" />
+				<select class="input-group-field">
+					<option value="*">All Fields</option>
+					<option value="Title">Title</option>
+					<option value="SKU">SKU</option>
+					<option value="Description">Description</option>
+				</select>
+				<div class="input-group-button">
+					<button type="button" class="button full-height float-right">
+						<i class="fi-magnifying-glass" style="font-size: 14px;"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="cell full-height medium-auto medium-cell-block-container">
+	<!-- Main data section -->
+
+	<table class="scroll">
+		<thead>
+			<tr>
+				<th><input type="checkbox"></th>
+				<th>Flag</th>
+				<th>Image</th>
+				<th>Product Name</th>
+				<th>Listings</th>
+				<th>SKU</th>
+				<th>Price</th>
+				<th>Qty</th>
+				<th>Created</th>
+				<th>Follow-up Link</th>
+			</tr>
+		</thead>
+        <tbody>
+            @foreach (var item in ViewBag.Items)
+            {
+                <tr class="status-@item.Status">
+                    <td><input type="checkbox"></td>
+                    <td>@item.Status</td>
+                    <td><img class="thumb40" src="@item.MainImageURL"></td>
+                    <td><a href="../item/edit" target="_blank">@item.Title</a></td>
+                    <td>
+                        <a href="https://www.ebay.com/itm/Genuine-Sony-Camcorder-Camera-Remote-Control-RMT-811-Tested-And-Works/184131178352?hash=item2adf12cf70:g:T~MAAOSwQLZeIPp8:sc:USPSFirstClass!02465!US!-1&autorefresh=true"
+                            target="_blank">
+                            <img src="../../wwwroot/images/ebay-thumb.png">
+                        </a>
+                        <a href="https://www.etsy.com/listing/489851311/universal-portable-remote-control?ga_order=most_relevant&ga_search_type=all&ga_view_type=gallery&ga_search_query=remote+control&ref=sr_gallery-1-10&organic_search_click=1"
+                            target="_blank">
+                            <img src="../../wwwroot/images/etsy-thumb.png">
+                        </a>
+                        @{
+                            var href = "https://poshmark.com" + item.ProductPageLink;
+                        }
+                        <a href="@href"
+                            target="_blank">
+                            <img src="../../wwwroot/images/poshmark-thumb.png">
+                        </a>
+                    </td>
+                    <td>RSW003</td>
+                    <td>$@item.Price</td>
+                    <td>1</td>
+                    <td>2020-04-02</td>
+                    <td><a href="@href" target="_blank">Poshmark Sale</a></td>
+                </tr>
+                /* <tr class="status-unlisted">
+                    <td scope="col"><input type="checkbox"></td>
+                    <td>Unlisted</td>
+                    <td><img class="thumb40" src="@item.MainImageURL"></td>
+                    <td><a href="#" target="_blank">@item.Title</a></td>
+                    <td>
+                    </td>
+                    <td>RSW002</td>
+                    <td>$@item.Price</td>
+                    <td>1</td>
+                    <td>2020-02-04</td>
+                    <td><a href="#" target="_blank">Edit Record</a></td>
+                </tr>
+                <tr class="status-problem">
+                    <td scope="col"><input type="checkbox"></td>
+                    <td>Problem</td>
+                    <td><img class="thumb40" src="@item.MainImageURL"></td>
+                    <td><a href="#" target="_blank">@item.Title</a></td>
+                    <td>
+                        <a href="https://www.amazon.com/Calvas-Control-24V4210U-23HLV87B-COMBINATION/dp/B07RC94LS9/ref=sr_1_3?dchild=1&keywords=Toshiba+Remote+Control+CT-8027&qid=1595414259&sr=8-3"
+                            target="_blank">
+                            <img src="../../wwwroot/images/amazon-thumb.png">
+                        </a>
+                        <a href="https://www.ebay.com/itm/TOSHIBA-Genuine-OEM-CT-8027-Remote-Control-TESTED/193498913565?hash=item2d0d6f1b1d:g:B0UAAOSw-gBe2ZqN"
+                            target="_blank">
+                            <img src="../../wwwroot/images/ebay-thumb.png">
+                        </a>
+                        @{
+                            href = "https://poshmark.com/listing/" + item.ProductPageLink;
+                        }
+                        <a href="@href"
+                            target="_blank">
+                            <img src="../../wwwroot/images/poshmark-thumb.png">
+                        </a>
+                    </td>
+                    <td>RSW002</td>
+                    <td>$@item.Price</td>
+                    <td>1</td>
+                    <td>2020-02-04</td>
+                    <td><a href="#" target="_blank">Fix Record</a></td>
+                </tr> */
+            }
+        </tbody>
+	</table>
+
+</div>

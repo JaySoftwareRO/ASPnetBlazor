@@ -12,7 +12,7 @@ namespace lib.poshmark_client
 
         public double Price { get; set; }
 
-        public bool NotForSale { get; set; }
+        public string Status { get; set; }
 
         public string Size { get; set; }
 
@@ -25,6 +25,8 @@ namespace lib.poshmark_client
         public List<string> Categories { get; set; }
 
         public List<string> Color { get; set; }
+
+        public string MainImageURL { get; set; }
     }
     public class PoshmarkClient
     {
@@ -35,7 +37,7 @@ namespace lib.poshmark_client
             var tempTitle = "";
             try
             {
-                tempTitle = node.SelectSingleNode("./div[@class='tile  ']/a").GetAttributeValue("title", "");
+                tempTitle = node.SelectSingleNode("./div/div[@class='item__details']/div/a").InnerText.Trim();
             } 
             catch (NullReferenceException e)
             {
@@ -49,7 +51,7 @@ namespace lib.poshmark_client
             var tempPrice = 0.0;
             try
             {
-                tempPrice = Convert.ToDouble(node.SelectSingleNode("./div[@class='tile  ']").GetAttributeValue("data-post-price", "").Trim('$'));
+                tempPrice = Convert.ToDouble(node.SelectSingleNode(".//span[@class='p--t--1 fw--bold']").InnerText.Trim().Trim('$'));
             }
             catch (NullReferenceException e)
             {
@@ -57,40 +59,18 @@ namespace lib.poshmark_client
             }
             return tempPrice;
         }
-        // NotForSale boolean of a product
-        public bool GetNotForSale(HtmlAgilityPack.HtmlNode node)
-        {
-            var tempBool = false;
-            try
-            {   
-                if (node.SelectSingleNode(".//i[@class='icon inventory-tag not-for-sale-tag']").InnerText == "Not for Sale")
-                {
-                    tempBool = true;
-                } 
-                else
-                {
-                    tempBool = false;
-                }
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to NotForSale: " + e);
-            }
-            return tempBool;
-        }
+        
         // Size of of a product
         public string GetSize(HtmlAgilityPack.HtmlNode node)
         {
             var tempSize = "";
             try
             {
-                tempSize = node.SelectSingleNode("./div[@class='tile  ']/div[@class='item-details']/ul[@class='pipe']/li[@class='size']/div").GetAttributeValue("title", "");
+                tempSize = node.SelectSingleNode("./div/div[@class='item__details']/div[2]/div[2]/a[1]").InnerText.Trim();
             }
             catch (NullReferenceException e)
             {
                 Console.WriteLine("Error referring to Size: " + e);
-                
-                tempSize = node.SelectSingleNode("./div[@class='tile  ']/div[@class='item-details']/ul[@class='pipe']/li/a").GetAttributeValue("title", "");
                 
             }
             return tempSize;
@@ -101,7 +81,7 @@ namespace lib.poshmark_client
             var tempBrand = "";
             try
             {
-                tempBrand = node.SelectSingleNode("./div[@class='tile  ']/div[@class='item-details']/ul[@class='pipe']/li[@class='brand']/a").GetAttributeValue("title", "");
+                tempBrand = node.SelectSingleNode("./div/div[@class='item__details']/div[2]/div[2]/a[2]").InnerText.Trim();
             }
             catch (NullReferenceException e)
             {
@@ -154,7 +134,7 @@ namespace lib.poshmark_client
             var tempLink = "";
             try
             {
-                tempLink = node.SelectSingleNode("./div[@data-post-price='$" + Item.Price + "']/a[@title='" + Item.Title + "']").GetAttributeValue("href", "");
+                tempLink = node.SelectSingleNode("./div/a").GetAttributeValue("href", "");
             }
             catch (NullReferenceException e)
             {
@@ -195,16 +175,72 @@ namespace lib.poshmark_client
             return nodesProduct;
         }
 
+        public string GetMainImageURL(HtmlAgilityPack.HtmlNode node)
+        {
+            var tempURL = "";
+            try
+            {
+                tempURL = node.SelectSingleNode(".//div[@class='img__container img__container--square']/img").GetAttributeValue("src", "");
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("Error referring to GetMainImageURL: " + e);
+            }
+            return tempURL;
+        }
+
+        // Status of a product. TODO: "problem" status
+        public string GetStatus(HtmlAgilityPack.HtmlNode node)
+        {
+            var tempStatus = "";
+            try
+            {
+                if (node.SelectSingleNode(".//span[@class='inventory-tag__text']").InnerText.Trim() == "Not for Sale")
+                {
+                    tempStatus = "unlisted";
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("Error referring to Status: " + e);
+            }
+
+            try
+            {
+                if (node.SelectSingleNode(".//span[@class='inventory-tag__text']").InnerText.Trim() == "Sold Out")
+                {
+                    tempStatus = "sold";
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("Error referring to Status: " + e);
+            }
+
+            try
+            {
+                if (node.SelectSingleNode(".//span[@class='inventory-tag__text']").InnerText.Trim() == "Sold")
+                {
+                    tempStatus = "sold";
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("Error referring to Status: " + e);
+            }
+
+            return tempStatus;
+        }
+
         public List<PoshmarkItem> List() 
         {
             List<PoshmarkItem> items = new List<PoshmarkItem>();
 
             // Web page with all the listings of an user
-            var htmlCloset = @"https://poshmark.com/closet/napelvs";
+            var htmlCloset = @"https://poshmark.com/closet/flippinoptimist?availability=sold_out";
             HtmlWeb webCloset = new HtmlWeb();
             var htmlDocCloset = webCloset.Load(htmlCloset);
-            var nodesCloset = htmlDocCloset.DocumentNode.SelectNodes("//div[@id='tiles-con']/div[@class='col-x12 col-l6 col-s8']");
-;
+            var nodesCloset = htmlDocCloset.DocumentNode.SelectNodes("//section[@class='main__column col-l19 col-x16']/div[@class='m--t--1']/div");
 
             foreach (var nodeCloset in nodesCloset)
             {
@@ -212,10 +248,11 @@ namespace lib.poshmark_client
 
                 Item.Title = GetTitle(nodeCloset);
                 Item.Price = GetPrice(nodeCloset);
-                Item.NotForSale = GetNotForSale(nodeCloset);
+                Item.Status = GetStatus(nodeCloset);
                 Item.Size = GetSize(nodeCloset);
                 Item.Brand = GetBrand(nodeCloset);
                 Item.ProductPageLink = GetProductPageLink(nodeCloset); // Get link for the product page 
+                Item.MainImageURL = GetMainImageURL(nodeCloset);
 
                 HtmlNodeCollection nodesProduct = GetProductPage(); 
 
