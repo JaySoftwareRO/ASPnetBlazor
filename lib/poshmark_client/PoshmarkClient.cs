@@ -22,17 +22,20 @@ namespace lib.poshmark_client
 
         public string Description { get; set; }
 
+        public List<string> ItemCategories { get; set; }
+
         public List<string> Categories { get; set; }
 
         public List<string> Color { get; set; }
 
         public string MainImageURL { get; set; }
-    }
+}
+
     public class PoshmarkClient
     {
-        public PoshmarkItem Item = new PoshmarkItem();
+        private PoshmarkItem Item = new PoshmarkItem();
         // Title of a product
-        public string GetTitle(HtmlAgilityPack.HtmlNode node)
+        private string GetTitle(HtmlAgilityPack.HtmlNode node)
         {
             var tempTitle = "";
             try
@@ -46,7 +49,7 @@ namespace lib.poshmark_client
             return tempTitle;
         }
         // Price of a product
-        public double GetPrice(HtmlAgilityPack.HtmlNode node)
+        private double GetPrice(HtmlAgilityPack.HtmlNode node)
         {
             var tempPrice = 0.0;
             try
@@ -61,7 +64,7 @@ namespace lib.poshmark_client
         }
         
         // Size of of a product
-        public string GetSize(HtmlAgilityPack.HtmlNode node)
+        private string GetSize(HtmlAgilityPack.HtmlNode node)
         {
             var tempSize = "";
             try
@@ -76,7 +79,7 @@ namespace lib.poshmark_client
             return tempSize;
         }
         // Brand of a product
-        public string GetBrand(HtmlAgilityPack.HtmlNode node)
+        private string GetBrand(HtmlAgilityPack.HtmlNode node)
         {
             var tempBrand = "";
             try
@@ -91,7 +94,7 @@ namespace lib.poshmark_client
         }
 
         // Categories of a product
-        public List<String> GetCategories(HtmlAgilityPack.HtmlNodeCollection nodes)
+        private List<String> GetItemCategories(HtmlAgilityPack.HtmlNodeCollection nodes)
         {
             List<string> categories = new List<string>();
             try
@@ -113,7 +116,29 @@ namespace lib.poshmark_client
             return categories;
         }
 
-        public string GetDescription(HtmlAgilityPack.HtmlNodeCollection nodes)
+        private List<String> GetCategories(HtmlAgilityPack.HtmlNodeCollection nodes)
+        {
+            List<string> categories = new List<string>();
+            try
+            {
+                foreach (var node in nodes)
+                {
+                    var nodes2 = node.SelectNodes("./div[@class='d--fl fw--w']/div[1]/a");
+
+                    foreach (var node2 in nodes2)
+                    {
+                        categories.Add(node2.SelectSingleNode(".").InnerText.Trim());
+                    }
+                }
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine("Error referring to Categories: " + e);
+            }
+            return categories;
+        }
+
+        private string GetDescription(HtmlAgilityPack.HtmlNodeCollection nodes)
         {
             var tempDescription = "";
             try
@@ -129,7 +154,7 @@ namespace lib.poshmark_client
             return tempDescription;
         }
 
-        public string GetProductPageLink(HtmlAgilityPack.HtmlNode node)
+        private string GetProductPageLink(HtmlAgilityPack.HtmlNode node)
         {
             var tempLink = "";
             try
@@ -143,7 +168,7 @@ namespace lib.poshmark_client
             return tempLink;
         }
 
-        public List<string> GetColor(HtmlAgilityPack.HtmlNodeCollection nodes)
+        private List<string> GetColor(HtmlAgilityPack.HtmlNodeCollection nodes)
         {
             List<string> colors = new List<string>();
             try
@@ -164,7 +189,7 @@ namespace lib.poshmark_client
             return colors;
         }
 
-        public HtmlNodeCollection GetProductPage()
+        private HtmlNodeCollection GetProductPage()
         { 
             // Web page with product pages
             var htmlProduct = "https://poshmark.com" + Item.ProductPageLink;
@@ -175,7 +200,7 @@ namespace lib.poshmark_client
             return nodesProduct;
         }
 
-        public string GetMainImageURL(HtmlAgilityPack.HtmlNode node)
+        private string GetMainImageURL(HtmlAgilityPack.HtmlNode node)
         {
             var tempURL = "";
             try
@@ -190,7 +215,7 @@ namespace lib.poshmark_client
         }
 
         // Status of a product. TODO: "problem" status
-        public string GetStatus(HtmlAgilityPack.HtmlNode node)
+        private string GetStatus(HtmlAgilityPack.HtmlNode node)
         {
             var tempStatus = "";
             try
@@ -235,7 +260,7 @@ namespace lib.poshmark_client
         public List<PoshmarkItem> List() 
         {
             List<PoshmarkItem> items = new List<PoshmarkItem>();
-
+            
             // Web page with all the listings of an user
             var htmlCloset = @"https://poshmark.com/closet/flippinoptimist?availability=sold_out";
             HtmlWeb webCloset = new HtmlWeb();
@@ -244,6 +269,7 @@ namespace lib.poshmark_client
 
             foreach (var nodeCloset in nodesCloset)
             {
+                
                 Item = new PoshmarkItem(); // Create new PoshmarkItem object to be populated
 
                 Item.Title = GetTitle(nodeCloset);
@@ -257,7 +283,7 @@ namespace lib.poshmark_client
                 HtmlNodeCollection nodesProduct = GetProductPage(); 
 
                 Item.Description = GetDescription(nodesProduct);
-                Item.Categories = GetCategories(nodesProduct); // Categories requires all the nodes as it has a foreach loop inside
+                Item.ItemCategories = GetItemCategories(nodesProduct); // Categories requires all the nodes as it has a foreach loop inside
                 Item.Color = GetColor(nodesProduct); 
 
                 items.Add(Item);
