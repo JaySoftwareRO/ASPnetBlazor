@@ -29,17 +29,7 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public IActionResult FieldMapping()
-        {
-            return View();
-        }
-
         public IActionResult FrameTest()
-        {
-            return View();
-        }
-
-        public IActionResult ImportData()
         {
             return View();
         }
