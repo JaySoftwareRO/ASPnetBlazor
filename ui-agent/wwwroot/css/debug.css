@@ -48,3 +48,16 @@ td a {
 .required { 
     color: red;
 }
+
+.caption-description {
+    color: darkgrey;
+    font-size: .8rem;
+}
+
+.button {
+    padding: .5rem;
+}
+
+.zero-margin {
+    margin: 0;
+}
