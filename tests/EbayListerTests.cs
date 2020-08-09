@@ -26,7 +26,7 @@ namespace tests
             var cache = new BifrostCache(@"https://bifrost.app.asgardtech.io/", logger);
 
             var tokenGetter = new EbayHardcodedTokenGetter();
-            tokenGetter.Set(token);
+            //tokenGetter.Set(token);
             var items = new lib.listers.EbayLister(cache, logger, 10000, "tests", tokenGetter).List().Result;
 
             Assert.True(items.Count > 0);

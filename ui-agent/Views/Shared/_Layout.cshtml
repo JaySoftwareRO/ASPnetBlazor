@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@inject lib.ITokenGetters tokenGetters
+
+@{ 
+    var ebayTokenGetter = tokenGetters.EBayTokenGetter();
+}
+
+
+<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
@@ -39,12 +46,23 @@
         <div class="cell shrink footer">
             <div class="grid-x">
                 <div class="cell">
-                    <span class="label success data-tooltip" title="Logged in as Odin.">
-                        <i class="fas fa-lock-open"></i> Odin
-                    </span>
+
+                    @if (string.IsNullOrWhiteSpace(ebayTokenGetter.Get()))
+                    {
+                        <span class="label alert data-tooltip" title="Ebay not logged in.">
+                            <i class="fas fa-exclamation-triangle"></i> <a href="https://auth.ebay.com/oauth2/authorize?client_id=VladIova-Treecat-PRD-4bcdaddba-89642d26&response_type=code&redirect_uri=Vlad_Iovanov-VladIova-Treeca-vehtia&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly">Ebay not logged in.</a>
+                        </span>
+                    } else
+                    {
+                        <span class="label success data-tooltip" title="Ebay logged in.">
+                            <i class="fas fa-info"></i> Ebay logged in.
+                        </span>
+                    }
+
                     <span class="label alert float-right">
                         <i class="fas fa-exclamation-triangle"></i> Failed to sync items.
                     </span>
+
                     <span class="label warning data-tooltip float-right" title="12 items left to sync.">
                         <i class="fas fa-info"></i> 12
                     </span>

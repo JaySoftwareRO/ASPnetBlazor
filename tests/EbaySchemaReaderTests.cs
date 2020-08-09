@@ -25,7 +25,7 @@ namespace tests
             var cache = new BifrostCache(@"https://127.0.0.1:5001", logger);
 
             var tokenGetter = new EbayHardcodedTokenGetter();
-            tokenGetter.Set(token);
+            //tokenGetter.Set(token);
             var categories = new lib.schema_readers.EbaySchemaReader(cache, logger, 10000, tokenGetter).CategoryTree().Result;
 
             Assert.True(categories.SubCategories.Count > 0);

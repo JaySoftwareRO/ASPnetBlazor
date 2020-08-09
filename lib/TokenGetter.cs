@@ -1,4 +1,5 @@
-﻿using System;
+﻿using lib.token_getters;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,6 +21,8 @@ namespace lib
 
     public class HardcodedTokenGetters : ITokenGetters
     {
+        private readonly EbayHardcodedTokenGetter ebayTokenGetter = new EbayHardcodedTokenGetter();
+
         public ITokenGetter AmazonTokenGetter()
         {
             throw new NotImplementedException();
@@ -27,9 +30,7 @@ namespace lib
 
         public ITokenGetter EBayTokenGetter()
         {
-            var tokenGetter=  new token_getters.EbayHardcodedTokenGetter();
-            tokenGetter.Set("");
-            return tokenGetter;
+            return this.ebayTokenGetter;
         }
 
         public ITokenGetter MercariTokenGetter()

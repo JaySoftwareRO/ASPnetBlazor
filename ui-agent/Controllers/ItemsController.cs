@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using lib;
 using lib.cache;
+using lib.cache.disk;
 using lib.cache.postgresql;
 using lib.token_getters;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ui_agent.Models;
+using YamlDotNet.Core.Tokens;
 
 namespace ui_agent.Controllers
 {
@@ -20,11 +22,13 @@ namespace ui_agent.Controllers
     {
         private readonly ILogger<DataController> logger;
         private readonly IConfiguration configuration;
+        private readonly ITokenGetters tokenGetters;
 
-        public ItemsController(ILogger<DataController> logger, IConfiguration configuration)
+        public ItemsController(ILogger<DataController> logger, IConfiguration configuration, ITokenGetters tokenGetters)
         {
             this.logger = logger;
             this.configuration = configuration;
+            this.tokenGetters = tokenGetters;
         }
 
         public IActionResult EbayListings()
@@ -48,9 +52,9 @@ namespace ui_agent.Controllers
             //    Encoding.UTF8.GetBytes(DateTime.UtcNow.ToLongDateString()),
             //    new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddDays(700)));
 
-            //var tokenGetter = new EbayHardcodedTokenGetter();
-            //tokenGetter.Set(token);
-            this.ViewBag.Items = new List<Item>();//  lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
+            var cache = new DiskCache(".", this.logger);
+            var tokenGetter = this.tokenGetters.EBayTokenGetter();
+            this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
 
             return View();
         }
