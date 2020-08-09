@@ -1,20 +1,23 @@
 ﻿
-.debug {
-    border: 1px solid magenta;
-    background-color: greenyellow;
-}
-
 .thumb40 {
-	max-height: 40px;
+    max-height: 40px;
 }
 
 .thumb100 {
     max-height: 100px;
 }
 
+
+/*
+ - Dark UI settings
+.debug {
+    border: 1px solid magenta;
+    background-color: greenyellow;
+}
+
 .callout {
-    background-color: black;
-    color: white;
+    background-color: #f4f1d6;
+    color: black;
 }
 
 td a {
@@ -26,27 +29,27 @@ td a {
 }
 
 .status-sold {
-    background-color: chartreuse; 
+    background-color: #77dd77;  Green 
     color: black;
 }
 
 .status-problem {
-    background-color: red; 
+    background-color: #ff6961;  Red 
     color: white;
 }
 
 .status-unlisted {
-    background-color: yellow; 
+    background-color: #FDFD96;  Yellow 
     color: black;
 }
 
-.selected { 
+.selected {
     background-color: white;
     color: black;
 }
 
-.required { 
-    color: red;
+.required {
+    color: #ff6961;  Red 
 }
 
 .caption-description {
@@ -61,3 +64,4 @@ td a {
 .zero-margin {
     margin: 0;
 }
+    */

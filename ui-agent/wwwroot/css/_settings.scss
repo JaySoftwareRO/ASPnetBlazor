@@ -71,17 +71,17 @@ $global-font-size: 100%;
 $global-width: rem-calc(1200);
 $global-lineheight: 1.5;
 $foundation-palette: (
-    primary: #f8f8f2,
-    secondary: #75715e,
-    success: #a6e22e,
-    warning: #e2e22e,
-    alert: #f92672,
+    primary: #1779ba,
+    secondary: #767676,
+    success: #3adb76,
+    warning: #ffae00,
+    alert: #cc4b37,
 );
-$light-gray: #1e1f1c;
-$medium-gray: #414339;
-$dark-gray: #414339;
-$black: #f8f8f2;
-$white: #272822;
+$light-gray: #e6e6e6;
+$medium-gray: #cacaca;
+$dark-gray: #8a8a8a;
+$black: #0a0a0a;
+$white: #fefefe;
 $body-background: $white;
 $body-font-color: $black;
 $body-font-family: 'Open Sans', open-sans, EmojiFontFace, helvetica, arial, sans-serif;
