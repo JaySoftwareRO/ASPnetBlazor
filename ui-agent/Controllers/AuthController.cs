@@ -29,9 +29,9 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public IActionResult Accepted(string code)
+        public IActionResult Accept(string code)
         {
-            var tokens = EbayHardcodedTokenGetter.TokenFromCode(code);
+            var tokens = EbayHardcodedTokenGetter.TokenFromCode(code, this.logger);
             ((EbayHardcodedTokenGetter)tokenGetters.EBayTokenGetter()).Set(tokens);
 
             return RedirectToAction("ebayListings", "items");

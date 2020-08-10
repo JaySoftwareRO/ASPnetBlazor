@@ -1,0 +1,5 @@
+﻿openssl req -config localhost.conf -newkey rsa:4096 -nodes -sha256 -x509 -days 3650 -keyout private.key -out  localhost.crt
+
+openssl rsa -in private.key -pubout -out public.key
+
+openssl pkcs12 -export -out localhost.pfx -inkey private.key -in localhost.crt

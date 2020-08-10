@@ -44,7 +44,7 @@ namespace ui_agent
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -74,8 +74,12 @@ namespace ui_agent
         {
             var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
             {
-
+                
             });
+
+           // Electron.App.CommandLine.AppendSwitch("ignore-certificate-errors");
+
+           // Electron.HostHook.Call
 
             await browserWindow.WebContents.Session.ClearCacheAsync();
 
@@ -193,7 +197,7 @@ namespace ui_agent
                 var mainWindow = Electron.WindowManager.BrowserWindows.FirstOrDefault();
                 Electron.Menu.SetContextMenu(mainWindow, menu);
             };
-
+            
             Electron.IpcMain.On("show-context-menu", (args) =>
             {
                 var mainWindow = Electron.WindowManager.BrowserWindows.FirstOrDefault();

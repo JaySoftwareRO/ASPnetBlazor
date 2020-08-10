@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ElectronNET.API;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,15 @@ namespace ui_agent
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
+                        .UseKestrel(options =>
+                        {
+                            options.Listen(IPAddress.Loopback, 19872, opts =>
+                            {
+                                opts.UseHttps("ssl/localhost.pfx");
+                            });
+
+                            options.Listen(IPAddress.Loopback, 19871);
+                        })
                         .UseStartup<Startup>()
                         .UseElectron(args);
                 });
