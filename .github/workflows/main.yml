@@ -34,6 +34,7 @@ jobs:
     - name: Build client app packages
       run: |
         cd ui-agent
+        dotnet build
         electronize build /target windows
         mv "bin\Desktop\ui-agent Setup 1.0.0.exe" "bin\Desktop\ui-agent-${{ github.run_number }}.exe"
         # electronize build /target linux
