@@ -1,5 +1,6 @@
 {
   "name": "electron-host-hook",
+  "version": "1.0.0",
   "description": "Connector for Electron.NET projects.",
   "repository": {
     "url": "https://github.com/ElectronNET/Electron.NET"
