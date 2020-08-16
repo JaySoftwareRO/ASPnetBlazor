@@ -1,15 +1,15 @@
 {
   "aspCoreBackendPort": 19871,
-  "executable": "ui-agent",
+  "executable": "treecat",
   "splashscreen": {
     "imageFile": ""
   },
   "singleInstance": true,
   "build": {
-    "appId": "com.ui-agent.app",
-    "productName": "ui-agent",
-    "copyright": "Copyright © 2019",
-    "buildVersion": "1.0.0",
+    "appId": "com.treecat.app",
+    "productName": "treecat",
+    "copyright": "Copyright TTINAGI LLC © 2020",
+    "buildVersion": "1.0.2",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"

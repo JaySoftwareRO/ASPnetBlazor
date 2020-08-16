@@ -8,7 +8,7 @@ on:
 
 jobs:
   clients:
-    runs-on: windows-2019
+    runs-on: ubuntu-16.04
 
     steps:
     - name: Add msbuild to PATH
@@ -24,6 +24,15 @@ jobs:
       with:
         node-version: 12.x
 
+    - name: Install Dependencies
+      run: |
+        sudo dpkg --add-architecture i386
+        wget -qO - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
+        sudo add-apt-repository ppa:cybermax-dexter/sdl2-backport
+        sudo apt-add-repository "deb https://dl.winehq.org/wine-builds/ubuntu $(lsb_release -cs) main"
+        sudo apt install --install-recommends winehq-stable
+
+
     - name: Restore packages and build
       run: |
         dotnet restore
@@ -34,11 +43,13 @@ jobs:
         dotnet tool install ElectronNET.CLI -g
 
     - name: Build client app packages
+      env:
+        BUILD_NUMBER: ${{ github.run_number }}
       run: |
         cd ui-agent
         dotnet build
         electronize build /target windows
-        mv "bin\Desktop\ui-agent Setup 1.0.0.exe" "bin\Desktop\ui-agent-${{ github.run_number }}.exe"
+        mv "bin/Desktop/ui-agent Setup 1.0.0.exe" "bin/Desktop/ui-agent-${{ github.run_number }}.exe"
         # electronize build /target linux
         # electronize build /target osx
     - name: Create Release
@@ -58,7 +69,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: 'ui-agent\bin\Desktop\ui-agent-${{ github.run_number }}.exe'
+        asset_path: 'ui-agent/bin/Desktop/ui-agent-${{ github.run_number }}.exe'
         asset_name: ui-agent-${{ github.run_number }}.exe
         asset_content_type: application/octet-stream
   server:
