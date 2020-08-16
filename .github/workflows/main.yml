@@ -58,7 +58,7 @@ jobs:
         cd ui-agent
         dotnet build
         electronize build /target win /PublishReadyToRun false
-        mv "bin/Desktop/ui-agent Setup 1.0.0.exe" "bin/Desktop/ui-agent-${{ github.run_number }}.exe"
+        mv "bin/Desktop/treecat Setup 1.0.0.exe" "bin/Desktop/treecat-${{ github.run_number }}.exe"
         # electronize build /target linux
         # electronize build /target osx
     - name: Create Release
@@ -78,8 +78,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: 'ui-agent/bin/Desktop/ui-agent-${{ github.run_number }}.exe'
-        asset_name: ui-agent-${{ github.run_number }}.exe
+        asset_path: 'ui-agent/bin/Desktop/treecat-${{ github.run_number }}.exe'
+        asset_name: treecat-${{ github.run_number }}.exe
         asset_content_type: application/octet-stream
   server:
     runs-on: ubuntu-16.04
