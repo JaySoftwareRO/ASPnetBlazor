@@ -57,7 +57,7 @@ jobs:
       run: |
         cd ui-agent
         dotnet build
-        electronize build /target windows
+        electronize build /target win
         mv "bin/Desktop/ui-agent Setup 1.0.0.exe" "bin/Desktop/ui-agent-${{ github.run_number }}.exe"
         # electronize build /target linux
         # electronize build /target osx

@@ -9,7 +9,7 @@
     "appId": "com.treecat.app",
     "productName": "treecat",
     "copyright": "Copyright TTINAGI LLC © 2020",
-    "buildVersion": "1.0.2",
+    "buildVersion": "1.0.0",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"
