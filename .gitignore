@@ -1,4 +1,3 @@
-
 notes.txt
 data/
 
@@ -483,3 +482,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /ui-agent/Views/Items/PoshmarkListings.cshtml
+
+!/ui-agent/ssl/localhost.pfx
