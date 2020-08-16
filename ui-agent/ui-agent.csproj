@@ -6,6 +6,9 @@
     <UpgradeBackupLocation>C:\Users\DanyN\Desktop\TreeCat\bifrost\Backup\ui-agent\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
+  <Target Name="CompileStaticAssets" AfterTargets="AfterBuild">
+    <Exec Command="webcompiler -r wwwroot/css" StandardOutputImportance="high" />
+  </Target>
   <ItemGroup>
     <Compile Remove="html-design\**" />
     <Compile Remove="Views\Design\**" />
@@ -21,7 +24,6 @@
     <None Remove="wwwroot\images\raw\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
     <PackageReference Include="ElectronNET.API" Version="9.31.2" />
     <PackageReference Include="Microsoft.Build.Framework" Version="16.6.0" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.6.0" />
