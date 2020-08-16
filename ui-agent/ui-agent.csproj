@@ -5,6 +5,7 @@
     <FileUpgradeFlags>40</FileUpgradeFlags>
     <UpgradeBackupLocation>C:\Users\DanyN\Desktop\TreeCat\bifrost\Backup\ui-agent\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <AssemblyName>treecat</AssemblyName>
   </PropertyGroup>
   <Target Name="CompileStaticAssets" AfterTargets="AfterBuild">
     <Exec Command="webcompiler -r wwwroot/css" StandardOutputImportance="high" />

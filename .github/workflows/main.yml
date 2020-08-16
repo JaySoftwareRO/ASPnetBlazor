@@ -39,14 +39,15 @@ jobs:
         sudo unzip /tmp/wine-home.zip -d /root/.wine
         sudo unlink /tmp/wine-home.zip
 
+    - name: Install web compiler electronize tools
+      run: |
+        dotnet tool install Excubo.WebCompiler --global --version 2.3.2
+        dotnet tool install ElectronNET.CLI -g
+
     - name: Restore packages and build
       run: |
         dotnet restore
         dotnet build
-
-    - name: Install electronize tool
-      run: |
-        dotnet tool install ElectronNET.CLI -g
 
     - name: Build client app packages
       env:
