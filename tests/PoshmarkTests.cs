@@ -11,9 +11,6 @@ namespace tests
         [Fact]
         public void List()
         {
-            var PoshmarkCategories = new PoshmarkCategories();
-            var foo = PoshmarkCategories.GetCategories();
-
             var PoshmarkClient = new PoshmarkClient();
             var foo2 = PoshmarkClient.List();
         }

@@ -8,9 +8,13 @@ namespace lib.poshmark_client
 {
     public class PoshmarkItem
     {
+        public string ProductID { get; set; }
+
         public string Title { get; set; }
 
-        public double Price { get; set; }
+        public int Price { get; set; }
+
+        public int OriginalPrice { get; set; }
 
         public string Status { get; set; }
 
@@ -18,273 +22,179 @@ namespace lib.poshmark_client
 
         public string Brand { get; set; }
 
-        public string ProductPageLink { get; set; }
-
         public string Description { get; set; }
 
-        public List<string> ItemCategories { get; set; }
+        public List<dynamic> Categories { get; set; }
 
-        public List<string> Categories { get; set; }
+        public List<dynamic> Colors { get; set; }
 
-        public List<string> Color { get; set; }
+        public List<dynamic> Images { get; set; }
 
-        public string MainImageURL { get; set; }
-}
+        public string Date { get; set; }
+
+        public List<dynamic> Quantity { get; set; } // Quantity [0] = available, [1] = reserved, [2] sold
+
+        public string URL { get; set; }
+
+        public string Shares { get; set; }
+
+        public string Comments { get; set; }
+
+        public string Likes { get; set; }
+
+        public string HasOffer { get; set; }
+    }
 
     public class PoshmarkClient
     {
         private PoshmarkItem Item = new PoshmarkItem();
-        // Title of a product
-        private string GetTitle(HtmlAgilityPack.HtmlNode node)
-        {
-            var tempTitle = "";
-            try
-            {
-                tempTitle = node.SelectSingleNode("./div/div[@class='item__details']/div/a").InnerText.Trim();
-            } 
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to Title: " + e);
-            }
-            return tempTitle;
-        }
-        // Price of a product
-        private double GetPrice(HtmlAgilityPack.HtmlNode node)
-        {
-            var tempPrice = 0.0;
-            try
-            {
-                tempPrice = Convert.ToDouble(node.SelectSingleNode(".//span[@class='p--t--1 fw--bold']").InnerText.Trim().Trim('$'));
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to Price: " + e);
-            }
-            return tempPrice;
-        }
-        
-        // Size of of a product
-        private string GetSize(HtmlAgilityPack.HtmlNode node)
-        {
-            var tempSize = "";
-            try
-            {
-                tempSize = node.SelectSingleNode("./div/div[@class='item__details']/div[2]/div[2]/a[1]").InnerText.Trim();
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to Size: " + e);
-                
-            }
-            return tempSize;
-        }
-        // Brand of a product
-        private string GetBrand(HtmlAgilityPack.HtmlNode node)
-        {
-            var tempBrand = "";
-            try
-            {
-                tempBrand = node.SelectSingleNode("./div/div[@class='item__details']/div[2]/div[2]/a[2]").InnerText.Trim();
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to Brand: " + e);
-            }
-            return tempBrand;
-        }
 
-        // Categories of a product
-        private List<String> GetItemCategories(HtmlAgilityPack.HtmlNodeCollection nodes)
+        public List<dynamic> GetCategories(dynamic result) 
         {
-            List<string> categories = new List<string>();
-            try
-            {                
-                foreach (var node in nodes)
-                {
-                    var nodes2 = node.SelectNodes("./div[@class='d--fl fw--w']/div[1]/a");
+            List<dynamic> categories = new List<dynamic>();
 
-                    foreach (var node2 in nodes2)
-                    {
-                        categories.Add(node2.SelectSingleNode(".").InnerText.Trim());
-                    }
-                }
-            }
-            catch (ArgumentNullException e)
+            categories.Add(result.department.display);
+
+            foreach(var category in result.category_features)
             {
-                Console.WriteLine("Error referring to Categories: " + e);
+                categories.Add(category.display);
             }
+
+            categories.Add(result.category_v2.display);
+
             return categories;
         }
 
-        private List<String> GetCategories(HtmlAgilityPack.HtmlNodeCollection nodes)
+        public List<dynamic> GetColors(dynamic result)
         {
-            List<string> categories = new List<string>();
-            try
-            {
-                foreach (var node in nodes)
-                {
-                    var nodes2 = node.SelectNodes("./div[@class='d--fl fw--w']/div[1]/a");
+            List<dynamic> colors = new List<dynamic>();
 
-                    foreach (var node2 in nodes2)
-                    {
-                        categories.Add(node2.SelectSingleNode(".").InnerText.Trim());
-                    }
-                }
-            }
-            catch (ArgumentNullException e)
+            foreach (var color in result.colors)
             {
-                Console.WriteLine("Error referring to Categories: " + e);
+                colors.Add(color.name);
             }
-            return categories;
-        }
 
-        private string GetDescription(HtmlAgilityPack.HtmlNodeCollection nodes)
-        {
-            var tempDescription = "";
-            try
-            {
-                foreach (var node in nodes)
-                {
-                    tempDescription = node.SelectSingleNode("./div[@class='listing__description fw--light']").InnerText.Trim();
-                }
-            } catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to Description: " + e);
-            }
-            return tempDescription;
-        }
-
-        private string GetProductPageLink(HtmlAgilityPack.HtmlNode node)
-        {
-            var tempLink = "";
-            try
-            {
-                tempLink = node.SelectSingleNode("./div/a").GetAttributeValue("href", "");
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to GetProductPageLink: " + e);
-            }
-            return tempLink;
-        }
-
-        private List<string> GetColor(HtmlAgilityPack.HtmlNodeCollection nodes)
-        {
-            List<string> colors = new List<string>();
-            try
-            {
-                foreach (var node in nodes)
-                {
-                    var nodes2 = node.SelectNodes("./div[@class='d--fl fw--w']/div[2]/a");
-                    foreach (var node2 in nodes2)
-                    {
-                        colors.Add(node2.SelectSingleNode(".").GetAttributeValue("data-et-prop-listing_color", ""));
-                    }
-                }
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to Description: " + e);
-            }
             return colors;
         }
 
-        private HtmlNodeCollection GetProductPage()
-        { 
-            // Web page with product pages
-            var htmlProduct = "https://poshmark.com" + Item.ProductPageLink;
-            HtmlWeb webProduct = new HtmlWeb();
-            var htmlDocProduct = webProduct.Load(htmlProduct);
-            var nodesProduct = htmlDocProduct.DocumentNode.SelectNodes("//div[@class='listing__layout-grid listing__layout-item listing__info col-x24 col-m12']");
+        public List<dynamic> GetImages(dynamic result)
+        {
+            List<dynamic> images = new List<dynamic>();
 
-            return nodesProduct;
+            // Cover image
+            images.Add(result.cover_shot.url_small);
+            images.Add(result.cover_shot.url);
+            images.Add(result.cover_shot.url_large);
+
+            // Rest of the images
+            foreach (var image in result.pictures)
+            {
+                images.Add(image.url_small);
+                images.Add(image.url);
+                images.Add(image.url_large);
+            }
+
+            return images;
         }
 
-        private string GetMainImageURL(HtmlAgilityPack.HtmlNode node)
+        public List<dynamic> GetQuantity(dynamic result)
         {
-            var tempURL = "";
-            try
+            List<dynamic> quantities = new List<dynamic>();
+
+            // Quantity [0] = available, [1] = reserved, [2] sold
+            foreach (var quantity in result.inventory.size_quantities)
             {
-                tempURL = node.SelectSingleNode(".//div[@class='img__container img__container--square']/img").GetAttributeValue("src", "");
+                quantities.Add(quantity.quantity_available); 
+                quantities.Add(quantity.quantity_reserved);
+                quantities.Add(quantity.quantity_sold);
             }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to GetMainImageURL: " + e);
-            }
-            return tempURL;
+
+            return quantities;
         }
 
-        // Status of a product. TODO: "problem" status
-        private string GetStatus(HtmlAgilityPack.HtmlNode node)
+        public string GetStatus()
         {
-            var tempStatus = "";
-            try
+            string status = String.Empty;
+
+            if (Item.Quantity[2] > "0")
             {
-                if (node.SelectSingleNode(".//span[@class='inventory-tag__text']").InnerText.Trim() == "Not for Sale")
-                {
-                    tempStatus = "unlisted";
-                }
+                status = "Sold";
+            } 
+            else if(Item.Quantity[1] > "0")
+            {
+                status = "Reserved";
             }
-            catch (NullReferenceException e)
+            else if (Item.Quantity[0] > "0")
             {
-                Console.WriteLine("Error referring to Status: " + e);
+                status = "Published";
             }
 
-            try
+            return status;
+        }
+
+        public string GetCreatedDate(dynamic result)
+        {
+            string date = result.created_at;
+
+            return date.Substring(0, 10);
+        }
+
+        public string GetURL()
+        {
+            string URL = String.Empty;
+
+            string title = Item.Title.Replace("/", "");
+
+            URL = "https://poshmark.com/listing/" + title + " " + Item.ProductID;
+
+            return URL;
+        }
+
+        public string GetHasOffer(dynamic result)
+        {
+            string hasOffer = String.Empty;
+
+            if (result.has_offer == true)
             {
-                if (node.SelectSingleNode(".//span[@class='inventory-tag__text']").InnerText.Trim() == "Sold Out")
-                {
-                    tempStatus = "sold";
-                }
-            }
-            catch (NullReferenceException e)
+                hasOffer = "Yes";
+            } 
+            else if (result.has_offer == false)
             {
-                Console.WriteLine("Error referring to Status: " + e);
+                hasOffer = "No";
             }
 
-            try
-            {
-                if (node.SelectSingleNode(".//span[@class='inventory-tag__text']").InnerText.Trim() == "Sold")
-                {
-                    tempStatus = "sold";
-                }
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine("Error referring to Status: " + e);
-            }
-
-            return tempStatus;
+            return hasOffer;
         }
 
         public List<PoshmarkItem> List() 
         {
             List<PoshmarkItem> items = new List<PoshmarkItem>();
+
+            var results = new List<dynamic>();
+            results = PoshmarkAPI.Request("simplysabr");
             
-            // Web page with all the listings of an user
-            var htmlCloset = @"https://poshmark.com/closet/flippinoptimist?availability=sold_out";
-            HtmlWeb webCloset = new HtmlWeb();
-            var htmlDocCloset = webCloset.Load(htmlCloset);
-            var nodesCloset = htmlDocCloset.DocumentNode.SelectNodes("//section[@class='main__column col-l19 col-x16']/div[@class='m--t--1']/div");
-
-            foreach (var nodeCloset in nodesCloset)
+            foreach(var result in results)
             {
-                
-                Item = new PoshmarkItem(); // Create new PoshmarkItem object to be populated
+                Item = new PoshmarkItem();
 
-                Item.Title = GetTitle(nodeCloset);
-                Item.Price = GetPrice(nodeCloset);
-                Item.Status = GetStatus(nodeCloset);
-                Item.Size = GetSize(nodeCloset);
-                Item.Brand = GetBrand(nodeCloset);
-                Item.ProductPageLink = GetProductPageLink(nodeCloset); // Get link for the product page 
-                Item.MainImageURL = GetMainImageURL(nodeCloset);
-
-                HtmlNodeCollection nodesProduct = GetProductPage(); 
-
-                Item.Description = GetDescription(nodesProduct);
-                Item.ItemCategories = GetItemCategories(nodesProduct); // Categories requires all the nodes as it has a foreach loop inside
-                Item.Color = GetColor(nodesProduct); 
+                Item.ProductID = result.id;
+                Item.Title = result.title;
+                Item.Price = result.price;
+                Item.OriginalPrice = result.original_price;
+                Item.Size = result.size;
+                Item.Brand = result.brand;
+                Item.Description = result.description;
+                Item.Shares = result.aggregates.shares;
+                Item.Comments = result.aggregates.comments;
+                Item.Likes = result.aggregates.likes;
+                Item.Categories = GetCategories(result);
+                Item.Colors = GetColors(result);
+                Item.Images = GetImages(result);
+                Item.Quantity = GetQuantity(result);
+                Item.Status = GetStatus();
+                Item.Date = GetCreatedDate(result);
+                Item.URL = GetURL();
+                Item.HasOffer = GetHasOffer(result);
 
                 items.Add(Item);
             }
