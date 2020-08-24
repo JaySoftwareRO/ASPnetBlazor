@@ -1,8 +1,8 @@
-﻿using bifrost;
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Net.Client;
+using lib.bifrost;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Rest;
@@ -10,17 +10,17 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static bifrost.Cache;
+using static lib.bifrost.Cache;
 
 namespace lib.cache.bifrost
 {
     public class BifrostCache : IDistributedCache
     {
-        private string dir;
         private CacheClient client;
         private ILogger logger;
+        private string name;
 
-        public BifrostCache(string address, ILogger logger)
+        public BifrostCache(string address, string name, ILogger logger)
         {
             var httpHandler = new HttpClientHandler();
             // Return `true` to allow certificates that are untrusted/invalid
@@ -46,6 +46,7 @@ namespace lib.cache.bifrost
 
             this.client = new CacheClient(channel);
             this.logger = logger;
+            this.name = name;
         }
 
         public byte[] Get(string key)
@@ -55,7 +56,8 @@ namespace lib.cache.bifrost
             var result = this.client.Get(
                 new GetRequest
                 {
-                    Key = key
+                    Key = key,
+                    Cache = this.name
                 });
 
             if (!result.HasValue)
@@ -73,7 +75,8 @@ namespace lib.cache.bifrost
             var result = await this.client.GetAsync(
                 new GetRequest
                 {
-                    Key = key
+                    Key = key,
+                    Cache = this.name
                 });
 
             if (!result.HasValue)
@@ -88,25 +91,37 @@ namespace lib.cache.bifrost
         public void Refresh(string key)
         {
             logger.LogDebug($"refresh key {key} from bifrost cache");
-            this.client.Refresh(new RefreshRequest{});
+            this.client.Refresh(new RefreshRequest{
+                Key = key,
+                Cache = this.name
+            });
         }
 
         public async Task RefreshAsync(string key, CancellationToken token = default)
         {
             logger.LogDebug($"refresh async key {key} from bifrost cache");
-            await this.client.RefreshAsync(new RefreshRequest { });
+            await this.client.RefreshAsync(new RefreshRequest { 
+                Key = key,
+                Cache = this.name
+            });
         }
 
         public void Remove(string key)
         {
             logger.LogDebug($"remove key {key} from bifrost cache");
-            this.client.Remove(new RemoveRequest { });
+            this.client.Remove(new RemoveRequest {
+                Key = key,
+                Cache = this.name
+            });
         }
 
         public async Task RemoveAsync(string key, CancellationToken token = default)
         {
             logger.LogDebug($"remove async key {key} from cache");
-            await this.client.RemoveAsync(new RemoveRequest { });
+            await this.client.RemoveAsync(new RemoveRequest {
+                Key = key,
+                Cache = this.name
+            });
         }
 
         public void Set(string key, byte[] value, DistributedCacheEntryOptions options)
@@ -120,7 +135,8 @@ namespace lib.cache.bifrost
                     AbsoluteExpiration = options.AbsoluteExpiration == null ? "" : options.AbsoluteExpiration.ToString(),
                     AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow == null ? "" : options.AbsoluteExpirationRelativeToNow.ToString(),
                     SlidingExpiration = options.SlidingExpiration == null ? "" : options.SlidingExpiration.ToString(),
-                }
+                },
+                Cache = this.name
             });
         }
 
@@ -136,7 +152,8 @@ namespace lib.cache.bifrost
                     AbsoluteExpiration = options.AbsoluteExpiration == null ? "" : options.AbsoluteExpiration.ToString(),
                     AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow == null ? "" : options.AbsoluteExpirationRelativeToNow.ToString(),
                     SlidingExpiration = options.SlidingExpiration == null ? "" : options.SlidingExpiration.ToString(),
-                }
+                },
+                Cache = this.name
             });
         }
     }

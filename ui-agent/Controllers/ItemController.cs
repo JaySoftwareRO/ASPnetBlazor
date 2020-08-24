@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ui_agent.Models;
 using lib.poshmark_client;
+using Microsoft.Extensions.Configuration;
+using lib.cache.bifrost;
+using lib;
 
 namespace ui_agent.Controllers
 {
     public class ItemController : Controller
     {
-        private readonly ILogger<DataController> _logger;
+        private readonly ILogger<ItemController> logger;
+        private readonly IConfiguration configuration;
+        private readonly ITokenGetters tokenGetters;
 
-        public ItemController(ILogger<DataController> logger)
+        public ItemController(ILogger<ItemController> logger, IConfiguration configuration, ITokenGetters tokenGetters)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.configuration = configuration;
+            this.tokenGetters = tokenGetters;
         }
 
         public IActionResult Add()
@@ -36,9 +43,16 @@ namespace ui_agent.Controllers
 
         public IActionResult Inventory()
         {
-            var items = new PoshmarkClient();
-            this.ViewBag.Items = items.List();
+            string bifrostURL = this.configuration["Bifrost:Service"];
+            var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
+            var tokenGetter = this.tokenGetters.EBayTokenGetter();
+            this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "fake-account", tokenGetter).List().Result;
 
+            return View();
+        }
+
+        public IActionResult Welcome()
+        {
             return View();
         }
 

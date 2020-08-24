@@ -23,7 +23,7 @@ namespace tests
         public void List()
         {
             var logger = TestLogger.NewLogger("ebay-categories-tests");
-            var cache = new BifrostCache(@"https://bifrost.app.asgardtech.io/", logger);
+            var cache = new BifrostCache(@"https://bifrost.app.asgardtech.io/", "ebay-items",  logger);
 
             var tokenGetter = new EbayHardcodedTokenGetter();
             //tokenGetter.Set(token);

@@ -6,6 +6,12 @@
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bifrost_client\**" />
+    <EmbeddedResource Remove="bifrost_client\**" />
+    <None Remove="bifrost_client\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="bifrost\cache.proto" />
     <None Remove="cache\postgresql\scripts\Create_Function_DateDiff.sql" />
     <None Remove="cache\postgresql\scripts\Create_Function_DeleteCacheItemFormat.sql" />
     <None Remove="cache\postgresql\scripts\Create_Function_DeleteExpiredCacheItemsFormat.sql" />
@@ -24,12 +30,6 @@
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Table_DistCache.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Protobuf Include="..\bifrost\Protos\cache.proto">
-      <Link>bifrost_client\cache.proto</Link>
-    </Protobuf>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="EO.WebBrowser" Version="20.2.19" />
     <PackageReference Include="Google.Protobuf" Version="3.12.4" />
     <PackageReference Include="Grpc.Net.Client" Version="2.30.0" />
     <PackageReference Include="Grpc.Tools" Version="2.31.0">
@@ -37,7 +37,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
-    <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.7" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.1.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -62,9 +61,9 @@
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services" />
+    <Protobuf Include="bifrost\cache.proto" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bifrost_client\" />
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 </Project>

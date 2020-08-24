@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "bifrost";
+option csharp_namespace = "lib.bifrost";
 
 package cache;
 
@@ -13,6 +13,7 @@ service Cache {
 
 message GetRequest {
   string key = 1;
+  string cache = 2;
 }
 
 message GetReply {
@@ -22,6 +23,7 @@ message GetReply {
 
 message RefreshRequest {
   string key = 1;
+  string cache = 2;
 }
 
 message RefreshReply {
@@ -29,6 +31,7 @@ message RefreshReply {
 
 message RemoveRequest {
   string key = 1;
+  string cache = 2;
 }
 
 message RemoveReply {
@@ -38,6 +41,7 @@ message SetRequest {
   string key = 1;
   bytes value = 2;
   CacheOptions cacheOptions = 3;
+  string cache = 4;
 }
 
 message SetReply {

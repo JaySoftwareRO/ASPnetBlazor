@@ -26,10 +26,8 @@ namespace bifrost
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = this.Configuration.GetValue<string>("Data:PSQLCache:ConnectionString");
-
             services
-                .AddCaches(connectionString)
+                .AddCaches(Configuration)
                 .AddGrpc();
         }
 

@@ -55,13 +55,7 @@ namespace ui_agent
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Items}/{action=Welcome}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "mapping",
-                    pattern: "{controller=Data}/{action=Mapping}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "items",
-                    pattern: "{controller=Items}/{action=EbayListings}/{id?}");
+                    pattern: "{controller=Item}/{action=Welcome}/{id?}");
             });
 
             if (HybridSupport.IsElectronActive)
