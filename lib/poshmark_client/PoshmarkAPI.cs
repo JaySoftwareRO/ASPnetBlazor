@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Web;
-using System.Web.Helpers;
 
 namespace lib.poshmark_client
 {

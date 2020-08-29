@@ -30,8 +30,10 @@ namespace lib.cache.postgresql
             SystemClock = systemClock;
 			if (createInfrastructure)
 			{
-				CreateTableIfNotExist();
-			}
+                CreateDatabaseIfNotExist("treecat"); // Parameter = name of the database to be created
+                CreateSchemaIfNotExist(); // Schemas are taken from "bifrost/appsettings.json"
+                CreateTableIfNotExist();
+            }
         }
 
         protected string ConnectionString { get; }
@@ -62,9 +64,87 @@ namespace lib.cache.postgresql
                     .Replace("[tableName]", TableName);
         }
 
+        private string ConnectionStringBuilder()
+        {
+            var  csb = new NpgsqlConnectionStringBuilder
+            {
+                ConnectionString = ConnectionString,
+                Database = "treecat"
+            };
+            return csb.ToString();
+        }
+
+        // Checks if the database that is going to be built exists or not 
+        private bool HasDatabase(string databaseName)
+        {
+            bool hasDatabase = false;
+            using (var cn = new NpgsqlConnection(ConnectionString))
+            {
+                cn.Open();
+
+                NpgsqlCommand cmd = new NpgsqlCommand(
+                    cmdText: "SELECT datname FROM pg_database",
+                    connection: cn);
+
+                using (var dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        if (dr["datname"].Equals(databaseName))
+                        {
+                            hasDatabase = true;
+                            break;
+                        }
+                    }
+                }
+                cn.Close();
+            }
+            return hasDatabase;
+        }
+
+        // If the database doesn't exist, create it
+        private void CreateDatabaseIfNotExist(string databaseName)
+        {
+            if (this.HasDatabase(databaseName) == false)
+            {
+                // Open a connection with the "ConnectionString" options taken from the JSON file
+                NpgsqlConnection conn = new NpgsqlConnection(ConnectionString);
+                conn.Open();
+
+                // Define a query
+                NpgsqlCommand cmd = new NpgsqlCommand("CREATE DATABASE " + databaseName, conn);
+
+                // Execute a query
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+
+        // Create the schemas if they don't exist
+        private void CreateSchemaIfNotExist()
+        {
+            using (var cn = new NpgsqlConnection(ConnectionStringBuilder()))
+            {
+                cn.Open();
+                try
+                {
+                    NpgsqlCommand cmd = new NpgsqlCommand(
+                        cmdText: "CREATE SCHEMA IF NOT EXISTS " + SchemaName,
+                        connection: cn);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.StackTrace);
+                }
+                cn.Close();
+            }
+        }
+
+        // Create the tables and functions if they don't exist
         private void CreateTableIfNotExist()
         {
-            
 
             var sql = (
              table: ReadScript("Create_Table_DistCache.sql"),
@@ -85,7 +165,7 @@ namespace lib.cache.postgresql
             sb.Append(FormatName(sql.funcDeleteCacheItem));
             sb.Append(FormatName(sql.funcDeleteExpired));
 
-            using (var cn = new NpgsqlConnection(ConnectionString))
+            using (var cn = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 cn.Open();
                 using (var transaction = cn.BeginTransaction())
@@ -101,9 +181,8 @@ namespace lib.cache.postgresql
                     }
                     catch (Exception ex)
                     {
-                        //
+                        Console.WriteLine(ex.StackTrace);
                         transaction.Rollback();
-
                     }
                 }
                 cn.Close();
@@ -111,11 +190,9 @@ namespace lib.cache.postgresql
 
         }
 
-
-
         public void DeleteCacheItem(string key)
         {
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.DeleteCacheItemFormat}", connection)
                 {
@@ -134,7 +211,7 @@ namespace lib.cache.postgresql
 
         public async Task DeleteCacheItemAsync(string key)
         {
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.DeleteCacheItemFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;
@@ -173,7 +250,7 @@ namespace lib.cache.postgresql
         {
             var utcNow = SystemClock.UtcNow;
 
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.DeleteExpiredCacheItemsFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;
@@ -195,7 +272,7 @@ namespace lib.cache.postgresql
             var absoluteExpiration = GetAbsoluteExpiration(utcNow, options);
             ValidateOptions(options.SlidingExpiration, absoluteExpiration);
 
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 var upsertCommand = new NpgsqlCommand($"{SchemaName}.{Functions.Names.SetCache}", connection);
                 upsertCommand.CommandType = CommandType.StoredProcedure;
@@ -236,7 +313,7 @@ namespace lib.cache.postgresql
             var absoluteExpiration = GetAbsoluteExpiration(utcNow, options);
             ValidateOptions(options.SlidingExpiration, absoluteExpiration);
 
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 var upsertCommand = new NpgsqlCommand($"{SchemaName}.{Functions.Names.SetCache}", connection);
                 upsertCommand.CommandType = CommandType.StoredProcedure;
@@ -278,7 +355,7 @@ namespace lib.cache.postgresql
             TimeSpan? slidingExpiration = null;
             DateTimeOffset? absoluteExpiration = null;
             DateTimeOffset expirationTime;
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.UpdateCacheItemFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;
@@ -346,7 +423,7 @@ namespace lib.cache.postgresql
             TimeSpan? slidingExpiration = null;
             DateTimeOffset? absoluteExpiration = null;
             DateTimeOffset expirationTime;
-            using (var connection = new NpgsqlConnection(ConnectionString))
+            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.UpdateCacheItemFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;

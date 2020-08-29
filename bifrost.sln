@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project-files", "project-fi
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.github\workflows\main.yml = .github\workflows\main.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bifrost", "bifrost\bifrost.csproj", "{7025A6FE-14E9-408D-8DFF-2FB0D78C2ED0}"
