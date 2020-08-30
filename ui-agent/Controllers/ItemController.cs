@@ -68,7 +68,7 @@ namespace ui_agent.Controllers
 
             try
             {
-                this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "fake-ckingsings").List().Result; 
+                this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "fake-ckingsing").List().Result; 
             }
             catch (Exception)
             {
