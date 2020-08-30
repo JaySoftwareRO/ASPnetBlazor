@@ -46,7 +46,36 @@ namespace ui_agent.Controllers
             string bifrostURL = this.configuration["Bifrost:Service"];
             var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
             var tokenGetter = this.tokenGetters.EBayTokenGetter();
-            this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "fake-account", tokenGetter).List().Result;
+            
+            try
+            {
+                this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "fake-account", tokenGetter).List().Result;
+            }
+            catch (Exception)
+            {
+                // Dirty implementation, should find a better way to achieve this.
+                this.ViewBag.Items = "";
+                this.ViewBag.EmptyInventoryMessage = "Please add some items to your eBay inventory.";
+            }
+
+            return View();
+        }
+
+        public IActionResult InventoryPoshmark()
+        {
+            string bifrostURL = this.configuration["Bifrost:Service"];
+            var cache = new BifrostCache(bifrostURL, "poshmark-items", logger);
+
+            try
+            {
+                this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "fake-ckingsings").List().Result; 
+            }
+            catch (Exception)
+            {
+                // Dirty implementation, should find a better way to achieve this.
+                this.ViewBag.Items = "";
+                this.ViewBag.EmptyInventoryMessage = "Please add some items to your Poshmark inventory.";
+            }
 
             return View();
         }

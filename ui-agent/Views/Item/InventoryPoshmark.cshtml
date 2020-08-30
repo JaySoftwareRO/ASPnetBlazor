@@ -70,39 +70,50 @@
 	<!-- Main data section -->
 
 	<table class="scroll">
-		<thead>
-			<tr>
-				<th><input type="checkbox"></th>
-				<th>Flag</th>
-				<th>Image</th>
-				<th>Product Name</th>
-				<th>Listings</th>
-				<th>SKU</th>
-				<th>Price</th>
-				<th>Qty</th>
-				<th>Created</th>
-				<th>Follow-up Link</th>
-			</tr>
-		</thead>
+        <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>Flag</th>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Listings</th>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Created</th>
+                <th>Has Offer</th>
+                <th>Shares</th>
+                <th>Likes</th>
+                <th>Comments</th>
+                <th>Follow-up Link</th>
+            </tr>
+        </thead>
         <tbody>
             @foreach (var item in ViewBag.Items)
             {
-                <tr class="status-@item.Status">
+                <tr>
                     <td><input type="checkbox"></td>
                     <td>@item.Status</td>
-                    <td><img class="thumb40" src="@item.MainImageURL"></td>
-                    <td><a href="~/item/edit" target="_blank">@item.Title</a></td>
+                    <td><img class="thumb40" src="@item.Images[0]"></td>
+                    <td><a href="../item/edit" target="_blank">@item.Title</a></td>
                     <td>
-						???
+                        <a href="@item.URL"
+                            target="_blank">
+                            <img src="../images/poshmark-thumb.png">
+                        </a>
                     </td>
-                    <td>??</td>
+                    <td>N/A</td>
                     <td>$@item.Price</td>
-                    <td>??</td>
-                    <td>??</td>
-                    <td><a href="~" target="_blank">EBay Sale</a></td>
+                    <td>@item.Quantity[0]</td>
+                    <td>@item.Date</td>
+                    <td>@item.HasOffer</td>
+                    <td>@item.Shares</td>
+                    <td>@item.Likes</td>
+                    <td>@item.Comments</td>
+                    <td><a href="@item.URL" target="_blank">Poshmark Sale</a></td>
                 </tr>
-            }
-        </tbody>
+                }
+            </tbody>
 	</table>
     <p>@ViewBag.EmptyInventoryMessage</p>
 </div>

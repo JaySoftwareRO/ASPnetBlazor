@@ -12,7 +12,7 @@ namespace tests
         public void List()
         {
             var PoshmarkClient = new PoshmarkClient();
-            var foo2 = PoshmarkClient.List();
+            var foo2 = PoshmarkClient.List("ckingsings"); // Random poshmark account name
         }
     }
 }

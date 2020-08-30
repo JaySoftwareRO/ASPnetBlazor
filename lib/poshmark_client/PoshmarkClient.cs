@@ -112,42 +112,11 @@ namespace lib.poshmark_client
             return quantities;
         }
 
-        public string GetStatus()
-        {
-            string status = String.Empty;
-
-            if (Item.Quantity[2] > "0")
-            {
-                status = "Sold";
-            } 
-            else if(Item.Quantity[1] > "0")
-            {
-                status = "Reserved";
-            }
-            else if (Item.Quantity[0] > "0")
-            {
-                status = "Published";
-            }
-
-            return status;
-        }
-
         public string GetCreatedDate(dynamic result)
         {
             string date = result.created_at;
 
             return date.Substring(0, 10);
-        }
-
-        public string GetURL()
-        {
-            string URL = String.Empty;
-
-            string title = Item.Title.Replace("/", "");
-
-            URL = "https://poshmark.com/listing/" + title + " " + Item.ProductID;
-
-            return URL;
         }
 
         public string GetHasOffer(dynamic result)
@@ -166,39 +135,9 @@ namespace lib.poshmark_client
             return hasOffer;
         }
 
-        public List<PoshmarkItem> List() 
+        public List<dynamic> List(string accountName) 
         {
-            List<PoshmarkItem> items = new List<PoshmarkItem>();
-
-            var results = new List<dynamic>();
-            results = PoshmarkAPI.Request("simplysabr");
-            
-            foreach(var result in results)
-            {
-                Item = new PoshmarkItem();
-
-                Item.ProductID = result.id;
-                Item.Title = result.title;
-                Item.Price = result.price;
-                Item.OriginalPrice = result.original_price;
-                Item.Size = result.size;
-                Item.Brand = result.brand;
-                Item.Description = result.description;
-                Item.Shares = result.aggregates.shares;
-                Item.Comments = result.aggregates.comments;
-                Item.Likes = result.aggregates.likes;
-                Item.Categories = GetCategories(result);
-                Item.Colors = GetColors(result);
-                Item.Images = GetImages(result);
-                Item.Quantity = GetQuantity(result);
-                Item.Status = GetStatus();
-                Item.Date = GetCreatedDate(result);
-                Item.URL = GetURL();
-                Item.HasOffer = GetHasOffer(result);
-
-                items.Add(Item);
-            }
-            return items;
+            return PoshmarkAPI.Request(accountName);
         }
     }
 }
