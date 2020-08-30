@@ -30,20 +30,22 @@ namespace lib.listers
         {
             PoshmarkClient items = new PoshmarkClient();
             var cachedSellingItems = await this.cache.GetAsync(this.accountID);
-            var sellingItems = items.List("ckingsings"); // Random poshmark account name
+
+            List<dynamic> sellingItems = new List<dynamic>();
 
             if (cachedSellingItems == null && liveCalls < this.liveCallLimit)
             {
-                liveCalls += 1; 
-
+                liveCalls += 1;
+                sellingItems = items.List("flippin-optimist"); // Random poshmark account name
                 await this.cache.SetAsync(
                     this.accountID,
                     ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(sellingItems)),
                     new DistributedCacheEntryOptions()
                     {
-                        AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200), 
+                        AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
                     });
-            } else if (cachedSellingItems != null)
+            } 
+            else if (cachedSellingItems != null)
             {
                 sellingItems = JsonConvert.DeserializeObject<List<dynamic>>(
                     ASCIIEncoding.UTF8.GetString(cachedSellingItems));
@@ -55,7 +57,6 @@ namespace lib.listers
             foreach (var result in sellingItems)
             {
                 Item = new PoshmarkItem();
-                PoshmarkClient client = new PoshmarkClient(); // To access the methods in PoshmarkClient
 
                 Item.ProductID = result.id;
                 Item.Title = result.title;
@@ -67,14 +68,14 @@ namespace lib.listers
                 Item.Shares = result.aggregates.shares;
                 Item.Comments = result.aggregates.comments;
                 Item.Likes = result.aggregates.likes;
-                Item.Categories = client.GetCategories(result);
-                Item.Colors = client.GetColors(result);
-                Item.Images = client.GetImages(result);
-                Item.Quantity = client.GetQuantity(result);
+                Item.Categories = items.GetCategories(result);
+                Item.Colors = items.GetColors(result);
+                Item.Images = items.GetImages(result);
+                Item.Quantity = items.GetQuantity(result);
                 Item.Status = result.inventory.status;
-                Item.Date = client.GetCreatedDate(result);
+                Item.Date = items.GetCreatedDate(result);
                 Item.URL = "https://poshmark.com/listing/" + Item.ProductID;
-                Item.HasOffer = client.GetHasOffer(result);
+                Item.HasOffer = items.GetHasOffer(result);
 
                 returnItems.Add(Item);
             }

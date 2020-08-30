@@ -68,12 +68,12 @@ namespace ui_agent.Controllers
 
             try
             {
-                this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "fake-ckingsing").List().Result; 
+                this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "fake-flippin").List().Result; 
             }
             catch (Exception)
             {
                 // Dirty implementation, should find a better way to achieve this.
-                this.ViewBag.Items = "";
+                // this.ViewBag.Items = ""; 
                 this.ViewBag.EmptyInventoryMessage = "Please add some items to your Poshmark inventory.";
             }
 
