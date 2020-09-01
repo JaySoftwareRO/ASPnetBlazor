@@ -8,6 +8,8 @@ namespace lib
     public interface ITokenGetter
     {
         string Get();
+
+        string LoginURL();
     }
 
     public interface ITokenGetters
@@ -22,6 +24,7 @@ namespace lib
     public class HardcodedTokenGetters : ITokenGetters
     {
         private readonly EbayHardcodedTokenGetter ebayTokenGetter = new EbayHardcodedTokenGetter();
+        private readonly ITokenGetter poshmarkTokenGetter = new PoshmarkHardcodedTokenGetter();
 
         public ITokenGetter AmazonTokenGetter()
         {
@@ -40,7 +43,7 @@ namespace lib
 
         public ITokenGetter PoshmarkTokenGetter()
         {
-            throw new NotImplementedException();
+            return this.poshmarkTokenGetter;
         }
     }
 }

@@ -10,6 +10,7 @@ using lib.poshmark_client;
 using lib;
 using YamlDotNet.Core.Tokens;
 using lib.token_getters;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ui_agent.Controllers
 {
@@ -24,20 +25,42 @@ namespace ui_agent.Controllers
             this.tokenGetters = tokenGetters;
         }
 
-        public IActionResult Declined()
+        public IActionResult EbayDeclined()
         {
             return View();
         }
 
-        public IActionResult Accept(string code)
+        public IActionResult EbayAccept(string code)
         {
-            var tokens = EbayHardcodedTokenGetter.TokenFromCode(code, this.logger);
-            ((EbayHardcodedTokenGetter)tokenGetters.EBayTokenGetter()).Set(tokens);
+            var token = EbayHardcodedTokenGetter.TokenFromCode(code, this.logger);
+            ((EbayHardcodedTokenGetter)tokenGetters.EBayTokenGetter()).Set(token);
 
-            return RedirectToAction("ebayListings", "items");
+            return RedirectToAction("welcome", "item");
         }
 
-        public IActionResult Privacy()
+        public IActionResult PoshmarkAccept(string cookie)
+        {
+            var jwt = cookie;
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwt);
+
+
+            var accessToken = token.Payload.FirstOrDefault(p => p.Key == "access_token");
+            if (!string.IsNullOrWhiteSpace(accessToken.Key))
+            {
+                ((PoshmarkHardcodedTokenGetter)tokenGetters.PoshmarkTokenGetter()).Set(accessToken.Value as string);
+
+                return RedirectToAction("welcome", "item");
+            }
+            else
+            {
+                // TODO: redirect to a better error page
+                this.logger.LogError("getting poshmark access token failed");
+                throw new Exception("poshmark token fail");
+            }
+        }
+
+        public IActionResult EbayPrivacy()
         {
             return View();
         }

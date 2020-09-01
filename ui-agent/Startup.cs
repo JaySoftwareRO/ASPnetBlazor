@@ -7,10 +7,14 @@ using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Build.Framework;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ui_agent.Services;
+using Microsoft.Extensions.Logging;
+using RestSharp.Extensions;
+using Microsoft.Extensions.Logging.Console;
 
 namespace ui_agent
 {
@@ -32,7 +36,7 @@ namespace ui_agent
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -60,25 +64,47 @@ namespace ui_agent
 
             if (HybridSupport.IsElectronActive)
             {
-                ElectronBootstrap();
+                ElectronBootstrap(logger);
             }
         }
 
-        public async void ElectronBootstrap()
+        public async void ElectronBootstrap(Microsoft.Extensions.Logging.ILogger logger)
         {
             var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
             {
                 
             });
 
-           // Electron.App.CommandLine.AppendSwitch("ignore-certificate-errors");
-
-           // Electron.HostHook.Call
-
             await browserWindow.WebContents.Session.ClearCacheAsync();
 
             browserWindow.OnReadyToShow += () => browserWindow.Show();
             browserWindow.SetTitle("TreeCat");
+
+            logger.LogInformation("window title set");
+
+            browserWindow.WebContents.OnDidFinishLoad += async () =>
+            {
+                var url = await browserWindow.WebContents.GetUrl();
+                logger.LogDebug($"navigated to {url}");
+
+                var cleanUrl = new Uri(url);
+                if (cleanUrl.Host == "poshmark.com" && cleanUrl.AbsolutePath == "/feed")
+                {
+                    logger.LogInformation("user logged into poshmark");
+
+                    var cookies = await browserWindow.WebContents.Session.Cookies.GetAsync(new CookieFilter());
+                    var jwtCookie = cookies.FirstOrDefault(c => c.Name == "jwt");
+
+                    if (jwtCookie != null)
+                    {
+                        browserWindow.LoadURL($"https://127.0.0.1:19872/auth/poshmarkaccept?cookie={jwtCookie.Value}");
+                    }
+                    else
+                    {
+                        logger.LogError("failed to read jwt cookie");
+                    }
+                }
+            };
 
             SetupMenus();
         }

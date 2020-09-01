@@ -17,5 +17,10 @@ namespace lib.token_getters
         {
             return token;
         }
+
+        public string LoginURL()
+        {
+            return "https://poshmark.com/login";
+        }
     }
 }

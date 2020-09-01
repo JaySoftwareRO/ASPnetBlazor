@@ -10,6 +10,7 @@ class HookService extends connector_1.Connector {
         app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
             // On certificate error we disable default behaviour (stop loading the page)
             // and we then say "it is all fine - true" to the callback
+            // TODO: only discard certificate for the local address, not for other URLs
             event.preventDefault();
             callback(true);
         });
