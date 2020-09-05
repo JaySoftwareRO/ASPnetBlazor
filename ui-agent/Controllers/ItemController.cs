@@ -10,6 +10,7 @@ using lib.poshmark_client;
 using Microsoft.Extensions.Configuration;
 using lib.cache.bifrost;
 using lib;
+using lib.token_getters;
 
 namespace ui_agent.Controllers
 {
@@ -63,20 +64,27 @@ namespace ui_agent.Controllers
 
         public IActionResult InventoryPoshmark()
         {
+            var token = tokenGetters.PoshmarkTokenGetter();
+            var userID = token.GetUserID();
+
             string bifrostURL = this.configuration["Bifrost:Service"];
             var cache = new BifrostCache(bifrostURL, "poshmark-items", logger);
 
             try
-            {
-                this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "fake-flippin").List().Result; 
+            {   if (userID != null)
+                {
+                    this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, token).List().Result;
+                }
+                else
+                {
+                    this.ViewBag.Items = string.Empty;
+                    this.ViewBag.EmptyInventoryMessage = "Please log in to see your Poshmark inventory.";
+                }
             }
             catch (Exception)
             {
-                // Dirty implementation, should find a better way to achieve this.
-                // this.ViewBag.Items = ""; 
-                this.ViewBag.EmptyInventoryMessage = "Please add some items to your Poshmark inventory.";
+                this.ViewBag.EmptyInventoryMessage = "Please add items to your Poshmark inventory.";
             }
-
             return View();
         }
 

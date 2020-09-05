@@ -9,6 +9,8 @@ namespace lib
     {
         string Get();
 
+        string GetUserID();
+
         string LoginURL();
     }
 

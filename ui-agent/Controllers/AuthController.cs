@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ui_agent.Models;
-using lib.poshmark_client;
 using lib;
+using lib.cache.disk;
 using YamlDotNet.Core.Tokens;
 using lib.token_getters;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace ui_agent.Controllers
 {
@@ -38,18 +39,21 @@ namespace ui_agent.Controllers
             return RedirectToAction("welcome", "item");
         }
 
-        public IActionResult PoshmarkAccept(string cookie)
+        public IActionResult PoshmarkAcceptAsync(string cookie)
         {
-            var jwt = cookie;
+            // Create a JSON token from the cookie
             var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(jwt);
+            var token = handler.ReadJwtToken(cookie);
 
-
+            // Get access_token and user_id from cookie token
             var accessToken = token.Payload.FirstOrDefault(p => p.Key == "access_token");
+            var userID = token.Payload.FirstOrDefault(p => p.Key == "user_id");
+
+            DiskCache diskCache = new DiskCache("CachedTokens", logger);
+
             if (!string.IsNullOrWhiteSpace(accessToken.Key))
             {
-                ((PoshmarkHardcodedTokenGetter)tokenGetters.PoshmarkTokenGetter()).Set(accessToken.Value as string);
-
+                ((PoshmarkHardcodedTokenGetter)tokenGetters.PoshmarkTokenGetter()).SetAsync(accessToken.Value as string, userID.Value as string, diskCache, "PoshmarkCachedToken");
                 return RedirectToAction("welcome", "item");
             }
             else

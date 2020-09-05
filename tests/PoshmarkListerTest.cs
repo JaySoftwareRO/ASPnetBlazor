@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using lib.token_getters;
 
 namespace tests
 {
@@ -15,7 +16,7 @@ namespace tests
 
             var cache = new BifrostCache(@"https://localhost:5001/", "poshmark-items", logger);
 
-            var items = new lib.listers.PoshmarkLister(cache, logger, 10000, "fake-helengu").List().Result;
+            //var items = new lib.listers.PoshmarkLister(cache, logger, 10000, "fake-helengu").List().Result;
 
         }
     }

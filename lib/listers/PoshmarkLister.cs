@@ -18,12 +18,13 @@ namespace lib.listers
         ITokenGetter tokenGetter;
         string accountID;
 
-        public PoshmarkLister(IDistributedCache cache, ILogger logger, int liveCallLimit, string accountID)
+        public PoshmarkLister(IDistributedCache cache, ILogger logger, int liveCallLimit, string accountID, ITokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;
             this.liveCallLimit = liveCallLimit;
             this.accountID = accountID;
+            this.tokenGetter = tokenGetter;
         }
 
         public async Task<List<dynamic>> List()
@@ -36,7 +37,8 @@ namespace lib.listers
             if (cachedSellingItems == null && liveCalls < this.liveCallLimit)
             {
                 liveCalls += 1;
-                sellingItems = items.List("flippin-optimist"); // Random poshmark account name
+                sellingItems = items.List(tokenGetter.GetUserID()); // Account ID taken after the user is logged.
+
                 await this.cache.SetAsync(
                     this.accountID,
                     ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(sellingItems)),

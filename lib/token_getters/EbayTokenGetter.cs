@@ -30,7 +30,7 @@ namespace lib.token_getters
         public string Get()
         {
             return this.accessToken;
-        }
+        }   
 
         public static EbayToken TokenFromCode(string code, ILogger logger)
         {
@@ -49,6 +49,11 @@ namespace lib.token_getters
         public string LoginURL()
         {
             return "https://auth.ebay.com/oauth2/authorize?client_id=VladIova-Treecat-PRD-4bcdaddba-89642d26&response_type=code&redirect_uri=Vlad_Iovanov-VladIova-Treeca-vehtia&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly";
+        }
+
+        public string GetUserID()
+        {
+            throw new NotImplementedException();
         }
     }
 }
