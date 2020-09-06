@@ -42,7 +42,7 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public IActionResult Inventory()
+        public IActionResult InventoryEbay()
         {
             string bifrostURL = this.configuration["Bifrost:Service"];
             var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
@@ -54,12 +54,11 @@ namespace ui_agent.Controllers
             }
             catch (Exception)
             {
-                // Dirty implementation, should find a better way to achieve this.
                 this.ViewBag.Items = "";
                 this.ViewBag.EmptyInventoryMessage = "Please add some items to your eBay inventory.";
             }
 
-            return View();
+            return View("importdata");
         }
 
         public IActionResult InventoryPoshmark()
@@ -85,17 +84,20 @@ namespace ui_agent.Controllers
             {
                 this.ViewBag.EmptyInventoryMessage = "Please add items to your Poshmark inventory.";
             }
-            return View("inventory");
+            return View("importdata");
         }
 
-        public IActionResult InventoryEbay()
+        public IActionResult ImportData()
         {
-            var token = tokenGetters.EBayTokenGetter();
-            var userID = token.GetUserID();
+            if (this.ViewBag.Items == null)
+            {
+                this.ViewBag.Items = string.Empty;
+            }
 
-            return View("inventory");
+            this.ViewBag.EmptyInventoryMessage = "Choose a Source Platform from the dropdown list.";
+
+            return View();
         }
-
 
         public IActionResult Welcome()
         {
