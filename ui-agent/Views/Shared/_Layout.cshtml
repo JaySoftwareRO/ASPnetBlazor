@@ -4,6 +4,7 @@
 @{ 
     var ebayTokenGetter = tokenGetters.EBayTokenGetter();
     var poshmarkTokenGetter = tokenGetters.PoshmarkTokenGetter();
+    var ebayAccessTokenGetter = tokenGetters.EbayAccessTokenGetter();
 }
 
 
@@ -52,7 +53,7 @@
 
                     @if (string.IsNullOrWhiteSpace(await ebayTokenGetter.GetToken()))
                     {
-                        <a href="@ebayTokenGetter.LoginURL()">
+                        <a href="@ebayTokenGetter.LoginURL()@string.Join(' ', @ebayAccessTokenGetter.Scopes())">
                             <span class="label alert data-tooltip" title="Ebay not logged in.">
                                 <i class="fas fa-exclamation-triangle"></i> Ebay not logged in.
                             </span>

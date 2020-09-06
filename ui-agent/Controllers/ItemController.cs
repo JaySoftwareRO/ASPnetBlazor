@@ -42,7 +42,7 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public IActionResult InventoryEbay()
+        public IActionResult Inventory()
         {
             string bifrostURL = this.configuration["Bifrost:Service"];
             var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
@@ -54,17 +54,25 @@ namespace ui_agent.Controllers
             }
             catch (Exception)
             {
+                // Dirty implementation, should find a better way to achieve this.
                 this.ViewBag.Items = "";
                 this.ViewBag.EmptyInventoryMessage = "Please add some items to your eBay inventory.";
             }
 
-            return View("importdata");
+            return View();
         }
 
-        public IActionResult InventoryPoshmark()
+        public async Task<IActionResult> InventoryPoshmark()
         {
-            var token = tokenGetters.PoshmarkTokenGetter();
-            var userID = token.GetUserID();
+            var tokenGetter = tokenGetters.PoshmarkTokenGetter();
+            var userID = await tokenGetter.GetUserID();
+            var token = await tokenGetter.GetToken();
+
+            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(userID))
+            {
+                // TODO: redirect to a "not logged into" page
+                return RedirectToAction("welcome", "item");
+            }
 
             string bifrostURL = this.configuration["Bifrost:Service"];
             var cache = new BifrostCache(bifrostURL, "poshmark-items", logger);
@@ -72,7 +80,7 @@ namespace ui_agent.Controllers
             try
             {   if (userID != null)
                 {
-                    this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, token).List().Result;
+                    this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, tokenGetter).List().Result;
                 }
                 else
                 {
@@ -84,19 +92,37 @@ namespace ui_agent.Controllers
             {
                 this.ViewBag.EmptyInventoryMessage = "Please add items to your Poshmark inventory.";
             }
-            return View("importdata");
+            return View("inventory");
         }
 
-        public IActionResult ImportData()
+        public async Task<IActionResult> InventoryEbay()
         {
-            if (this.ViewBag.Items == null)
+            var tokenGetter = tokenGetters.EbayAccessTokenGetter();
+            var accessToken = await tokenGetter.GetToken();
+
+            if (string.IsNullOrWhiteSpace(accessToken))
             {
-                this.ViewBag.Items = string.Empty;
+                var refreshTokenGetter = tokenGetters.EbayAccessTokenGetter();
+                var refreshToken = await refreshTokenGetter.GetToken();
+
+                if (string.IsNullOrWhiteSpace(refreshToken))
+                {
+                    // TODO: redirect to a "not logged into" page
+                    return RedirectToAction("welcome", "item");
+                }
+
+                // Use the refresh token to get an access token
+                var newAccessToken = EbayTokenUtils.AccessTokenFromRefreshToken(refreshToken, tokenGetter.Scopes(), logger);
+                await this.tokenGetters.EbayAccessTokenGetter().Set(newAccessToken.AccessToken, string.Empty);
             }
 
-            this.ViewBag.EmptyInventoryMessage = "Choose a Source Platform from the dropdown list.";
+            string bifrostURL = this.configuration["Bifrost:Service"];
+            var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
 
-            return View();
+            //TODO: account should be ebay user's account, and the bifrost service has to authenticate the local account
+            this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
+
+            return View("inventory");
         }
 
         public IActionResult Welcome()

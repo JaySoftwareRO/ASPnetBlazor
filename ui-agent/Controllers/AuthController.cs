@@ -35,6 +35,7 @@ namespace ui_agent.Controllers
         {
             var token = EbayTokenUtils.TokenFromCode(code, this.logger);
             await this.tokenGetters.EBayTokenGetter().Set(token.RefreshToken, string.Empty);
+            await this.tokenGetters.EbayAccessTokenGetter().Set(token.AccessToken, string.Empty);
 
             return RedirectToAction("welcome", "item");
         }

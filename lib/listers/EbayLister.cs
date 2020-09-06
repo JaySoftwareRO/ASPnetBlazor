@@ -47,11 +47,8 @@ namespace lib.listers
 
             String requestURL = endpoint + queryString; // "https://api.ebay.com/wsapi";
 
-
             ebayws.eBayAPIInterfaceClient client = new ebayws.eBayAPIInterfaceClient();
             client.Endpoint.Address = new EndpointAddress(requestURL);
-
-
 
             var cachedSellingItems = await this.cache.GetAsync(this.accountID);
             GetMyeBaySellingResponse sellingItems = new GetMyeBaySellingResponse();
@@ -69,6 +66,7 @@ namespace lib.listers
 
                     sellingItems = client.GetMyeBaySellingAsync(null, new GetMyeBaySellingRequestType()
                     {
+                        // TODO: should not be hardcoded
                         Version = "1149",
                         ActiveList = new ItemListCustomizationType() { Sort = ItemSortTypeCodeType.TimeLeft, Pagination = new PaginationType() { EntriesPerPage = 3, PageNumber = 1 } }
                     }).GetAwaiter().GetResult();

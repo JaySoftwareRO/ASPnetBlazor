@@ -16,18 +16,22 @@ namespace lib.token_getters
         private int cacheDays = 30;
         private string loginURL;
         private ILogger logger;
+        private List<string> scopes;
 
-        public CachedTokenGetter(IDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheDays)
+        public CachedTokenGetter(IDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheDays, List<string> scopes)
         {
             this.cache = cache;
             this.cacheTokenKey = string.Format($"{cacheKey}_token");
             this.cacheUserIDKey = string.Format($"{cacheKey}_userid");
             this.cacheDays = cacheDays;
             this.loginURL = loginURL;
+            this.logger = logger;
+            this.scopes = scopes;
         }
 
         public async Task Set(string token, string userID)
         {
+            this.logger.LogDebug($"recording token and user in {this.cacheTokenKey} cache");
             await this.cache.SetStringAsync(
                 this.cacheTokenKey,
                 token,
@@ -47,12 +51,19 @@ namespace lib.token_getters
 
         public async Task<string> GetToken()
         {
+            this.logger.LogDebug($"getting token from {this.cacheTokenKey} cache");
             return await this.cache.GetStringAsync(this.cacheTokenKey);
         }
 
         public async Task<string> GetUserID()
         {
+            this.logger.LogDebug($"getting user in {this.cacheTokenKey} cache");
             return await this.cache.GetStringAsync(this.cacheUserIDKey);
+        }
+
+        public List<string> Scopes()
+        {
+            return this.scopes;
         }
 
         public string LoginURL()
