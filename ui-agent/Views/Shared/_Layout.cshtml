@@ -30,8 +30,7 @@
                     <ul class="dropdown menu" data-dropdown-menu>
                         <li class="menu-text thin-border-right"><i class="fas fa-cat"></i> TreeCat</li>
                         <li><a href="~/item/inventory">Inventory</a></li>
-                        <li><a href="~/item/importdata">Import Data</a></li>
-                        <li><a href="~/item/inventoryposhmark">Poshmark Inventory</a></li>
+                        <li><a href="~/item/importebay">Import Data</a></li>
                         <li><a href="#">Field Mappings</a></li>
                         <li><a href="~/item/add">Add Item</a></li>
                     </ul>
@@ -66,17 +65,17 @@
                         </span>
                     }
 
-                    @if (string.IsNullOrWhiteSpace(await poshmarkTokenGetter.GetToken()))
+                    @if (string.IsNullOrWhiteSpace(await poshmarkTokenGetter.GetToken()) || string.IsNullOrWhiteSpace(await poshmarkTokenGetter.GetUserID()))
                     {
                         <a href="@poshmarkTokenGetter.LoginURL()">
-                            <span class="label alert data-tooltip" title="Ebay not logged in.">
+                            <span class="label alert data-tooltip" title="Poshmark not logged in.">
                                 <i class="fas fa-exclamation-triangle"></i> Poshmark not logged in.
                             </span>
                         </a>
                     }
                     else
                     {
-                        <span class="label success data-tooltip" title="Ebay logged in.">
+                        <span class="label success data-tooltip" title="Poshmark logged in.">
                             <i class="fas fa-info"></i> Poshmark logged in.
                         </span>
                     }

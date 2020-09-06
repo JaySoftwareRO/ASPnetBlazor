@@ -53,23 +53,42 @@ namespace lib.listers
             var cachedSellingItems = await this.cache.GetAsync(this.accountID);
             GetMyeBaySellingResponse sellingItems = new GetMyeBaySellingResponse();
 
+            if (cachedSellingItems != null)
+            {
+                sellingItems = JsonConvert.DeserializeObject<GetMyeBaySellingResponse>(ASCIIEncoding.UTF8.GetString(cachedSellingItems));
+
+                if (sellingItems.GetMyeBaySellingResponse1 == null)
+                {
+                    await this.cache.RemoveAsync(this.accountID);
+                    cachedSellingItems = null;
+                }
+            }
+
             if (cachedSellingItems == null && liveCalls < this.liveCallLimit)
             {
                 liveCalls += 1;
 
+                // TODO: dispose of the OperationContextScope properly
                 using (OperationContextScope scope = new OperationContextScope(client.InnerChannel))
                 {
-                    var httpRequestProperty = new HttpRequestMessageProperty();
-                    httpRequestProperty.Headers["X-EBAY-API-IAF-TOKEN"] = await tokenGetter.GetToken();
-
-                    OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
-
-                    sellingItems = client.GetMyeBaySellingAsync(null, new GetMyeBaySellingRequestType()
+                    try
                     {
-                        // TODO: should not be hardcoded
-                        Version = "1149",
-                        ActiveList = new ItemListCustomizationType() { Sort = ItemSortTypeCodeType.TimeLeft, Pagination = new PaginationType() { EntriesPerPage = 3, PageNumber = 1 } }
-                    }).GetAwaiter().GetResult();
+                        var httpRequestProperty = new HttpRequestMessageProperty();
+                        httpRequestProperty.Headers["X-EBAY-API-IAF-TOKEN"] = await tokenGetter.GetToken();
+
+                        OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
+
+                        sellingItems = client.GetMyeBaySellingAsync(null, new GetMyeBaySellingRequestType()
+                        {
+                            // TODO: should not be hardcoded
+                            Version = "1149",
+                            ActiveList = new ItemListCustomizationType() { Sort = ItemSortTypeCodeType.TimeLeft, Pagination = new PaginationType() { EntriesPerPage = 3, PageNumber = 1 } }
+                        }).GetAwaiter().GetResult();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.LogError($"error getting ebay items {ex}");
+                    }
                 }
 
                 await this.cache.SetAsync(
@@ -79,11 +98,6 @@ namespace lib.listers
                     {
                         AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
                     });
-            }
-            else if (cachedSellingItems != null)
-            {
-                sellingItems = JsonConvert.DeserializeObject<GetMyeBaySellingResponse>(
-                    ASCIIEncoding.UTF8.GetString(cachedSellingItems));
             }
 
             List<Item> result = new List<Item>();

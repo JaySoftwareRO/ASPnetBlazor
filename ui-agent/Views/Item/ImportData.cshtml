@@ -1,4 +1,5 @@
-﻿
+﻿@model List<lib.Item>
+
 @{
     ViewData["Title"] = "ImportData";
 }
@@ -11,13 +12,9 @@
                 <div class="input-group">
                     <div class="input-group-label">Source Platform:</div>
                     <div>
-                        <select class="input-group-field">
-                            <option value="amazon">Amazon</option>
-                            <option value="ebay" selected>eBay</option>
-                            <option value="etsy">Etsy</option>
-                            <option value="~/inventoryposhmark" href="~/inventoryposhmark">Poshmark</option>
-                            <option value="mercari">Mercari</option>
-                            <option value="emag">Emag</option>
+                        <select class="input-group-field" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                            <option value="/item/importebay" selected="@( ViewBag.Selected == "ebay" )" >eBay</option>
+                            <option value="/item/importposhmark" selected="@( ViewBag.Selected == "poshmark" )">Poshmark</option>
                         </select>
                     </div>
                 </div>
@@ -61,12 +58,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in ViewBag.Items)
+                    @foreach (var item in Model)
                     {
                         <tr>
                             <td><input type="checkbox"></td>
                             <td>@item.Status</td>
-                            <td><img class="thumb40" src="@item.Images[0]"></td>
+                            <td><img class="thumb40" src="@item.Images"></td>
                             <td><a href="../item/edit" target="_blank">@item.Title</a></td>
                             <td>
                                 <a href="@item.URL"
@@ -76,7 +73,7 @@
                             </td>
                             <td>N/A</td>
                             <td>$@item.Price</td>
-                            <td>@item.Quantity[0]</td>
+                            <td>@item.Quantity</td>
                             <td>@item.Date</td>
                             <td>@item.HasOffer</td>
                             <td>@item.Shares</td>

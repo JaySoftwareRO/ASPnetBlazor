@@ -17,7 +17,7 @@ namespace lib
         public string LoginURL { get; set; }
         public string CacheKey { get; set; }
         public List<string> Scopes { get; set; }
-        public int TokenCacheDurationDays { get; set; }
+        public int TokenCacheDurationHours { get; set; }
     }
 
     public class TokenGetterSettings
@@ -51,7 +51,7 @@ namespace lib
         private ITokenGetter Amazon {
             get
             {
-                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name];
+                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
             }
         }
 
@@ -59,7 +59,7 @@ namespace lib
         {
             get
             {
-                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name];
+                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
             }
         }
 
@@ -68,7 +68,7 @@ namespace lib
         {
             get
             {
-                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name];
+                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
             }
         }
 
@@ -76,7 +76,7 @@ namespace lib
         {
             get
             {
-                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name];
+                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
             }
         }
 
@@ -84,7 +84,7 @@ namespace lib
         {
             get
             {
-                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name];
+                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
             }
         }
 
@@ -110,7 +110,7 @@ namespace lib
                     logger, 
                     config.CacheKey, 
                     config.LoginURL,
-                    config.TokenCacheDurationDays,
+                    config.TokenCacheDurationHours,
                     config.Scopes);
             }
         }

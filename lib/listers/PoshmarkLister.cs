@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace lib.listers
 {
-    public class PoshmarkLister
+    public class PoshmarkLister : Lister
     {
         IDistributedCache cache;
         ILogger logger;
@@ -27,7 +27,7 @@ namespace lib.listers
             this.tokenGetter = tokenGetter;
         }
 
-        public async Task<List<dynamic>> List()
+        public async Task<List<Item>> List()
         {
             PoshmarkClient items = new PoshmarkClient();
             var cachedSellingItems = await this.cache.GetAsync(this.accountID);
@@ -53,12 +53,11 @@ namespace lib.listers
                     ASCIIEncoding.UTF8.GetString(cachedSellingItems));
             }
 
-            PoshmarkItem Item = new PoshmarkItem(); // An item to be populated from the JSON file
-            List<dynamic> returnItems = new List<dynamic>();  // List with items to be returned
+            List<Item> returnItems = new List<Item>();  // List with items to be returned
 
             foreach (var result in sellingItems)
             {
-                Item = new PoshmarkItem();
+                var Item = new Item();
 
                 Item.ProductID = result.id;
                 Item.Title = result.title;
@@ -70,14 +69,14 @@ namespace lib.listers
                 Item.Shares = result.aggregates.shares;
                 Item.Comments = result.aggregates.comments;
                 Item.Likes = result.aggregates.likes;
-                Item.Categories = items.GetCategories(result);
-                Item.Colors = items.GetColors(result);
-                Item.Images = items.GetImages(result);
-                Item.Quantity = items.GetQuantity(result);
-                Item.Status = result.inventory.status;
-                Item.Date = items.GetCreatedDate(result);
+                //Item.Categories = items.GetCategories(result);
+                //Item.Colors = items.GetColors(result);
+                //Item.Images = items.GetImages(result);
+                //Item.Quantity = items.GetQuantity(result);
+                //Item.Status = result.inventory.status;
+                //Item.Date = items.GetCreatedDate(result);
                 Item.URL = "https://poshmark.com/listing/" + Item.ProductID;
-                Item.HasOffer = items.GetHasOffer(result);
+                //Item.HasOffer = items.GetHasOffer(result);
 
                 returnItems.Add(Item);
             }

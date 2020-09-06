@@ -44,7 +44,7 @@ namespace lib.token_getters
             return new EbayToken()
             {
                 AccessToken = result.AccessToken.Token,
-                RefreshToken = result.RefreshToken.Token,
+                RefreshToken = string.Empty,
             };
         }
     }

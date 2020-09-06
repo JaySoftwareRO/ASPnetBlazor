@@ -62,7 +62,7 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public async Task<IActionResult> InventoryPoshmark()
+        public async Task<IActionResult> ImportPoshmark()
         {
             var tokenGetter = tokenGetters.PoshmarkTokenGetter();
             var userID = await tokenGetter.GetUserID();
@@ -77,14 +77,15 @@ namespace ui_agent.Controllers
             string bifrostURL = this.configuration["Bifrost:Service"];
             var cache = new BifrostCache(bifrostURL, "poshmark-items", logger);
 
+            var items = new List<Item>();
+
             try
             {   if (userID != null)
                 {
-                    this.ViewBag.Items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, tokenGetter).List().Result;
+                    items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, tokenGetter).List().Result;
                 }
                 else
                 {
-                    this.ViewBag.Items = string.Empty;
                     this.ViewBag.EmptyInventoryMessage = "Please log in to see your Poshmark inventory.";
                 }
             }
@@ -92,17 +93,19 @@ namespace ui_agent.Controllers
             {
                 this.ViewBag.EmptyInventoryMessage = "Please add items to your Poshmark inventory.";
             }
-            return View("inventory");
+
+            this.ViewBag.Selected = "poshmark";
+            return View("importdata", items);
         }
 
-        public async Task<IActionResult> InventoryEbay()
+        public async Task<IActionResult> ImportEbay()
         {
             var tokenGetter = tokenGetters.EbayAccessTokenGetter();
             var accessToken = await tokenGetter.GetToken();
 
             if (string.IsNullOrWhiteSpace(accessToken))
             {
-                var refreshTokenGetter = tokenGetters.EbayAccessTokenGetter();
+                var refreshTokenGetter = tokenGetters.EBayTokenGetter();
                 var refreshToken = await refreshTokenGetter.GetToken();
 
                 if (string.IsNullOrWhiteSpace(refreshToken))
@@ -120,9 +123,10 @@ namespace ui_agent.Controllers
             var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
 
             //TODO: account should be ebay user's account, and the bifrost service has to authenticate the local account
-            this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
+            var items = new lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
 
-            return View("inventory");
+            this.ViewBag.Selected = "ebay";
+            return View("importdata", items);
         }
 
         public IActionResult Welcome()

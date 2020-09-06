@@ -6,49 +6,8 @@ using HtmlAgilityPack;
 
 namespace lib.poshmark_client
 {
-    public class PoshmarkItem
-    {
-        public string ProductID { get; set; }
-
-        public string Title { get; set; }
-
-        public int Price { get; set; }
-
-        public int OriginalPrice { get; set; }
-
-        public string Status { get; set; }
-
-        public string Size { get; set; }
-
-        public string Brand { get; set; }
-
-        public string Description { get; set; }
-
-        public List<dynamic> Categories { get; set; }
-
-        public List<dynamic> Colors { get; set; }
-
-        public List<dynamic> Images { get; set; }
-
-        public string Date { get; set; }
-
-        public List<dynamic> Quantity { get; set; } // Quantity [0] = available, [1] = reserved, [2] sold
-
-        public string URL { get; set; }
-
-        public string Shares { get; set; }
-
-        public string Comments { get; set; }
-
-        public string Likes { get; set; }
-
-        public string HasOffer { get; set; }
-    }
-
     public class PoshmarkClient
     {
-        private PoshmarkItem Item = new PoshmarkItem();
-
         public List<dynamic> GetCategories(dynamic result) 
         {
             List<dynamic> categories = new List<dynamic>();

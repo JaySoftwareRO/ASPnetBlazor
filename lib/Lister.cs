@@ -52,5 +52,32 @@ namespace lib
         {
             get; set;
         }
+        public string ProductID { get; set; }
+
+        public string Size { get; set; }
+
+        public string Brand { get; set; }
+
+        public int OriginalPrice { get; set; }
+
+        public List<string> Categories { get; set; }
+
+        public List<string> Colors { get; set; }
+
+        public List<string> Images { get; set; }
+
+        public string Date { get; set; }
+
+        public List<string> Quantity { get; set; } // Quantity [0] = available, [1] = reserved, [2] sold
+
+        public string URL { get; set; }
+
+        public string Shares { get; set; }
+
+        public string Comments { get; set; }
+
+        public string Likes { get; set; }
+
+        public string HasOffer { get; set; }
     }
 }
