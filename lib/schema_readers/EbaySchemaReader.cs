@@ -38,7 +38,7 @@ namespace lib.schema_readers
 
         public async Task<Category> CategoryTree()
         {
-            string eBayOAuthToken = this.tokenGetter.Get();
+            string eBayOAuthToken = await this.tokenGetter.GetToken();
             
             HttpClient httpClient = new HttpClient(new HttpClientHandler
             {

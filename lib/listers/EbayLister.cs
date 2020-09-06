@@ -63,7 +63,7 @@ namespace lib.listers
                 using (OperationContextScope scope = new OperationContextScope(client.InnerChannel))
                 {
                     var httpRequestProperty = new HttpRequestMessageProperty();
-                    httpRequestProperty.Headers["X-EBAY-API-IAF-TOKEN"] = tokenGetter.Get();
+                    httpRequestProperty.Headers["X-EBAY-API-IAF-TOKEN"] = await tokenGetter.GetToken();
 
                     OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 

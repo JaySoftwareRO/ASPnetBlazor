@@ -50,7 +50,7 @@
             <div class="grid-x">
                 <div class="cell">
 
-                    @if (string.IsNullOrWhiteSpace(ebayTokenGetter.Get()))
+                    @if (string.IsNullOrWhiteSpace(await ebayTokenGetter.GetToken()))
                     {
                         <a href="@ebayTokenGetter.LoginURL()">
                             <span class="label alert data-tooltip" title="Ebay not logged in.">
@@ -65,7 +65,7 @@
                         </span>
                     }
 
-                    @if (string.IsNullOrWhiteSpace(poshmarkTokenGetter.Get()))
+                    @if (string.IsNullOrWhiteSpace(await poshmarkTokenGetter.GetToken()))
                     {
                         <a href="@poshmarkTokenGetter.LoginURL()">
                             <span class="label alert data-tooltip" title="Ebay not logged in.">

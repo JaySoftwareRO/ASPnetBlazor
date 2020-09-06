@@ -37,7 +37,7 @@ namespace lib.listers
             if (cachedSellingItems == null && liveCalls < this.liveCallLimit)
             {
                 liveCalls += 1;
-                sellingItems = items.List(tokenGetter.GetUserID()); // Account ID taken after the user is logged.
+                sellingItems = items.List(await this.tokenGetter.GetUserID()); // Account ID taken after the user is logged.
 
                 await this.cache.SetAsync(
                     this.accountID,

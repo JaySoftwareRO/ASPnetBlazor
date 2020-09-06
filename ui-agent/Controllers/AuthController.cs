@@ -31,15 +31,15 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public IActionResult EbayAccept(string code)
+        public async Task<IActionResult> EbayAccept(string code)
         {
-            var token = EbayHardcodedTokenGetter.TokenFromCode(code, this.logger);
-            ((EbayHardcodedTokenGetter)tokenGetters.EBayTokenGetter()).Set(token);
+            var token = EbayTokenUtils.TokenFromCode(code, this.logger);
+            await this.tokenGetters.EBayTokenGetter().Set(token.RefreshToken, string.Empty);
 
             return RedirectToAction("welcome", "item");
         }
 
-        public IActionResult PoshmarkAcceptAsync(string cookie)
+        public async Task<IActionResult> PoshmarkAcceptAsync(string cookie)
         {
             // Create a JSON token from the cookie
             var handler = new JwtSecurityTokenHandler();
@@ -49,11 +49,10 @@ namespace ui_agent.Controllers
             var accessToken = token.Payload.FirstOrDefault(p => p.Key == "access_token");
             var userID = token.Payload.FirstOrDefault(p => p.Key == "user_id");
 
-            DiskCache diskCache = new DiskCache("CachedTokens", logger);
-
             if (!string.IsNullOrWhiteSpace(accessToken.Key))
             {
-                ((PoshmarkHardcodedTokenGetter)tokenGetters.PoshmarkTokenGetter()).SetAsync(accessToken.Value as string, userID.Value as string, diskCache, "PoshmarkCachedToken");
+                await this.tokenGetters.PoshmarkTokenGetter().Set(accessToken.Value as string, userID.Value as string);
+
                 return RedirectToAction("welcome", "item");
             }
             else

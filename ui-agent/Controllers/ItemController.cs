@@ -85,8 +85,17 @@ namespace ui_agent.Controllers
             {
                 this.ViewBag.EmptyInventoryMessage = "Please add items to your Poshmark inventory.";
             }
-            return View();
+            return View("inventory");
         }
+
+        public IActionResult InventoryEbay()
+        {
+            var token = tokenGetters.EBayTokenGetter();
+            var userID = token.GetUserID();
+
+            return View("inventory");
+        }
+
 
         public IActionResult Welcome()
         {

@@ -15,17 +15,20 @@ using ui_agent.Services;
 using Microsoft.Extensions.Logging;
 using RestSharp.Extensions;
 using Microsoft.Extensions.Logging.Console;
+using lib.cache.disk;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace ui_agent
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,6 +41,7 @@ namespace ui_agent
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
