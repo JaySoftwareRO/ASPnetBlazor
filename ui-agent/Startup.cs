@@ -1,22 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Build.Framework;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ui_agent.Services;
 using Microsoft.Extensions.Logging;
-using RestSharp.Extensions;
-using Microsoft.Extensions.Logging.Console;
-using lib.cache.disk;
-using Microsoft.Extensions.Caching.Distributed;
+using System;
+using System.Linq;
+using ui_agent.Services;
 
 namespace ui_agent
 {

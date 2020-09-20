@@ -14,7 +14,7 @@ namespace lib.listers
     public class EbayLister : Lister
     {
         // https://developer.ebay.com/api-docs/commerce/taxonomy/static/supportedmarketplaces.html
-        private const string MarketplaceUSA = "EBAY_US";
+        // private const string MarketplaceUSA = "EBAY_US";
 
         IDistributedCache cache;
         ILogger logger;
@@ -23,13 +23,13 @@ namespace lib.listers
         ITokenGetter tokenGetter;
         string accountID;
 
-        public EbayLister(IDistributedCache cache, ILogger logger, int liveCallLimit, string accountID, ITokenGetter tokenGetter)
+        public EbayLister(IDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;
             this.liveCallLimit = liveCallLimit;
             this.tokenGetter = tokenGetter;
-            this.accountID = accountID;
+            this.accountID = tokenGetter.GetUserID().Result;
         }
         public async Task<List<Item>> List()
         {

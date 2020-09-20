@@ -62,7 +62,7 @@
                     else
                     {
                         <span class="label success data-tooltip" title="Treecat logged in.">
-                            <i class="fas fa-info"></i> @googleTokenGetter.GetUserID()
+                            <i class="fas fa-info"></i> @googleTokenGetter.GetUserID().Result
                         </span>
 
                         @if (string.IsNullOrWhiteSpace(await ebayTokenGetter.GetToken()))

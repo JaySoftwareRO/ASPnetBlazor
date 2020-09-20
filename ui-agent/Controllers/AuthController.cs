@@ -32,12 +32,12 @@ namespace ui_agent.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GoogleDone(GoogleProfileModel loginData)
+        public async Task<IActionResult> GoogleDone([FromBody] GoogleProfileModel loginData)
         {
             // Save the auth token in the cache
             await this.tokenGetters.Google.Set(loginData.IDToken, loginData.Email);
 
-            return RedirectToAction("welcome", "item");
+            return null;
         }
 
         public async Task<IActionResult> EbayAccept(string code)

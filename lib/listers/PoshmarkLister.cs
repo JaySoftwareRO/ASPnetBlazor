@@ -18,12 +18,12 @@ namespace lib.listers
         ITokenGetter tokenGetter;
         string accountID;
 
-        public PoshmarkLister(IDistributedCache cache, ILogger logger, int liveCallLimit, string accountID, ITokenGetter tokenGetter)
+        public PoshmarkLister(IDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;
             this.liveCallLimit = liveCallLimit;
-            this.accountID = accountID;
+            this.accountID = tokenGetter.GetUserID().Result;
             this.tokenGetter = tokenGetter;
         }
 

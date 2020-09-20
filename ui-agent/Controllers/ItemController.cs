@@ -42,36 +42,14 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Inventory()
-        {
-            var authToken = await this.tokenGetters.Google.GetToken();
-            string bifrostURL = this.configuration["Bifrost:Service"];
-            var cache = new BifrostCache(bifrostURL, "ebay-items", authToken, logger);
-            var tokenGetter = this.tokenGetters.Ebay;
-            
-            try
-            {
-                this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "fake-account", tokenGetter).List().Result;
-            }
-            catch (Exception)
-            {
-                // Dirty implementation, should find a better way to achieve this.
-                this.ViewBag.Items = "";
-                this.ViewBag.EmptyInventoryMessage = "Please add some items to your eBay inventory.";
-            }
-
-            return View();
-        }
-
         public async Task<IActionResult> ImportPoshmark()
         {
             var authToken = await this.tokenGetters.Google.GetToken();
 
             var tokenGetter = tokenGetters.Poshmark;
-            var userID = await tokenGetter.GetUserID();
             var token = await tokenGetter.GetToken();
 
-            if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(userID))
+            if (string.IsNullOrWhiteSpace(token))
             {
                 // TODO: redirect to a "not logged into" page
                 return RedirectToAction("welcome", "item");
@@ -83,14 +61,9 @@ namespace ui_agent.Controllers
             var items = new List<Item>();
 
             try
-            {   if (userID != null)
-                {
-                    items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, tokenGetter).List().Result;
-                }
-                else
-                {
-                    this.ViewBag.EmptyInventoryMessage = "Please log in to see your Poshmark inventory.";
-                }
+            {   
+                // TODO: live call limits should not be hardcoded
+                items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, tokenGetter).List().Result;
             }
             catch (Exception)
             {
@@ -127,8 +100,7 @@ namespace ui_agent.Controllers
             string bifrostURL = this.configuration["Bifrost:Service"];
             var cache = new BifrostCache(bifrostURL, "ebay-items", authToken, logger);
 
-            //TODO: account should be ebay user's account, and the bifrost service has to authenticate the local account
-            var items = new lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;
+            var items = new lib.listers.EbayLister(cache, this.logger, 10000, tokenGetter).List().Result;
 
             this.ViewBag.Selected = "ebay";
             return View("importdata", items);
