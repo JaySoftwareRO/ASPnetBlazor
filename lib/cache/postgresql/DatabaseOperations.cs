@@ -30,8 +30,8 @@ namespace lib.cache.postgresql
             SystemClock = systemClock;
 			if (createInfrastructure)
 			{
-                CreateDatabaseIfNotExist("treecat"); // Parameter = name of the database to be created
-                CreateSchemaIfNotExist(); // Schemas are taken from "bifrost/appsettings.json"
+                CreateDatabaseIfNotExist();
+                CreateSchemaIfNotExist();
                 CreateTableIfNotExist();
             }
         }
@@ -64,21 +64,14 @@ namespace lib.cache.postgresql
                     .Replace("[tableName]", TableName);
         }
 
-        private string ConnectionStringBuilder()
-        {
-            var  csb = new NpgsqlConnectionStringBuilder
-            {
-                ConnectionString = ConnectionString,
-                Database = "treecat"
-            };
-            return csb.ToString();
-        }
-
         // Checks if the database that is going to be built exists or not 
         private bool HasDatabase(string databaseName)
         {
             bool hasDatabase = false;
-            using (var cn = new NpgsqlConnection(ConnectionString))
+            NpgsqlConnectionStringBuilder csb = new NpgsqlConnectionStringBuilder(ConnectionString);
+            csb.Database = string.Empty;
+
+            using (var cn = new NpgsqlConnection(csb.ToString()))
             {
                 cn.Open();
 
@@ -103,16 +96,20 @@ namespace lib.cache.postgresql
         }
 
         // If the database doesn't exist, create it
-        private void CreateDatabaseIfNotExist(string databaseName)
+        private void CreateDatabaseIfNotExist()
         {
-            if (this.HasDatabase(databaseName) == false)
+            NpgsqlConnectionStringBuilder csb = new NpgsqlConnectionStringBuilder(this.ConnectionString);
+            var dbname = csb.Database;
+
+            if (this.HasDatabase(dbname) == false)
             {
+                csb.Database = string.Empty;
                 // Open a connection with the "ConnectionString" options taken from the JSON file
-                NpgsqlConnection conn = new NpgsqlConnection(ConnectionString);
+                NpgsqlConnection conn = new NpgsqlConnection(csb.ToString());
                 conn.Open();
 
                 // Define a query
-                NpgsqlCommand cmd = new NpgsqlCommand("CREATE DATABASE " + databaseName, conn);
+                NpgsqlCommand cmd = new NpgsqlCommand("CREATE DATABASE " + dbname, conn);
 
                 // Execute a query
                 cmd.ExecuteNonQuery();
@@ -124,7 +121,7 @@ namespace lib.cache.postgresql
         // Create the schemas if they don't exist
         private void CreateSchemaIfNotExist()
         {
-            using (var cn = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var cn = new NpgsqlConnection(this.ConnectionString))
             {
                 cn.Open();
                 try
@@ -165,7 +162,7 @@ namespace lib.cache.postgresql
             sb.Append(FormatName(sql.funcDeleteCacheItem));
             sb.Append(FormatName(sql.funcDeleteExpired));
 
-            using (var cn = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var cn = new NpgsqlConnection(this.ConnectionString))
             {
                 cn.Open();
                 using (var transaction = cn.BeginTransaction())
@@ -192,7 +189,7 @@ namespace lib.cache.postgresql
 
         public void DeleteCacheItem(string key)
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.DeleteCacheItemFormat}", connection)
                 {
@@ -211,7 +208,7 @@ namespace lib.cache.postgresql
 
         public async Task DeleteCacheItemAsync(string key)
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.DeleteCacheItemFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;
@@ -250,7 +247,7 @@ namespace lib.cache.postgresql
         {
             var utcNow = SystemClock.UtcNow;
 
-            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.DeleteExpiredCacheItemsFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;
@@ -272,7 +269,7 @@ namespace lib.cache.postgresql
             var absoluteExpiration = GetAbsoluteExpiration(utcNow, options);
             ValidateOptions(options.SlidingExpiration, absoluteExpiration);
 
-            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
             {
                 var upsertCommand = new NpgsqlCommand($"{SchemaName}.{Functions.Names.SetCache}", connection);
                 upsertCommand.CommandType = CommandType.StoredProcedure;
@@ -313,7 +310,7 @@ namespace lib.cache.postgresql
             var absoluteExpiration = GetAbsoluteExpiration(utcNow, options);
             ValidateOptions(options.SlidingExpiration, absoluteExpiration);
 
-            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
             {
                 var upsertCommand = new NpgsqlCommand($"{SchemaName}.{Functions.Names.SetCache}", connection);
                 upsertCommand.CommandType = CommandType.StoredProcedure;
@@ -355,7 +352,7 @@ namespace lib.cache.postgresql
             TimeSpan? slidingExpiration = null;
             DateTimeOffset? absoluteExpiration = null;
             DateTimeOffset expirationTime;
-            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.UpdateCacheItemFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;
@@ -423,7 +420,7 @@ namespace lib.cache.postgresql
             TimeSpan? slidingExpiration = null;
             DateTimeOffset? absoluteExpiration = null;
             DateTimeOffset expirationTime;
-            using (var connection = new NpgsqlConnection(ConnectionStringBuilder()))
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
             {
                 var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.UpdateCacheItemFormat}", connection);
                 command.CommandType = CommandType.StoredProcedure;

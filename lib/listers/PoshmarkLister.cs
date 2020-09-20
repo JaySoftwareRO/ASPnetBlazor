@@ -53,34 +53,41 @@ namespace lib.listers
                     ASCIIEncoding.UTF8.GetString(cachedSellingItems));
             }
 
-            List<Item> returnItems = new List<Item>();  // List with items to be returned
+            List<Item> result = new List<Item>();  // List with items to be returned
 
-            foreach (var result in sellingItems)
+            foreach (var item in sellingItems)
             {
-                var Item = new Item();
+                try
+                {
+                    var Item = new Item();
 
-                Item.ProductID = result.id;
-                Item.Title = result.title;
-                Item.Price = result.price;
-                Item.OriginalPrice = result.original_price;
-                Item.Size = result.size;
-                Item.Brand = result.brand;
-                Item.Description = result.description;
-                Item.Shares = result.aggregates.shares;
-                Item.Comments = result.aggregates.comments;
-                Item.Likes = result.aggregates.likes;
-                //Item.Categories = items.GetCategories(result);
-                //Item.Colors = items.GetColors(result);
-                //Item.Images = items.GetImages(result);
-                //Item.Quantity = items.GetQuantity(result);
-                //Item.Status = result.inventory.status;
-                //Item.Date = items.GetCreatedDate(result);
-                Item.URL = "https://poshmark.com/listing/" + Item.ProductID;
-                //Item.HasOffer = items.GetHasOffer(result);
+                    Item.ID = item.id;
+                    Item.Title = item.title;
+                    Item.Price = item.price;
+                    Item.Description = item.description;
+                    Item.Status = item.inventory.status;
+                    Item.Stock = items.GetQuantity(item);
+                    Item.MainImageURL = items.GetMainImageURL(item);
+                    //Item.Size = result.size;
+                    Item.Brand = item.brand;
+                    //Item.Shares = item.aggregates.shares;
+                    //Item.Comments = item.aggregates.comments;
+                    //Item.Likes = item.aggregates.likes;
+                    //Item.Categories = items.GetCategories(item);
+                    //Item.Colors = items.GetColors(item);
+                    Item.Date = items.GetCreatedDate(item);
+                    Item.URL = "https://poshmark.com/listing/" + Item.ID;
+                    Item.HasOffer = items.GetHasOffer(item);
 
-                returnItems.Add(Item);
+                    result.Add(Item);
+                } 
+                catch (NullReferenceException e)
+                {
+                    logger.LogInformation("Error listing eBay items: " + e.ToString());
+                }
             }
-            return returnItems;
+
+            return result;
         }
     }
 }

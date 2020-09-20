@@ -52,7 +52,6 @@ namespace lib
         {
             get; set;
         }
-        public string ProductID { get; set; }
 
         public string Size { get; set; }
 
@@ -64,11 +63,9 @@ namespace lib
 
         public List<string> Colors { get; set; }
 
-        public List<string> Images { get; set; }
+        //public List<string> Images { get; set; }
 
         public string Date { get; set; }
-
-        public List<string> Quantity { get; set; } // Quantity [0] = available, [1] = reserved, [2] sold
 
         public string URL { get; set; }
 

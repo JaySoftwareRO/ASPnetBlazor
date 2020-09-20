@@ -13,17 +13,17 @@ namespace lib.token_getters
         private IDistributedCache cache;
         private string cacheTokenKey;
         private string cacheUserIDKey;
-        private int cacheDays = 30;
+        private int cacheHours = 30;
         private string loginURL;
         private ILogger logger;
         private List<string> scopes;
 
-        public CachedTokenGetter(IDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheDays, List<string> scopes)
+        public CachedTokenGetter(IDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheHours, List<string> scopes)
         {
             this.cache = cache;
             this.cacheTokenKey = string.Format($"{cacheKey}_token");
             this.cacheUserIDKey = string.Format($"{cacheKey}_userid");
-            this.cacheDays = cacheDays;
+            this.cacheHours = cacheHours;
             this.loginURL = loginURL;
             this.logger = logger;
             this.scopes = scopes;
@@ -37,7 +37,7 @@ namespace lib.token_getters
                 token,
                 new DistributedCacheEntryOptions()
                 {
-                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(this.cacheDays)
+                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromHours(this.cacheHours)
                 });
 
             await this.cache.SetStringAsync(
@@ -45,7 +45,7 @@ namespace lib.token_getters
                 userID,
                 new DistributedCacheEntryOptions()
                 {
-                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(this.cacheDays)
+                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromHours(this.cacheHours)
                 });
         }
 

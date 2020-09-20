@@ -104,16 +104,32 @@ namespace lib.listers
 
             foreach (var item in sellingItems.GetMyeBaySellingResponse1.ActiveList.ItemArray)
             {
-                result.Add(new Item()
+                try
                 {
-                    Title = item.Title,
-                    ID = item.ItemID,
-                    Description = "BFRST-NPY",
-                    Price = item.BuyItNowPrice.Value,
-                    Status = "BFRST-NPY",
-                    Stock = item.QuantityAvailable,
-                    MainImageURL = item.PictureDetails.GalleryURL
-                });
+                    var Item = new Item();
+
+                    Item.ID = item.ItemID;
+                    Item.Title = item.Title;
+                    Item.Price = item.BuyItNowPrice.Value;
+                    Item.Description = "BFRST-NPY";
+                    Item.Status = item.SellingStatus.ListingStatus.ToString();
+                    Item.Stock = item.QuantityAvailable;
+                    Item.MainImageURL = item.PictureDetails.GalleryURL;
+                    Item.Size = "BFRST-NPY";
+                    Item.Brand = "BFRST-NPY";
+                    // Ebay has no shares/likes/comments
+                    // Item.Categories.Add("BFRST-NPY");
+                    // Item.Colors.Add("BFRST-NPY");
+                    Item.Date = item.ListingDetails.StartTime.ToString().Substring(0, 10);
+                    Item.URL = item.ListingDetails.ViewItemURL;
+                    Item.HasOffer = item.SellingStatus.BidCount > 0 ? "Yes" : "No";
+
+                    result.Add(Item);
+                }
+                catch (NullReferenceException e)
+                {
+                    logger.LogInformation("Error listing eBay items: " + e.ToString());
+                }
             }
 
             return result;

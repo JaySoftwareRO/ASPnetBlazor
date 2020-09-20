@@ -12,6 +12,8 @@ namespace lib.token_getters
         public string AccessToken { get; set; }
 
         public string RefreshToken { get; set; }
+
+        public string UserID { get; set; }
     }
 
     public class EbayTokenUtils
@@ -45,6 +47,22 @@ namespace lib.token_getters
             {
                 AccessToken = result.AccessToken.Token,
                 RefreshToken = string.Empty,
+            };
+        }
+
+        public static EbayToken UserID(string refreshToken, List<string> scopes, ILogger logger)
+        {
+            logger.LogDebug("loading ebay auth config");
+            CredentialUtil.Load("ebay-auth-config.yaml", logger);
+            OAuth2Api oAuth2Api = new OAuth2Api(logger);
+
+            logger.LogInformation("getting ebay user id");
+            var result = oAuth2Api.GetApplicationToken(OAuthEnvironment.PRODUCTION, scopes);
+            return new EbayToken()
+            {
+                AccessToken = result.AccessToken.Token,
+                RefreshToken = result.AccessToken.Token,
+                
             };
         }
     }

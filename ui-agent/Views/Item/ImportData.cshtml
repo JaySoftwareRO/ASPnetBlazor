@@ -51,9 +51,9 @@
                         <th>Qty</th>
                         <th>Created</th>
                         <th>Has Offer</th>
-                        <th>Shares</th>
+                        @*<th>Shares</th>
                         <th>Likes</th>
-                        <th>Comments</th>
+                        <th>Comments</th>*@
                         <th>Follow-up Link</th>
                     </tr>
                 </thead>
@@ -63,7 +63,7 @@
                         <tr>
                             <td><input type="checkbox"></td>
                             <td>@item.Status</td>
-                            <td><img class="thumb40" src="@item.Images"></td>
+                            <td><img class="thumb40" src="@item.MainImageURL"></td>
                             <td><a href="../item/edit" target="_blank">@item.Title</a></td>
                             <td>
                                 <a href="@item.URL"
@@ -73,12 +73,12 @@
                             </td>
                             <td>N/A</td>
                             <td>$@item.Price</td>
-                            <td>@item.Quantity</td>
+                            <td>@item.Stock</td>
                             <td>@item.Date</td>
                             <td>@item.HasOffer</td>
-                            <td>@item.Shares</td>
+                            @*<td>@item.Shares</td>
                             <td>@item.Likes</td>
-                            <td>@item.Comments</td>
+                            <td>@item.Comments</td>*@
                             <td><a href="@item.URL" target="_blank">Poshmark Sale</a></td>
                         </tr>
                     }

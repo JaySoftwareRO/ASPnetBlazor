@@ -36,39 +36,41 @@ namespace lib.poshmark_client
             return colors;
         }
 
-        public List<dynamic> GetImages(dynamic result)
+        //public List<dynamic> GetImages(dynamic result)
+        //{
+        //    List<dynamic> images = new List<dynamic>();
+
+        //    // Cover image
+        //    images.Add(result.cover_shot.url_small);
+        //    images.Add(result.cover_shot.url);
+        //    images.Add(result.cover_shot.url_large);
+
+        //    // Rest of the images
+        //    foreach (var image in result.pictures)
+        //    {
+        //        images.Add(image.url_small);
+        //        images.Add(image.url);
+        //        images.Add(image.url_large);
+        //    }
+
+        //    return images;
+        //}
+
+        public string GetMainImageURL(dynamic result)
         {
-            List<dynamic> images = new List<dynamic>();
-
-            // Cover image
-            images.Add(result.cover_shot.url_small);
-            images.Add(result.cover_shot.url);
-            images.Add(result.cover_shot.url_large);
-
-            // Rest of the images
-            foreach (var image in result.pictures)
-            {
-                images.Add(image.url_small);
-                images.Add(image.url);
-                images.Add(image.url_large);
-            }
-
-            return images;
+            return result.cover_shot.url;
         }
 
-        public List<dynamic> GetQuantity(dynamic result)
+        public int GetQuantity(dynamic result)
         {
-            List<dynamic> quantities = new List<dynamic>();
+            int quantity = 0;
 
-            // Quantity [0] = available, [1] = reserved, [2] sold
-            foreach (var quantity in result.inventory.size_quantities)
+            foreach (var resultQuantity in result.inventory.size_quantities)
             {
-                quantities.Add(quantity.quantity_available); 
-                quantities.Add(quantity.quantity_reserved);
-                quantities.Add(quantity.quantity_sold);
+                quantity = resultQuantity.quantity_available;
             }
 
-            return quantities;
+            return quantity;
         }
 
         public string GetCreatedDate(dynamic result)

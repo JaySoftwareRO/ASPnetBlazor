@@ -42,26 +42,6 @@ namespace ui_agent.Controllers
             return View();
         }
 
-        public IActionResult Inventory()
-        {
-            string bifrostURL = this.configuration["Bifrost:Service"];
-            var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
-            var tokenGetter = this.tokenGetters.EBayTokenGetter();
-            
-            try
-            {
-                this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "fake-account", tokenGetter).List().Result;
-            }
-            catch (Exception)
-            {
-                // Dirty implementation, should find a better way to achieve this.
-                this.ViewBag.Items = "";
-                this.ViewBag.EmptyInventoryMessage = "Please add some items to your eBay inventory.";
-            }
-
-            return View();
-        }
-
         public async Task<IActionResult> ImportPoshmark()
         {
             var tokenGetter = tokenGetters.PoshmarkTokenGetter();
@@ -80,9 +60,10 @@ namespace ui_agent.Controllers
             var items = new List<Item>();
 
             try
-            {   if (userID != null)
+            {   
+                if (userID != null)
                 {
-                    items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, tokenGetter).List().Result;
+                    items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "poshmarkUser-" + userID, tokenGetter).List().Result;
                 }
                 else
                 {
