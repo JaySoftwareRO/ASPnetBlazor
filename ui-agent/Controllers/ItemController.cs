@@ -110,6 +110,13 @@ namespace ui_agent.Controllers
             return View("importdata", items);
         }
 
+        public IActionResult ImportSelected()
+        {
+
+
+            return View("importdata");
+        }
+
         public IActionResult Welcome()
         {
             return View();

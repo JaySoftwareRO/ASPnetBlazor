@@ -45,7 +45,8 @@ namespace bifrost
                     cacheOptions.SlidingExpiration = TimeSpan.Parse(request.CacheOptions.SlidingExpiration);
                 }
             }
-            await cache.SetAsync(request.Key, request.Value.ToByteArray(), cacheOptions);
+            var key = GenerateKey(request.Key, context);
+            await cache.SetAsync(key, request.Value.ToByteArray(), cacheOptions);
             return new SetReply();
         }
 
@@ -75,6 +76,12 @@ namespace bifrost
             
             await cache.RemoveAsync(request.Key);
             return new RemoveReply();
+        }
+        // Key created from the request key and the Google account ID. 
+        public string GenerateKey(string key, ServerCallContext context)
+        {
+            var googleAccountId = context.RequestHeaders.Get("googleProfileID");
+            return $"{key}_{googleAccountId}";
         }
     }
 }

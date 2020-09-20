@@ -32,7 +32,10 @@
                 <div class="input-group">
                     <input type="submit" class="button" value="Refresh List">
                     <div class="input-group-label">Last Refreshed: 2020-07-20 14h30</div>
-                    <input type="submit" class="button" value="Import Selected">
+                    <a href="/item/importselected">
+                        <input type="submit" class="button" value="Import Selected">
+                    </a>
+                    <asp:Button Text="Import Selected" runat="server" OnClick="ImportSelected"/>
                 </div>
             </div>
         </div>
@@ -61,7 +64,7 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td><input type="checkbox"></td>
+                            <td><input type="checkbox" value="@item.ID"></td>
                             <td>@item.Status</td>
                             <td><img class="thumb40" src="@item.MainImageURL"></td>
                             <td><a href="../item/edit" target="_blank">@item.Title</a></td>
