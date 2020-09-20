@@ -28,7 +28,27 @@ namespace lib.bifrost
             UnaryServerMethod<TRequest, TResponse> continuation)
         {
             LogCall(context);
+            await AuthenticateCall(context);
             return await continuation(request, context);
+        }
+
+        public async override Task ServerStreamingServerHandler<TRequest, TResponse>(TRequest request, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, ServerStreamingServerMethod<TRequest, TResponse> continuation)
+        {
+            LogCall(context);
+            await AuthenticateCall(context);
+            await continuation(request, responseStream, context);
+        }
+        public async override Task DuplexStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, IServerStreamWriter<TResponse> responseStream, ServerCallContext context, DuplexStreamingServerMethod<TRequest, TResponse> continuation)
+        {
+            LogCall(context);
+            await AuthenticateCall(context);
+            await continuation(requestStream, responseStream, context);
+        }
+        public async override Task<TResponse> ClientStreamingServerHandler<TRequest, TResponse>(IAsyncStreamReader<TRequest> requestStream, ServerCallContext context, ClientStreamingServerMethod<TRequest, TResponse> continuation)
+        {
+            LogCall(context);
+            await AuthenticateCall(context);
+            return await continuation(requestStream, context);
         }
 
         private void LogCall(ServerCallContext context)
@@ -56,8 +76,8 @@ namespace lib.bifrost
                     });
 
                 var accountID = validPayload.Subject;
-                context.RequestHeaders.Add("googleProfileID", accountID);
-            } 
+                context.RequestHeaders.Add("googleprofileid", accountID);
+            }
             catch (Exception ex)
             {
                 this.logger.LogWarning($"invalid google auth token from {context.GetHttpContext().Connection.RemoteIpAddress} for {context.Method}");

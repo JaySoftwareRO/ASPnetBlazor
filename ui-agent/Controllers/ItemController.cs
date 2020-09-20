@@ -94,7 +94,7 @@ namespace ui_agent.Controllers
 
                 // Use the refresh token to get an access token
                 var newAccessToken = EbayTokenUtils.AccessTokenFromRefreshToken(refreshToken, tokenGetter.Scopes(), logger);
-                await this.tokenGetters.Ebay.Set(newAccessToken.AccessToken, string.Empty);
+                await this.tokenGetters.Ebay.Set(newAccessToken.AccessToken, newAccessToken.UserID);
             }
 
             string bifrostURL = this.configuration["Bifrost:Service"];

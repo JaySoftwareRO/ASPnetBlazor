@@ -53,8 +53,9 @@ namespace bifrost
         public override async Task<GetReply> Get(GetRequest request, ServerCallContext context)
         {
             var cache = this.caches.Get(request.Cache);
-            
-            var value = await cache.GetAsync(request.Key);
+            var key = GenerateKey(request.Key, context);
+
+            var value = await cache.GetAsync(key);
             return new GetReply()
             {
                 Value = value == null ? ByteString.Empty : ByteString.CopyFrom(value),
@@ -65,23 +66,25 @@ namespace bifrost
         public override async Task<RefreshReply> Refresh(RefreshRequest request, ServerCallContext context)
         {
             var cache = this.caches.Get(request.Cache);
-            
-            await cache.RefreshAsync(request.Key);
+            var key = GenerateKey(request.Key, context);
+
+            await cache.RefreshAsync(key);
             return new RefreshReply();
         }
 
         public override async Task<RemoveReply> Remove(RemoveRequest request, ServerCallContext context)
         {
             var cache = this.caches.Get(request.Cache);
-            
-            await cache.RemoveAsync(request.Key);
+            var key = GenerateKey(request.Key, context);
+
+            await cache.RemoveAsync(key);
             return new RemoveReply();
         }
         // Key created from the request key and the Google account ID. 
         public string GenerateKey(string key, ServerCallContext context)
         {
-            var googleAccountId = context.RequestHeaders.Get("googleProfileID");
-            return $"{key}_{googleAccountId}";
+            var googleAccountId = context.RequestHeaders.Get("googleprofileid");
+            return $"{key}_{googleAccountId.Value}";
         }
     }
 }
