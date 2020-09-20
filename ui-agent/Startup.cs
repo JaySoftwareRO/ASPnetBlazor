@@ -88,6 +88,8 @@ namespace ui_agent
 
             browserWindow.WebContents.OnDidFinishLoad += async () =>
             {
+                browserWindow.WebContents.Session.SetUserAgent("Chrome");
+
                 var url = await browserWindow.WebContents.GetUrl();
                 logger.LogDebug($"navigated to {url}");
 

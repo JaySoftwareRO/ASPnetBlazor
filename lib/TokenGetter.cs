@@ -39,23 +39,24 @@ namespace lib
 
     public interface ITokenGetters
     {
-        ITokenGetter EBayTokenGetter();
-        ITokenGetter EbayAccessTokenGetter();
-        ITokenGetter MercariTokenGetter();
-        ITokenGetter PoshmarkTokenGetter();
-        ITokenGetter AmazonTokenGetter();
+        ITokenGetter Ebay { get; }
+        ITokenGetter EbayAccess { get; }
+        ITokenGetter Mercari { get; }
+        ITokenGetter Poshmark { get; }
+        ITokenGetter Amazon { get; }
+        ITokenGetter Google { get; }
     }
 
     public class TokenGetters : ITokenGetters
     {
-        private ITokenGetter Amazon {
+        public ITokenGetter Amazon {
             get
             {
                 return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
             }
         }
 
-        private ITokenGetter Ebay
+        public ITokenGetter Ebay
         {
             get
             {
@@ -63,8 +64,7 @@ namespace lib
             }
         }
 
-
-        private ITokenGetter EbayAccess
+        public ITokenGetter EbayAccess
         {
             get
             {
@@ -72,7 +72,7 @@ namespace lib
             }
         }
 
-        private ITokenGetter Mercari
+        public ITokenGetter Mercari
         {
             get
             {
@@ -80,7 +80,15 @@ namespace lib
             }
         }
 
-        private ITokenGetter Poshmark
+        public ITokenGetter Poshmark
+        {
+            get
+            {
+                return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
+            }
+        }
+
+        public ITokenGetter Google
         {
             get
             {
@@ -113,31 +121,6 @@ namespace lib
                     config.TokenCacheDurationHours,
                     config.Scopes);
             }
-        }
-
-        public ITokenGetter AmazonTokenGetter()
-        {
-            return this.Amazon;
-        }
-
-        public ITokenGetter EBayTokenGetter()
-        {
-            return this.Ebay;
-        }
-
-        public ITokenGetter MercariTokenGetter()
-        {
-            return this.Mercari;
-        }
-
-        public ITokenGetter PoshmarkTokenGetter()
-        {
-            return this.Poshmark;
-        }
-
-        public ITokenGetter EbayAccessTokenGetter()
-        {
-            return this.EbayAccess;
         }
     }
 }

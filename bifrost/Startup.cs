@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using Grpc.Core;
+using lib.bifrost;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +30,10 @@ namespace bifrost
         {
             services
                 .AddCaches(Configuration)
-                .AddGrpc();
+                .AddGrpc(options =>
+                {
+                    options.Interceptors.Add<GoogleTokenInterceptor>();
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,33 +45,13 @@ namespace bifrost
             }
 
             app.UseRouting();
-
-            // TODO: should use proper authentication
-            // app.UseAuthentication();
-
-            app.Use(async (context, next) =>
-            {
-                var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-
-                if (authHeader == "NmQ4NDYxMzkyM2VhNDVkN2E0MTQ5OGZlNzI2ZGE2Nzc6NTBlNWU1MmY2YmMxNDllMzhjMWY2MTQ5MDliZWZjNTg=")
-                {
-                    // Call the next delegate/middleware in the pipeline
-                    await next();
-                }
-                else
-                {
-                    throw new AuthenticationException("not authorized to access treecat");
-                }
-
-            });
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<CacheService>();
 
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client.");
                 });
             });
         }

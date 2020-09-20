@@ -42,9 +42,32 @@ namespace ui_agent.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Inventory()
+        {
+            var authToken = await this.tokenGetters.Google.GetToken();
+            string bifrostURL = this.configuration["Bifrost:Service"];
+            var cache = new BifrostCache(bifrostURL, "ebay-items", authToken, logger);
+            var tokenGetter = this.tokenGetters.Ebay;
+            
+            try
+            {
+                this.ViewBag.Items = new lib.listers.EbayLister(cache, this.logger, 10000, "fake-account", tokenGetter).List().Result;
+            }
+            catch (Exception)
+            {
+                // Dirty implementation, should find a better way to achieve this.
+                this.ViewBag.Items = "";
+                this.ViewBag.EmptyInventoryMessage = "Please add some items to your eBay inventory.";
+            }
+
+            return View();
+        }
+
         public async Task<IActionResult> ImportPoshmark()
         {
-            var tokenGetter = tokenGetters.PoshmarkTokenGetter();
+            var authToken = await this.tokenGetters.Google.GetToken();
+
+            var tokenGetter = tokenGetters.Poshmark;
             var userID = await tokenGetter.GetUserID();
             var token = await tokenGetter.GetToken();
 
@@ -55,15 +78,14 @@ namespace ui_agent.Controllers
             }
 
             string bifrostURL = this.configuration["Bifrost:Service"];
-            var cache = new BifrostCache(bifrostURL, "poshmark-items", logger);
+            var cache = new BifrostCache(bifrostURL, "poshmark-items", authToken, logger);
 
             var items = new List<Item>();
 
             try
-            {   
-                if (userID != null)
+            {   if (userID != null)
                 {
-                    items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "poshmarkUser-" + userID, tokenGetter).List().Result;
+                    items = new lib.listers.PoshmarkLister(cache, this.logger, 10000, "ad-" + userID, tokenGetter).List().Result;
                 }
                 else
                 {
@@ -81,12 +103,14 @@ namespace ui_agent.Controllers
 
         public async Task<IActionResult> ImportEbay()
         {
-            var tokenGetter = tokenGetters.EbayAccessTokenGetter();
+            var authToken = await this.tokenGetters.Google.GetToken();
+
+            var tokenGetter = tokenGetters.EbayAccess;
             var accessToken = await tokenGetter.GetToken();
 
             if (string.IsNullOrWhiteSpace(accessToken))
             {
-                var refreshTokenGetter = tokenGetters.EBayTokenGetter();
+                var refreshTokenGetter = tokenGetters.Ebay;
                 var refreshToken = await refreshTokenGetter.GetToken();
 
                 if (string.IsNullOrWhiteSpace(refreshToken))
@@ -97,11 +121,11 @@ namespace ui_agent.Controllers
 
                 // Use the refresh token to get an access token
                 var newAccessToken = EbayTokenUtils.AccessTokenFromRefreshToken(refreshToken, tokenGetter.Scopes(), logger);
-                await this.tokenGetters.EbayAccessTokenGetter().Set(newAccessToken.AccessToken, string.Empty);
+                await this.tokenGetters.Ebay.Set(newAccessToken.AccessToken, string.Empty);
             }
 
             string bifrostURL = this.configuration["Bifrost:Service"];
-            var cache = new BifrostCache(bifrostURL, "ebay-items", logger);
+            var cache = new BifrostCache(bifrostURL, "ebay-items", authToken, logger);
 
             //TODO: account should be ebay user's account, and the bifrost service has to authenticate the local account
             var items = new lib.listers.EbayLister(cache, this.logger, 10000, "localAccount", tokenGetter).List().Result;

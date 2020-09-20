@@ -2,6 +2,11 @@
 import * as Electron from "electron";
 import { Connector } from "./connector";
 
+Electron.session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders['User-Agent'] = 'Chrome';
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+});
+
 export class HookService extends Connector {
     constructor(socket: SocketIO.Socket, public app: Electron.App) {
         super(socket, app);

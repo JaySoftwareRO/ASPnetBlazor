@@ -31,11 +31,20 @@ namespace ui_agent.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GoogleDone(GoogleProfileModel loginData)
+        {
+            // Save the auth token in the cache
+            await this.tokenGetters.Google.Set(loginData.IDToken, loginData.Email);
+
+            return RedirectToAction("welcome", "item");
+        }
+
         public async Task<IActionResult> EbayAccept(string code)
         {
             var token = EbayTokenUtils.TokenFromCode(code, this.logger);
-            await this.tokenGetters.EBayTokenGetter().Set(token.RefreshToken, string.Empty);
-            await this.tokenGetters.EbayAccessTokenGetter().Set(token.AccessToken, string.Empty);
+            await this.tokenGetters.Ebay.Set(token.RefreshToken, string.Empty);
+            await this.tokenGetters.EbayAccess.Set(token.AccessToken, string.Empty);
 
             return RedirectToAction("welcome", "item");
         }
@@ -52,7 +61,7 @@ namespace ui_agent.Controllers
 
             if (!string.IsNullOrWhiteSpace(accessToken.Key))
             {
-                await this.tokenGetters.PoshmarkTokenGetter().Set(accessToken.Value as string, userID.Value as string);
+                await this.tokenGetters.Poshmark.Set(accessToken.Value as string, userID.Value as string);
 
                 return RedirectToAction("welcome", "item");
             }

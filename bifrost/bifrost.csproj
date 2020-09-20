@@ -8,6 +8,7 @@
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth" Version="1.49.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.24.0" />
     <PackageReference Include="ShopifySharp" Version="5.0.4" />
   </ItemGroup>

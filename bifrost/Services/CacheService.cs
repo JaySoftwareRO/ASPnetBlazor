@@ -26,7 +26,7 @@ namespace bifrost
         public override async Task<SetReply> Set(SetRequest request, ServerCallContext context)
         {
             var cache = this.caches.Get(request.Cache);
-
+           
             var cacheOptions = new DistributedCacheEntryOptions();
             if (request.CacheOptions != null)
             {
@@ -53,7 +53,7 @@ namespace bifrost
         public override async Task<GetReply> Get(GetRequest request, ServerCallContext context)
         {
             var cache = this.caches.Get(request.Cache);
-
+            
             var value = await cache.GetAsync(request.Key);
             return new GetReply()
             {

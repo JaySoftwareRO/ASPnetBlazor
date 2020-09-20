@@ -20,7 +20,7 @@ namespace lib.cache.bifrost
         private ILogger logger;
         private string name;
 
-        public BifrostCache(string address, string name, ILogger logger)
+        public BifrostCache(string address, string name, string authToken, ILogger logger)
         {
             var httpHandler = new HttpClientHandler();
             // Return `true` to allow certificates that are untrusted/invalid
@@ -28,10 +28,10 @@ namespace lib.cache.bifrost
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 
             // TODO: the credentials should not be hardcoded
-            var httpCredentials = "NmQ4NDYxMzkyM2VhNDVkN2E0MTQ5OGZlNzI2ZGE2Nzc6NTBlNWU1MmY2YmMxNDllMzhjMWY2MTQ5MDliZWZjNTg=";
+            
             var credentials = CallCredentials.FromInterceptor((context, metadata) =>
             {
-                metadata.Add("Authorization", $"{httpCredentials}");
+                metadata.Add("Authorization", $"{authToken}");
                 return Task.CompletedTask;
             });
 
