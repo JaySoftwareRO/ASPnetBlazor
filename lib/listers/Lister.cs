@@ -13,45 +13,21 @@ namespace lib
 
     public class Item
     {
-        public string ID
-        {
-            get; set;
-        }
+        public string ID { get; set; }
 
-        public string Title
-        {
-            get; set;
-        }
+        public string Title { get; set; }
 
-        public string Description
-        {
-            get; set;
-        }
+        public string Description { get; set; }
 
-        public double Price
-        {
-            get; set;
-        }
+        public double Price { get; set; }
 
-        public Dictionary<Feature, object> Value
-        {
-            get; set;
-        }
+        public Dictionary<Feature, object> Value { get; set; }
 
-        public string Status
-        {
-            get; set;
-        }
+        public string Status { get; set; }
 
-        public int Stock
-        {
-            get; set;
-        }
+        public int Stock { get; set; }
 
-        public string MainImageURL
-        {
-            get; set;
-        }
+        public string MainImageURL { get; set; }
 
         public string Size { get; set; }
 
@@ -76,5 +52,6 @@ namespace lib
         public string Likes { get; set; }
 
         public string HasOffer { get; set; }
+
     }
 }
