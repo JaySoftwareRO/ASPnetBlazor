@@ -20,10 +20,11 @@ namespace ui_agent
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging =>
+                .ConfigureLogging((ctx, logging) =>
                 {
                     logging.ClearProviders();
                     logging.AddConsole();
+                    logging.AddFile(o => o.RootPath = ctx.HostingEnvironment.ContentRootPath);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

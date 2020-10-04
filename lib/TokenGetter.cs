@@ -24,8 +24,13 @@ namespace lib
     {
         public Dictionary<string, TokenGetterConfig> TokenGetters { get; set; }
     }
+
+    public delegate bool OnTokenValidationDelegate(ITokenGetter tokenGetter, string token, ILogger logger);
+
     public interface ITokenGetter
     {
+        event OnTokenValidationDelegate OnTokenValidation;
+
         Task<string> GetToken();
 
         Task<string> GetUserID();
@@ -120,7 +125,32 @@ namespace lib
                     config.LoginURL,
                     config.TokenCacheDurationHours,
                     config.Scopes);
+
+                switch (provider)
+                {
+                    case "EbayAccess":
+                        this.TokenGetterMap[provider].OnTokenValidation += OnEbayAccessTokenValidation;
+                        break;
+                    default:
+                        break;
+                }
             }
+        }
+
+        private bool OnEbayAccessTokenValidation(ITokenGetter tokenGetter, string token, ILogger logger)
+        {
+            // Validate the token
+            try
+            {
+                EbayTokenUtils.UserID(token, logger);
+            }
+            catch (Exception ex)
+            {
+                logger.LogDebug(ex, "access token for ebay is not valid");
+                return false;
+            }
+
+            return true;
         }
     }
 }

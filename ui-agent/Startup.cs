@@ -31,19 +31,11 @@ namespace ui_agent
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, IConfiguration configuration)
         {
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            app.UseExceptionHandler("/item/error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
 
             app.UseStaticFiles();
 
@@ -57,6 +49,9 @@ namespace ui_agent
                     name: "default",
                     pattern: "{controller=Item}/{action=Welcome}/{id?}");
             });
+
+            var bifrostURL = configuration["Bifrost:Service"];
+            logger.LogInformation($"will use the following bifrost service: {bifrostURL}");
 
             if (HybridSupport.IsElectronActive)
             {

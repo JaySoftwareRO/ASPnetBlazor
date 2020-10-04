@@ -18,6 +18,7 @@ namespace lib.token_getters
         private ILogger logger;
         private List<string> scopes;
 
+        public event OnTokenValidationDelegate OnTokenValidation;
         public CachedTokenGetter(IDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheHours, List<string> scopes)
         {
             this.cache = cache;
@@ -52,7 +53,14 @@ namespace lib.token_getters
         public async Task<string> GetToken()
         {
             this.logger.LogDebug($"getting token from {this.cacheTokenKey} cache");
-            return await this.cache.GetStringAsync(this.cacheTokenKey);
+            var token = await this.cache.GetStringAsync(this.cacheTokenKey);
+
+            if (this.OnTokenValidation != null && !this.OnTokenValidation(this, token, logger))
+            {
+                return null;
+            }
+
+            return token;
         }
 
         public async Task<string> GetUserID()

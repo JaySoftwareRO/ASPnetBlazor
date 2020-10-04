@@ -13,7 +13,7 @@ using lib;
 using lib.token_getters;
 using System.Text;
 using Newtonsoft.Json.Linq;
-
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace ui_agent.Controllers
 {
@@ -79,6 +79,8 @@ namespace ui_agent.Controllers
 
         public async Task<IActionResult> ImportEbay()
         {
+            // TODO: handle ebay tokens in a more generic way, maybe some middleware with
+            // annotations on the actions
             var authToken = await this.tokenGetters.Google.GetToken();
 
             var tokenGetter = tokenGetters.EbayAccess;
@@ -97,6 +99,14 @@ namespace ui_agent.Controllers
 
                 // Use the refresh token to get an access token
                 var newAccessToken = EbayTokenUtils.AccessTokenFromRefreshToken(refreshToken, tokenGetter.Scopes(), logger);
+
+                if (newAccessToken == null)
+                {
+                    await this.tokenGetters.Ebay.Set("", "");
+                    // TODO: redirect to a "not logged into" page
+                    return RedirectToAction("welcome", "item");
+                }
+
                 await this.tokenGetters.Ebay.Set(newAccessToken.AccessToken, newAccessToken.UserID);    
             }
 
@@ -177,7 +187,12 @@ namespace ui_agent.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            this.ViewBag.Path = exceptionHandlerPathFeature.Path;
+            this.ViewBag.Error = exceptionHandlerPathFeature.Error;
+
+            return View();
         }
     }
 }

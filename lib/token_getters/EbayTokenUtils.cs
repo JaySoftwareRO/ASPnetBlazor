@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
@@ -48,6 +49,11 @@ namespace lib.token_getters
             logger.LogInformation("getting ebay access token from refresh token");
             var result = oAuth2Api.GetAccessToken(OAuthEnvironment.PRODUCTION, refreshToken, scopes);
 
+            if (result.AccessToken == null)
+            {
+                return null; 
+            }
+
             return new EbayToken()
             {
                 AccessToken = result.AccessToken.Token,
@@ -56,7 +62,7 @@ namespace lib.token_getters
             };
         }
 
-        private static string UserID(string accessToken, ILogger logger)
+        public static string UserID(string accessToken, ILogger logger)
         {
             logger.LogInformation("getting ebay user id");
 
