@@ -1,4 +1,5 @@
-﻿using lib.cache.disk;
+﻿using Google.Apis.Auth;
+using lib.cache.disk;
 using lib.token_getters;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
@@ -131,15 +132,34 @@ namespace lib
                     case "EbayAccess":
                         this.TokenGetterMap[provider].OnTokenValidation += OnEbayAccessTokenValidation;
                         break;
+                    case "Google":
+                        this.TokenGetterMap[provider].OnTokenValidation += OnGoogleTokenValidation;
+                        break;
                     default:
                         break;
                 }
             }
         }
 
+        private bool OnGoogleTokenValidation(ITokenGetter tokenGetter, string token, ILogger logger)
+        {
+            try
+            {
+                var validPayload = GoogleJsonWebSignature.ValidateAsync(
+                    token,
+                    new GoogleJsonWebSignature.ValidationSettings{}).Result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogDebug(ex, $"invalid google auth token");
+                return false;
+            }
+
+            return true;
+        }
+
         private bool OnEbayAccessTokenValidation(ITokenGetter tokenGetter, string token, ILogger logger)
         {
-            // Validate the token
             try
             {
                 EbayTokenUtils.UserID(token, logger);

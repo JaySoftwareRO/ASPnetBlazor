@@ -69,13 +69,13 @@ namespace lib.listers
                 liveCalls += 1;
 
                 // TODO: dispose of the OperationContextScope properly
+                var httpRequestProperty = new HttpRequestMessageProperty();
+                httpRequestProperty.Headers["X-EBAY-API-IAF-TOKEN"] = await tokenGetter.GetToken();
+
                 using (OperationContextScope scope = new OperationContextScope(client.InnerChannel))
                 {
                     try
                     {
-                        var httpRequestProperty = new HttpRequestMessageProperty();
-                        httpRequestProperty.Headers["X-EBAY-API-IAF-TOKEN"] = await tokenGetter.GetToken();
-
                         OperationContext.Current.OutgoingMessageProperties[HttpRequestMessageProperty.Name] = httpRequestProperty;
 
                         sellingItems = client.GetMyeBaySellingAsync(null, new GetMyeBaySellingRequestType()
