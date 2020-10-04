@@ -32,7 +32,7 @@ namespace lib.listers
             PoshmarkClient items = new PoshmarkClient();
             var cachedSellingItems = await this.cache.GetAsync(this.accountID);
 
-            List<dynamic> sellingItems = new List<dynamic>();
+            List<PoshmarkItem> sellingItems = new List<PoshmarkItem>();
 
             if (cachedSellingItems == null && liveCalls < this.liveCallLimit)
             {
@@ -49,7 +49,7 @@ namespace lib.listers
             } 
             else if (cachedSellingItems != null)
             {
-                sellingItems = JsonConvert.DeserializeObject<List<dynamic>>(
+                sellingItems = JsonConvert.DeserializeObject<List<PoshmarkItem>>(
                     ASCIIEncoding.UTF8.GetString(cachedSellingItems));
             }
 
@@ -61,15 +61,15 @@ namespace lib.listers
                 {
                     var Item = new Item();
 
-                    Item.ID = item.id;
-                    Item.Title = item.title;
-                    Item.Price = item.price;
-                    Item.Description = item.description;
-                    Item.Status = item.inventory.status;
-                    Item.Stock = items.GetQuantity(item);
-                    Item.MainImageURL = items.GetMainImageURL(item);
+                    Item.ID = item.ID;
+                    Item.Title = item.Title;
+                    Item.Price = item.Price;
+                    Item.Description = item.Description;
+                    Item.Status = item.InventoryStatus;
+                    Item.Stock = item.InventorySizeQuantitiesQuantityAvailable;
+                    Item.MainImageURL = item.CoverShotUrl;
                     //Item.Size = result.size;
-                    Item.Brand = item.brand;
+                    Item.Brand = item.Brand;
                     //Item.Shares = item.aggregates.shares;
                     //Item.Comments = item.aggregates.comments;
                     //Item.Likes = item.aggregates.likes;
@@ -111,13 +111,13 @@ namespace lib.listers
 
             // Algorithm to sort what's imported into the TREECAT(GMAIL) account
             // All the user's item IDs to import into TREECAT (itemsToImport variable)
-            for (var i = 0; itemsToImport.PoshmarkIDs.Count > i; i++) 
+            for (int i = 0; itemsToImport.PoshmarkIDs.Count > i; i++) 
             {
                 // Found item ID in "itemsToImport"
                 var itemToImport = itemsToImport.PoshmarkIDs[i];
 
                 // All the user's cached items from POSHMARK
-                foreach (var item in userPoshmarkCachedItems) // Not sure this check has to be made or not (probably not)
+                foreach (var item in userPoshmarkCachedItems) 
                 {
                     // Compare against the already TREECAT cached item IDs if these exist
                     if (treecatCachedItemIDs != null)
@@ -127,7 +127,6 @@ namespace lib.listers
                         if (itemToImport == item.ID && treecatItemIDs[i] != item.ID)
                         {
                             listToCache.Add(item.ID); // Import in the cache
-                            itemsToReturn.Add(item); // Return 
                         }
                     } 
                     else if (treecatCachedItemIDs == null)
@@ -136,8 +135,19 @@ namespace lib.listers
                         if (itemToImport == item.ID)
                         {
                             listToCache.Add(item.ID); // Import in the cache
-                            itemsToReturn.Add(item); // Return 
                         }
+                    }
+                }
+            }
+
+            // Add all user's TreeCat cached items to a list to return them
+            for (int i = 0; treecatItemIDs.Count > i; i++)
+            {
+                foreach (var poshmarkItem in userPoshmarkCachedItems)
+                {
+                    if (treecatItemIDs[i] == poshmarkItem.ID)
+                    {
+                        itemsToReturn.Add(poshmarkItem); // Return Item
                     }
                 }
             }
