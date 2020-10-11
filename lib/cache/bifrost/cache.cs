@@ -70,7 +70,7 @@ namespace lib.cache.bifrost
 
         public async Task<byte[]> GetAsync(string key, CancellationToken token = default)
         {
-            logger.LogDebug($"get key {key} from bifrost cache");
+            logger.LogDebug($"get async key {key} from bifrost cache");
 
             var result = await this.client.GetAsync(
                 new GetRequest
@@ -142,7 +142,7 @@ namespace lib.cache.bifrost
 
         public async Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options, CancellationToken token = default)
         {
-            logger.LogDebug($"set key {key} from bifrost cache");
+            logger.LogDebug($"set async key {key} from bifrost cache");
             await this.client.SetAsync(new SetRequest
             {
                 Key = key,

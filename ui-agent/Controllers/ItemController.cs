@@ -14,6 +14,7 @@ using lib.token_getters;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
 
 namespace ui_agent.Controllers
 {
@@ -122,17 +123,37 @@ namespace ui_agent.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportData([FromBody] ItemImportModel itemsToImport)
         {
+            string bifrostURL = this.configuration["Bifrost:Service"];
+            var authToken = await this.tokenGetters.Google.GetToken(); // Get Google auth token\
+            var treecatServiceCache = new BifrostCache(bifrostURL, "treecat-items", authToken, logger); // Connect to the TreeCat service cache
+
             // Check which field has the more than 0 IDs stored and return view to the appropriate action
             // Ebay try/catch
             try
             {
                 if (itemsToImport.EbayIDs.Count > 0)
                 {
-                    logger.LogInformation(itemsToImport.EbayIDs.Count.ToString());
+                    logger.LogInformation($"FOUND {itemsToImport.EbayIDs.Count.ToString()} items to import into TreeCat(gmail) account.");
+
+                    // Not sure if we need to check if the accessToken is valid like in "ImportEbay"
+                    // because we already do this when we list the ebay items.
+
+                    // Get Ebay token
+                    var tokenGetter = tokenGetters.EbayAccess;
+
+                    // Get the user's EBAY items from cache
+                    var ebayCache = new BifrostCache(bifrostURL, "ebay-items", authToken, logger);
+                    var userEbayCachedItems = new lib.listers.EbayLister(ebayCache, this.logger, 10000, tokenGetter).List().Result;
+
+                    //Set the user's TREECAT items in cache, returns the cached items.
+                    List<string> treecatIDs = new lib.listers.EbayLister(treecatServiceCache, this.logger, 10000, tokenGetter).ImportTreecatIDs(itemsToImport, userEbayCachedItems).Result;
+
+                    logger.LogInformation($"SUCCESSFULLY imported {treecatIDs.Count.ToString()} items into TreeCat.");
+
                     return Redirect("importebay");
                 }
             } 
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 logger.LogInformation(e.ToString());
             }
@@ -144,29 +165,65 @@ namespace ui_agent.Controllers
                 {
                     logger.LogInformation($"FOUND {itemsToImport.PoshmarkIDs.Count.ToString()} items to import into TreeCat(gmail) account.");
 
-                    string bifrostURL = this.configuration["Bifrost:Service"];
-                    var authToken = await this.tokenGetters.Google.GetToken();
+                    // Get Poshmark token
                     var tokenGetter = tokenGetters.Poshmark;
 
-                    // Get the user's items from cache
-                    var cache = new BifrostCache(bifrostURL, "poshmark-items", authToken, logger);
-                    List<Item> usersTreecatCachedItems = new lib.listers.PoshmarkLister(cache, this.logger, 10000, tokenGetter).List().Result;
+                    // Get the user's POSHMARK items from cache
+                    var poshmarkCache = new BifrostCache(bifrostURL, "poshmark-items", authToken, logger);
+                    List<Item> userPoshmarkCachedItems = new lib.listers.PoshmarkLister(poshmarkCache, this.logger, 10000, tokenGetter).List().Result;
 
-                    var googleUserID = await this.tokenGetters.Google.GetUserID(); // Get user gmail ID
-                    var treecatServiceCache = new BifrostCache(bifrostURL, "poshmark-treecat-items", authToken, logger); // Connect to the TreeCat service cache
-                    List<Item> treecatItems = new lib.listers.PoshmarkLister(treecatServiceCache, this.logger, 10000, tokenGetter).ListTreecatItems(itemsToImport, googleUserID, usersTreecatCachedItems).Result; // Returns the items located into the user's TREECAT(GMAIL) account database
+                    // Set the user's TREECAT IDs in cache
+                    List<string> treecatItems = new lib.listers.PoshmarkLister(treecatServiceCache, this.logger, 10000, tokenGetter).ImportTreecatIDs(itemsToImport, userPoshmarkCachedItems).Result; // Returns the IDs imported into the user's TREECAT(GMAIL) account database
 
                     logger.LogInformation($"SUCCESSFULLY imported {treecatItems.Count.ToString()} items into TreeCat.");
 
                     return Redirect("importposhmark");
                 }
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 logger.LogInformation(e.ToString());
             }
 
             return View("importdata");
+        }
+
+        public async Task<IActionResult> Inventory()
+        {
+            // This function returns all the items from the user's TreeCat cache
+            // First, we need to access the TreeCat cache and take the "treecat_list" key with all the IDs of the unique items
+            // Get "treecat_list" from cache into list
+            string bifrostURL = this.configuration["Bifrost:Service"];
+            var authToken = await this.tokenGetters.Google.GetToken(); // Get Google auth token\
+            var treecatServiceCache = new BifrostCache(bifrostURL, "treecat-items", authToken, logger); // Connect to the TreeCat service cache
+
+            var treecatByteItems = await treecatServiceCache.GetAsync("treecat_list");
+
+            List<Item> inventory = new List<Item>(); // Items to diplay on the Inventory page 
+            if (treecatByteItems != null)
+            {
+                // Treecat list with IDs
+                List<string> treecatIDsList = JsonConvert.DeserializeObject<List<string>>(
+                    ASCIIEncoding.UTF8.GetString(treecatByteItems));
+
+                // Get each individual TreeCat ID from the list
+                foreach (var treecatListedID in treecatIDsList)
+                {
+                    // Get the Item corresponding to each individual ID
+                    var treecatByteItem = await treecatServiceCache.GetAsync(treecatListedID);
+                    if (treecatByteItem != null)
+                    {
+                        Item treecatItem = JsonConvert.DeserializeObject<Item>(
+                            ASCIIEncoding.UTF8.GetString(treecatByteItem));
+
+                        inventory.Add(treecatItem); // Add Item to display
+                    }
+                }
+            }
+
+            ViewBag.Items = inventory;
+
+            return View();
         }
 
         public IActionResult Welcome()

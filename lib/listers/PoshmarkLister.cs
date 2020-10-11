@@ -59,27 +59,28 @@ namespace lib.listers
             {
                 try
                 {
-                    var Item = new Item();
+                    var treecatItem = new Item();
 
-                    Item.ID = item.ID;
-                    Item.Title = item.Title;
-                    Item.Price = item.Price;
-                    Item.Description = item.Description;
-                    Item.Status = item.InventoryStatus;
-                    Item.Stock = item.InventorySizeQuantitiesQuantityAvailable;
-                    Item.MainImageURL = item.CoverShotUrl;
-                    //Item.Size = result.size;
-                    Item.Brand = item.Brand;
+                    treecatItem.ID = item.ID;
+                    treecatItem.Provisioner = "Poshmark";
+                    treecatItem.Title = item.Title;
+                    treecatItem.Price = item.Price;
+                    treecatItem.Description = item.Description;
+                    treecatItem.Status = item.InventoryStatus;
+                    treecatItem.Stock = item.InventorySizeQuantitiesQuantityAvailable;
+                    treecatItem.MainImageURL = item.CoverShotUrl;
+                    treecatItem.Size = item.Size;
+                    treecatItem.Brand = item.Brand;
                     //Item.Shares = item.aggregates.shares;
                     //Item.Comments = item.aggregates.comments;
                     //Item.Likes = item.aggregates.likes;
                     //Item.Categories = items.GetCategories(item);
                     //Item.Colors = items.GetColors(item);
-                    Item.Date = items.GetCreatedDate(item);
-                    Item.URL = "https://poshmark.com/listing/" + Item.ID;
-                    Item.HasOffer = items.GetHasOffer(item);
+                    treecatItem.Date = items.GetCreatedDate(item);
+                    treecatItem.URL = "https://poshmark.com/listing/" + treecatItem.ID;
+                    treecatItem.HasOffer = items.GetHasOffer(item);
 
-                    returnItems.Add(Item);
+                    returnItems.Add(treecatItem);
                 }
                 catch (NullReferenceException e)
                 {
@@ -89,109 +90,81 @@ namespace lib.listers
             return returnItems;
         }
 
-        public async Task<List<Item>> ListTreecatItems(dynamic itemsToImport, string googleID, List<Item> userPoshmarkCachedItems)
+        public async Task<List<string>> ImportTreecatIDs(dynamic itemsToImport, List<Item> userPoshmarkCachedItems)
         {
-            // Only the Item's ID is saved in the cache, but the function MUST return Item objects.
-
-            // List containing item IDs to be imported
-            List<string> listToCache = new List<string>();
-
-            // Variable to return Item objects
-            List<Item> itemsToReturn = new List<Item>();
-
-            // User's TREECAT cached items based on GMAIL
-            var treecatCachedItemIDs = await this.cache.GetAsync(googleID);
-            List<string> treecatItemIDs = new List<string>();
-
-            if (treecatCachedItemIDs != null)
+            List<string> treecatIDs = new List<string>();
+            for (int i = 0; itemsToImport.PoshmarkIDs.Count > i; i++)
             {
-                treecatItemIDs = JsonConvert.DeserializeObject<List<string>>(
-                    ASCIIEncoding.UTF8.GetString(treecatCachedItemIDs));
-            }
+                // New TREECAT ID using Guid
+                Guid treecatItemID = Guid.NewGuid();
 
-            // Algorithm to sort what's imported into the TREECAT(GMAIL) account
-            // All the user's item IDs to import into TREECAT (itemsToImport variable)
-            for (int i = 0; itemsToImport.PoshmarkIDs.Count > i; i++) 
-            {
-                // Found item ID in "itemsToImport"
-                var itemToImport = itemsToImport.PoshmarkIDs[i];
+                // Get "treecat_list" from cache into list
+                var treecatByteItems = await this.cache.GetAsync("treecat_list");
 
-                // All the user's cached items from POSHMARK
-                foreach (var item in userPoshmarkCachedItems) 
+                if (treecatByteItems != null)
                 {
-                    // Compare against the already TREECAT cached item IDs if these exist
-                    if (treecatCachedItemIDs != null)
-                    {
-                        // Add item ID to the list when algorithm finds an ID that matches 
-                        // an ID from "itemsToImport" and it's not already in the TreeCat cache
-                        if (itemToImport == item.ID && treecatItemIDs[i] != item.ID)
-                        {
-                            listToCache.Add(item.ID); // Import in the cache
-                        }
-                    } 
-                    else if (treecatCachedItemIDs == null)
-                    {
-                        // Add item ID to the list when algorithm finds an ID that matches an ID from "itemsToImport"
-                        if (itemToImport == item.ID)
-                        {
-                            listToCache.Add(item.ID); // Import in the cache
-                        }
-                    }
+                    treecatIDs = JsonConvert.DeserializeObject<List<string>>(
+                        ASCIIEncoding.UTF8.GetString(treecatByteItems));
                 }
-            }
 
-            // Add all user's TreeCat cached items to a list to return them
-            for (int i = 0; treecatItemIDs.Count > i; i++)
-            {
+                // Link TreeCat ID to Item by importing the entire Item value to the GUID key
+                // Also checks the item to import 
                 foreach (var poshmarkItem in userPoshmarkCachedItems)
                 {
-                    if (treecatItemIDs[i] == poshmarkItem.ID)
+                    if (treecatByteItems != null)
                     {
-                        itemsToReturn.Add(poshmarkItem); // Return Item
+                        foreach (var treecatID in treecatIDs)
+                        {
+                            var treecatGUID = await this.cache.GetAsync(treecatID);
+                            Item treecatItem = new Item();
+
+                            treecatItem = JsonConvert.DeserializeObject<Item>(
+                                    ASCIIEncoding.UTF8.GetString(treecatGUID));
+
+                            if (itemsToImport.PoshmarkIDs[i] == poshmarkItem.ID)
+                            {
+                                if (poshmarkItem.ID != treecatItem.ID)
+                                {
+                                    // Insert GUID Key to Poshmark Item value
+                                    await this.cache.SetAsync(
+                                        treecatItemID.ToString(),
+                                        ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(poshmarkItem)),
+                                        new DistributedCacheEntryOptions()
+                                        {
+                                            AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                        });
+
+                                    // Update "treecat_list" cache by adding the new TreeCat ID generated with GUID
+                                    await this.cache.RemoveAsync("treecat_list");
+                                    treecatIDs.Add(treecatItemID.ToString());
+
+                                    await this.cache.SetAsync(
+                                        "treecat_list",
+                                        ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(treecatIDs)),
+                                        new DistributedCacheEntryOptions()
+                                        {
+                                            AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                        });
+                                }
+                            }
+                        }
+                    }
+                    else if (treecatByteItems == null)
+                    {
+                        if (itemsToImport.PoshmarkIDs[i] == poshmarkItem.ID)
+                        {
+                            await this.cache.SetAsync(
+                                treecatItemID.ToString(),
+                                ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(poshmarkItem)),
+                                new DistributedCacheEntryOptions()
+                                {
+                                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                });
+                        }
                     }
                 }
             }
-
-            // At this point, we have the list with the verified item IDs we want to import 
-            // into the TREECAT CACHE
-
-            if (treecatCachedItemIDs == null && liveCalls < this.liveCallLimit)
-            {
-                liveCalls += 1;
-
-                await this.cache.SetAsync(
-                    googleID,
-                    ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(listToCache)),
-                    new DistributedCacheEntryOptions()
-                    {
-                        AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
-                    });
-            }
-            else if (treecatCachedItemIDs != null)
-            {
-                // Now, we should store the user's items from the TreeCat cache in a variable
-                // Already done (treecatCachedItems var)
-
-                // Then, remove the key from the cache
-                await this.cache.RemoveAsync(googleID);
-
-                // After that, add the old items together with the new ones
-                // Add old and new IDs together in a JSON format
-                //List<string> test = treecatCachedItemIDs;
-
-                listToCache.AddRange(treecatItemIDs);
-
-                // And, finally, import all of them again into the cache with the same CACHE KEY
-                await this.cache.SetAsync(
-                    googleID,
-                    ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(listToCache)),
-                    new DistributedCacheEntryOptions()
-                    {
-                        AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
-                    });
-            }
-
-            return itemsToReturn;
+            return treecatIDs;
         }
     }
 }

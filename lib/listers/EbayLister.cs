@@ -16,6 +16,19 @@ namespace lib.listers
         // https://developer.ebay.com/api-docs/commerce/taxonomy/static/supportedmarketplaces.html
         // private const string MarketplaceUSA = "EBAY_US";
 
+        // TODO: vladi: all of these should be configurable
+        // Define the endpoint (e.g., the Sandbox Gateway URI)
+        private static string endpoint = "https://api.ebay.com/wsapi";
+
+        // Define the query string parameters.
+        private static string queryString = "?callname=GetMyeBaySelling"
+                            + "&siteid=0"
+                            + "&appid=VladIova-Treecat-SBX-6bce464fb-92785135"
+                            + "&version=1149"
+                            + "&Routing=new";
+
+        String requestURL = endpoint + queryString; // "https://api.ebay.com/wsapi";
+
         IDistributedCache cache;
         ILogger logger;
         int liveCallLimit;
@@ -33,21 +46,7 @@ namespace lib.listers
         }
         public async Task<List<Item>> List()
         {
-            // TODO: vladi: all of these should be configurable
-
-            // Define the endpoint (e.g., the Sandbox Gateway URI)
-            String endpoint = "https://api.ebay.com/wsapi";
-
-            // Define the query string parameters.
-            String queryString = "?callname=GetMyeBaySelling"
-                                + "&siteid=0"
-                                + "&appid=VladIova-Treecat-SBX-6bce464fb-92785135"
-                                + "&version=1149"
-                                + "&Routing=new";
-
-            String requestURL = endpoint + queryString; // "https://api.ebay.com/wsapi";
-
-            ebayws.eBayAPIInterfaceClient client = new ebayws.eBayAPIInterfaceClient();
+            eBayAPIInterfaceClient client = new eBayAPIInterfaceClient();
             client.Endpoint.Address = new EndpointAddress(requestURL);
 
             var cachedSellingItems = await this.cache.GetAsync(this.accountID);
@@ -106,25 +105,26 @@ namespace lib.listers
             {
                 try
                 {
-                    var Item = new Item();
+                    var treecatItem = new Item();
 
-                    Item.ID = item.ItemID;
-                    Item.Title = item.Title;
-                    Item.Price = item.BuyItNowPrice.Value;
-                    Item.Description = "BFRST-NPY";
-                    Item.Status = item.SellingStatus.ListingStatus.ToString();
-                    Item.Stock = item.QuantityAvailable;
-                    Item.MainImageURL = item.PictureDetails.GalleryURL;
-                    Item.Size = "BFRST-NPY";
-                    Item.Brand = "BFRST-NPY";
+                    treecatItem.ID = item.ItemID;
+                    treecatItem.Provisioner = "eBay";
+                    treecatItem.Title = item.Title;
+                    treecatItem.Price = item.BuyItNowPrice.Value;
+                    treecatItem.Description = "BFRST-NPY";
+                    treecatItem.Status = item.SellingStatus.ListingStatus.ToString();
+                    treecatItem.Stock = item.QuantityAvailable;
+                    treecatItem.MainImageURL = item.PictureDetails.GalleryURL;
+                    treecatItem.Size = "BFRST-NPY";
+                    treecatItem.Brand = "BFRST-NPY";
                     // Ebay has no shares/likes/comments
                     // Item.Categories.Add("BFRST-NPY");
                     // Item.Colors.Add("BFRST-NPY");
-                    Item.Date = item.ListingDetails.StartTime.ToString().Substring(0, 10);
-                    Item.URL = item.ListingDetails.ViewItemURL;
-                    Item.HasOffer = item.SellingStatus.BidCount > 0 ? "Yes" : "No";
+                    treecatItem.Date = item.ListingDetails.StartTime.ToString().Substring(0, 10);
+                    treecatItem.URL = item.ListingDetails.ViewItemURL;
+                    treecatItem.HasOffer = item.SellingStatus.BidCount > 0 ? "Yes" : "No";
 
-                    result.Add(Item);
+                    result.Add(treecatItem);
                 }
                 catch (NullReferenceException e)
                 {
@@ -134,5 +134,83 @@ namespace lib.listers
 
             return result;
         }
+
+        public async Task<List<string>> ImportTreecatIDs(dynamic itemsToImport, List<Item> userEbayCachedItems)
+        {
+            List<string> treecatIDs = new List<string>();
+            for (int i = 0; itemsToImport.EbayIDs.Count > i; i++)
+                {
+                // New TREECAT ID using Guid
+                Guid treecatItemID = Guid.NewGuid();
+
+                // Get "treecat_list" from cache into list
+                var treecatByteItems = await this.cache.GetAsync("treecat_list");
+
+                if (treecatByteItems != null)
+                {
+                    treecatIDs = JsonConvert.DeserializeObject<List<string>>(
+                        ASCIIEncoding.UTF8.GetString(treecatByteItems));
+                }
+
+                // Link TreeCat ID to Item by importing the entire Item value to the GUID key
+                // Also checks the item to import 
+                foreach (var ebayItem in userEbayCachedItems)
+                {
+                    if (treecatByteItems != null)
+                    {
+                        foreach (var treecatID in treecatIDs)
+                        {
+                            var treecatGUID = await this.cache.GetAsync(treecatID);
+                            Item treecatItem = new Item();
+
+                            treecatItem = JsonConvert.DeserializeObject<Item>(
+                                    ASCIIEncoding.UTF8.GetString(treecatGUID));
+
+                            if (itemsToImport.EbayIDs[i] == ebayItem.ID)
+                            {
+                                if (ebayItem.ID != treecatItem.ID)
+                                {
+                                    // Insert GUID Key to Ebay Item value
+                                    await this.cache.SetAsync(
+                                        treecatItemID.ToString(),
+                                        ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(ebayItem)),
+                                        new DistributedCacheEntryOptions()
+                                        {
+                                            AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                        });
+
+                                    // Update "treecat_list" cache by adding the new TreeCat ID generated with GUID
+                                    await this.cache.RemoveAsync("treecat_list");
+                                    treecatIDs.Add(treecatItemID.ToString());
+
+                                    await this.cache.SetAsync(
+                                        "treecat_list",
+                                        ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(treecatIDs)),
+                                        new DistributedCacheEntryOptions()
+                                        {
+                                            AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                        });
+                                }
+                            }
+                        }
+                    }
+                    else if (treecatByteItems == null)
+                    {
+                        if (itemsToImport.EbayIDs[i] == ebayItem.ID)
+                        {
+                            await this.cache.SetAsync(
+                                treecatItemID.ToString(),
+                                ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(ebayItem)),
+                                new DistributedCacheEntryOptions()
+                                {
+                                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                });
+                        }
+                    }
+                }
+            }
+            return treecatIDs;
+        }
+
     }
 }

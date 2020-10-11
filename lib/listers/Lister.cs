@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 // Lists all items for a provider
@@ -14,6 +16,8 @@ namespace lib
     public class Item
     {
         public string ID { get; set; }
+
+        public string Provisioner { get; set; }
 
         public string Title { get; set; }
 
@@ -52,6 +56,5 @@ namespace lib
         public string Likes { get; set; }
 
         public string HasOffer { get; set; }
-
     }
 }
