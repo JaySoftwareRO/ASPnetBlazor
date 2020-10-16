@@ -221,9 +221,58 @@ namespace ui_agent.Controllers
                 }
             }
 
-            ViewBag.Items = inventory;
+            return View("inventory", inventory);
+        }
 
-            return View();
+        [HttpPost]
+        public async Task<IActionResult> ImportToPoshmarkAsync([FromBody] ItemImportModel itemsToImport)
+        {
+            logger.LogInformation("Importing " + itemsToImport.PoshmarkIDs.Count.ToString() + " items to Poshmark.");
+
+            return Redirect("inventory");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportToEbayAsync([FromBody] ItemImportModel itemsToImport)
+        {
+            logger.LogInformation("Importing " + itemsToImport.EbayIDs.Count.ToString() + " items to eBay.");
+
+            // Get entire Item from cache
+            // First, we need to access the TreeCat cache and take the "treecat_list" key with all the IDs of the unique items
+            // Get "treecat_list" from cache into list
+            string bifrostURL = this.configuration["Bifrost:Service"];
+            var authToken = await this.tokenGetters.Google.GetToken(); // Get Google auth token\
+            var treecatServiceCache = new BifrostCache(bifrostURL, "treecat-items", authToken, logger); // Connect to the TreeCat service cache
+
+            var treecatByteItems = await treecatServiceCache.GetAsync("treecat_list");
+
+            List<Item> treecatItems = new List<Item>(); // Items to diplay on the Inventory page 
+            if (treecatByteItems != null)
+            {
+                // Treecat list with IDs
+                List<string> treecatIDsList = JsonConvert.DeserializeObject<List<string>>(
+                    ASCIIEncoding.UTF8.GetString(treecatByteItems));
+
+                // Get each individual TreeCat ID from the list
+                foreach (var treecatListedID in treecatIDsList)
+                {
+                    // Get the Item corresponding to each individual ID
+                    var treecatByteItem = await treecatServiceCache.GetAsync(treecatListedID);
+                    if (treecatByteItem != null)
+                    {
+                        Item treecatItem = JsonConvert.DeserializeObject<Item>(
+                            ASCIIEncoding.UTF8.GetString(treecatByteItem));
+
+                        treecatItems.Add(treecatItem); // Add Item to display
+                    }
+                }
+            }
+
+            // Create the ebayitem with all the values from the TreeCat Item objects
+            ebayws.VerifyAddItemRequest ebayItem = new ebayws.VerifyAddItemRequest();
+            
+
+            return Redirect("inventory");
         }
 
         public IActionResult Welcome()

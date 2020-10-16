@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using lib.poshmark_client;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace lib.listers
@@ -92,6 +93,7 @@ namespace lib.listers
 
         public async Task<List<string>> ImportTreecatIDs(dynamic itemsToImport, List<Item> userPoshmarkCachedItems)
         {
+            List<string> cachedTreecatPoshmarkIDs = new List<string>();
             List<string> treecatIDs = new List<string>();
             for (int i = 0; itemsToImport.PoshmarkIDs.Count > i; i++)
             {
@@ -121,30 +123,33 @@ namespace lib.listers
                             treecatItem = JsonConvert.DeserializeObject<Item>(
                                     ASCIIEncoding.UTF8.GetString(treecatGUID));
 
-                            if (itemsToImport.PoshmarkIDs[i] == poshmarkItem.ID)
+                            cachedTreecatPoshmarkIDs.Add(treecatItem.ID);
+                        }
+
+                        if (itemsToImport.PoshmarkIDs[i] == poshmarkItem.ID)
+                        {
+                            bool hasMatch = cachedTreecatPoshmarkIDs.Contains(poshmarkItem.ID);
+                            if (hasMatch == false)
                             {
-                                if (poshmarkItem.ID != treecatItem.ID)
-                                {
-                                    // Insert GUID Key to Poshmark Item value
-                                    await this.cache.SetAsync(
-                                        treecatItemID.ToString(),
-                                        ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(poshmarkItem)),
-                                        new DistributedCacheEntryOptions()
-                                        {
-                                            AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
-                                        });
+                                // Insert GUID Key to Poshmark Item value
+                                await this.cache.SetAsync(
+                                    treecatItemID.ToString(),
+                                    ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(poshmarkItem)),
+                                    new DistributedCacheEntryOptions()
+                                    {
+                                        AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                    });
 
-                                    // Update "treecat_list" cache by adding the new TreeCat ID generated with GUID
-                                    treecatIDs.Add(treecatItemID.ToString());
+                                // Update "treecat_list" cache by adding the new TreeCat ID generated with GUID
+                                treecatIDs.Add(treecatItemID.ToString());
 
-                                    await this.cache.SetAsync(
-                                        "treecat_list",
-                                        ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(treecatIDs)),
-                                        new DistributedCacheEntryOptions()
-                                        {
-                                            AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
-                                        });
-                                }
+                                await this.cache.SetAsync(
+                                    "treecat_list",
+                                    ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(treecatIDs)),
+                                    new DistributedCacheEntryOptions()
+                                    {
+                                        AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                    });
                             }
                         }
                     }
@@ -161,6 +166,18 @@ namespace lib.listers
                                 });
 
                             // Update "treecat_list" cache by adding the new TreeCat ID generated with GUID
+                            treecatIDs.Add(treecatItemID.ToString());
+
+                            await this.cache.SetAsync(
+                                "treecat_list",
+                                ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(treecatIDs)),
+                                new DistributedCacheEntryOptions()
+                                {
+                                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(200)
+                                });
+
+                            // Update "treecat_list" cache by adding the new TreeCat ID generated with GUID
+                            await this.cache.RemoveAsync("treecat_list");
                             treecatIDs.Add(treecatItemID.ToString());
 
                             await this.cache.SetAsync(

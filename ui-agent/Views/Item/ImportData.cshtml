@@ -8,7 +8,6 @@
             <div class="grid-y full-height">
                 <div class="grid-x grid-margin-x">
                     <div class="cell shrink">
-
                         <div class="input-group">
                             <div class="input-group-label">Source Platform:</div>
                             <div>
@@ -19,7 +18,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="cell shrink">
                         <div class="input-group">
                             <div class="input-group-label">Filter:</div>
@@ -68,10 +66,12 @@
                                     <td>
                                         <a href="@item.URL"
                                            target="_blank">
-                                            <img src="../images/poshmark-thumb.png">
+                                            <img src="../images/@item.Provisioner-thumb.png">
                                         </a>
                                     </td>
-                                    <td>N/A</td>
+                                    <td>
+                                        @((item.Provisioner == "eBay") ? item.SKU : "N/A")
+                                    </td>
                                     <td>$@item.Price</td>
                                     <td>@item.Stock</td>
                                     <td>@item.Date</td>
@@ -79,7 +79,7 @@
                                     @*<td>@item.Shares</td>
                                     <td>@item.Likes</td>
                                     <td>@item.Comments</td>*@
-                                    <td><a href="@item.URL" target="_blank">Poshmark Sale</a></td>
+                                    <td><a href="@item.URL" target="_blank">@item.Provisioner Sale</a></td>
                                 </tr>
                             }
                         </tbody>
