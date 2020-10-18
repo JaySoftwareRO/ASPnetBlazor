@@ -131,7 +131,7 @@ namespace ui_agent.Controllers
             // Ebay try/catch
             try
             {
-                if (itemsToImport.EbayIDs.Count > 0)
+                if (itemsToImport.EbayIDs != null && itemsToImport.EbayIDs.Count > 0)
                 {
                     logger.LogInformation($"FOUND {itemsToImport.EbayIDs.Count.ToString()} items to import into TreeCat(gmail) account.");
 
@@ -161,7 +161,7 @@ namespace ui_agent.Controllers
             // Poshmark try/catch
             try
             {
-                if (itemsToImport.PoshmarkIDs.Count > 0)
+                if (itemsToImport.PoshmarkIDs != null && itemsToImport.PoshmarkIDs.Count > 0)
                 {
                     logger.LogInformation($"FOUND {itemsToImport.PoshmarkIDs.Count.ToString()} items to import into TreeCat(gmail) account.");
 
