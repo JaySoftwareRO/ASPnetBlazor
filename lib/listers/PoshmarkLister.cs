@@ -64,9 +64,7 @@ namespace lib.listers
 
                     treecatItem.ID = item.ID;
                     treecatItem.Provisioner = "Poshmark";
-                    treecatItem.Title = item.Title;
                     treecatItem.Price = item.Price;
-                    treecatItem.Description = item.Description;
                     treecatItem.Status = item.InventoryStatus;
                     treecatItem.Stock = item.InventorySizeQuantitiesQuantityAvailable;
                     treecatItem.MainImageURL = item.CoverShotUrl;
@@ -80,6 +78,11 @@ namespace lib.listers
                     treecatItem.Date = items.GetCreatedDate(item);
                     treecatItem.URL = "https://poshmark.com/listing/" + treecatItem.ID;
                     treecatItem.HasOffer = items.GetHasOffer(item);
+
+                    // Extra needed to import items from Poshmark to Ebay
+                    treecatItem.Title = item.Title;
+                    treecatItem.Description = item.Description;
+                    treecatItem.Condition = item.Condition; 
 
                     returnItems.Add(treecatItem);
                 }
@@ -166,6 +169,7 @@ namespace lib.listers
                                 });
 
                             // Update "treecat_list" cache by adding the new TreeCat ID generated with GUID
+                            await this.cache.RemoveAsync("treecat_list");
                             treecatIDs.Add(treecatItemID.ToString());
 
                             await this.cache.SetAsync(

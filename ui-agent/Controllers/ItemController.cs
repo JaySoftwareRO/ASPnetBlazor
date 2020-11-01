@@ -194,7 +194,7 @@ namespace ui_agent.Controllers
             // First, we need to access the TreeCat cache and take the "treecat_list" key with all the IDs of the unique items
             // Get "treecat_list" from cache into list
             string bifrostURL = this.configuration["Bifrost:Service"];
-            var authToken = await this.tokenGetters.Google.GetToken(); // Get Google auth token\
+            var authToken = await this.tokenGetters.Google.GetToken(); // Get Google auth token
             var treecatServiceCache = new BifrostCache(bifrostURL, "treecat-items", authToken, logger); // Connect to the TreeCat service cache
 
             var treecatByteItems = await treecatServiceCache.GetAsync("treecat_list");
@@ -241,12 +241,14 @@ namespace ui_agent.Controllers
             // First, we need to access the TreeCat cache and take the "treecat_list" key with all the IDs of the unique items
             // Get "treecat_list" from cache into list
             string bifrostURL = this.configuration["Bifrost:Service"];
-            var authToken = await this.tokenGetters.Google.GetToken(); // Get Google auth token\
+            var authToken = await this.tokenGetters.Google.GetToken(); // Get Google auth token
             var treecatServiceCache = new BifrostCache(bifrostURL, "treecat-items", authToken, logger); // Connect to the TreeCat service cache
 
             var treecatByteItems = await treecatServiceCache.GetAsync("treecat_list");
 
             List<Item> treecatItems = new List<Item>(); // Items to diplay on the Inventory page 
+            List<Item> treecatToEbayItems = new List<Item>(); // Items to import into Ebay
+
             if (treecatByteItems != null)
             {
                 // Treecat list with IDs
@@ -264,14 +266,28 @@ namespace ui_agent.Controllers
                             ASCIIEncoding.UTF8.GetString(treecatByteItem));
 
                         treecatItems.Add(treecatItem); // Add Item to display
+
+                        // If the there is a match for an item the user has selected, import it to ebay 
+                        if (itemsToImport.PoshmarkIDs.Contains(treecatItem.ID))
+                        {
+                            // Create the ebayitem with all the values from the TreeCat Item objects
+                            ebayws.VerifyAddItemRequest ebayItem = new ebayws.VerifyAddItemRequest();
+
+                            ebayItem.VerifyAddItemRequest1.Item.Title = treecatItem.Title;
+                            ebayItem.VerifyAddItemRequest1.Item.Description = treecatItem.Description;
+                            ebayItem.VerifyAddItemRequest1.Item.ConditionDescription = treecatItem.ConditionDescription;
+                            ebayItem.VerifyAddItemRequest1.Item.PrimaryCategory.CategoryName = treecatItem.PrimaryCategory.CategoryName;
+                            ebayItem.VerifyAddItemRequest1.Item.SecondaryCategory.CategoryName = treecatItem.SecondaryCategory.CategoryName;
+                            ebayItem.VerifyAddItemRequest1.Item.FreeAddedCategory.CategoryName = treecatItem.FreeAddedCategory.CategoryName;
+                            ebayItem.VerifyAddItemRequest1.Item.Site = ebayws.SiteCodeType.US;
+                        }
+                        else if (itemsToImport.EbayIDs != null)
+                        {
+                            // Error message "You can't import ebay items to ebay!"
+                        }
                     }
                 }
             }
-
-            // Create the ebayitem with all the values from the TreeCat Item objects
-            ebayws.VerifyAddItemRequest ebayItem = new ebayws.VerifyAddItemRequest();
-            
-
             return Redirect("inventory");
         }
 
