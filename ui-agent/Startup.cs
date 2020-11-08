@@ -1,5 +1,6 @@
 using ElectronNET.API;
 using ElectronNET.API.Entities;
+using lib;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +32,7 @@ namespace ui_agent
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, IConfiguration configuration)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, IConfiguration configuration, ITokenGetters tokenGetters)
         {
             app.UseExceptionHandler("/item/error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -55,15 +56,15 @@ namespace ui_agent
 
             if (HybridSupport.IsElectronActive)
             {
-                ElectronBootstrap(logger);
+                ElectronBootstrap(logger, tokenGetters);
             }
         }
 
-        public async void ElectronBootstrap(Microsoft.Extensions.Logging.ILogger logger)
+        public async void ElectronBootstrap(Microsoft.Extensions.Logging.ILogger logger, ITokenGetters tokenGetters)
         {
             var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
             {
-                
+
             });
 
             await browserWindow.WebContents.Session.ClearCacheAsync();
@@ -99,11 +100,11 @@ namespace ui_agent
                 }
             };
 
-            SetupMenus();
+            SetupMenus(tokenGetters);
         }
 
 
-        private void SetupMenus()
+        private void SetupMenus(ITokenGetters tokenGetters)
         {
             if (HybridSupport.IsElectronActive)
             {
@@ -162,12 +163,30 @@ namespace ui_agent
                         },
                         new MenuItem
                         {
-                            Label = "App Menu Demo",
+                            Label = "Clear All Data",
                             Click = async () => {
-                                var options = new MessageBoxOptions("This demo is for the Menu section, showing how to create a clickable menu item in the application menu.");
-                                options.Type = MessageBoxType.info;
-                                options.Title = "Application Menu Demo";
-                                await Electron.Dialog.ShowMessageBoxAsync(options);
+                                var options = new MessageBoxOptions("Are you sure you want to clear all local data? This includes authentication cookies and tokens, but all your items are safe in the cloud.");
+                                options.Type = MessageBoxType.question;
+                                options.Title = "Please Confirm";
+                                options.Buttons = new string[] {"Yes, delete all data", "Cancel"};
+                                var result = await Electron.Dialog.ShowMessageBoxAsync(options);
+                                if (result.Response == 0)
+                                {
+                                    tokenGetters.ClearAllData();
+                                    var mainWindowId = Electron.WindowManager.BrowserWindows.ToList().First().Id;
+                                    Electron.WindowManager.BrowserWindows.ToList().ForEach(async browserWindow => {
+                                        await browserWindow.WebContents.Session.ClearStorageDataAsync();
+
+                                        if(browserWindow.Id != mainWindowId)
+                                        {
+                                            browserWindow.Close();
+                                        }
+                                        else
+                                        {
+                                            browserWindow.Reload();
+                                        }
+                                    });
+                                }
                             }
                         }
                     }
@@ -210,7 +229,7 @@ namespace ui_agent
                 var mainWindow = Electron.WindowManager.BrowserWindows.FirstOrDefault();
                 Electron.Menu.SetContextMenu(mainWindow, menu);
             };
-            
+
             Electron.IpcMain.On("show-context-menu", (args) =>
             {
                 var mainWindow = Electron.WindowManager.BrowserWindows.FirstOrDefault();

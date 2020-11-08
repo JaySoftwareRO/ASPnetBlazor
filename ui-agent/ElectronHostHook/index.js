@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HookService = void 0;
 // @ts-ignore
 const Electron = require("electron");
 const connector_1 = require("./connector");

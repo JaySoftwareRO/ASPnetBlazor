@@ -51,6 +51,8 @@ namespace lib
         ITokenGetter Poshmark { get; }
         ITokenGetter Amazon { get; }
         ITokenGetter Google { get; }
+
+        void ClearAllData();
     }
 
     public class TokenGetters : ITokenGetters
@@ -103,10 +105,16 @@ namespace lib
         }
 
         private Dictionary<string, ITokenGetter> TokenGetterMap;
+        private DiskCache TokenCache;
+
+        public void ClearAllData()
+        {
+            this.TokenCache.ClearAll();
+        }
 
         public TokenGetters(ILogger logger, IConfiguration configuration)
         {
-            IDistributedCache tokenCache = new DiskCache("tokens", logger);
+            this.TokenCache = new DiskCache("tokens", logger);
             this.TokenGetterMap = new Dictionary<string, ITokenGetter>();
 
             // Read all token getter settings from configs
@@ -120,7 +128,7 @@ namespace lib
 
                 logger.LogDebug($"registering token provider for {provider}");
                 this.TokenGetterMap[provider] = new CachedTokenGetter(
-                    tokenCache, 
+                    this.TokenCache, 
                     logger, 
                     config.CacheKey, 
                     config.LoginURL,
@@ -147,7 +155,7 @@ namespace lib
             {
                 var validPayload = GoogleJsonWebSignature.ValidateAsync(
                     token,
-                    new GoogleJsonWebSignature.ValidationSettings{}).Result;
+                    new GoogleJsonWebSignature.ValidationSettings { }).Result;
             }
             catch (Exception ex)
             {

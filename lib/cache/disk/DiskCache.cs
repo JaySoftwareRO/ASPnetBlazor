@@ -24,6 +24,11 @@ namespace lib.cache.disk
             this.logger = logger;
         }
 
+        public void ClearAll()
+        {
+            Directory.Delete(this.dir, true);
+        }
+
         public byte[] Get(string key)
         {
             logger.LogDebug($"get key {key} from cache");
