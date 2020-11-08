@@ -4,6 +4,7 @@
   "splashscreen": {
     "imageFile": ""
   },
+  "name":  "treecat",
   "singleInstance": true,
   "build": {
     "appId": "com.treecat.app",
