@@ -3,7 +3,7 @@ import * as Electron from "electron";
 import { Connector } from "./connector";
 
 Electron.session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-    details.requestHeaders['User-Agent'] = 'Chrome';
+    details.requestHeaders['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36';
     callback({ cancel: false, requestHeaders: details.requestHeaders });
 });
 

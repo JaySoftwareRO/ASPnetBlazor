@@ -30,8 +30,6 @@ namespace lib
 
     public interface ITokenGetter
     {
-        event OnTokenValidationDelegate OnTokenValidation;
-
         Task<string> GetToken();
 
         Task<string> GetUserID();
@@ -53,6 +51,7 @@ namespace lib
         ITokenGetter Google { get; }
 
         void ClearAllData();
+        ILogger Logger();
     }
 
     public class TokenGetters : ITokenGetters
@@ -106,16 +105,23 @@ namespace lib
 
         private Dictionary<string, ITokenGetter> TokenGetterMap;
         private DiskCache TokenCache;
+        private readonly ILogger logger;
 
         public void ClearAllData()
         {
             this.TokenCache.ClearAll();
         }
 
+        public ILogger Logger()
+        {
+            return this.logger;
+        }
+
         public TokenGetters(ILogger logger, IConfiguration configuration)
         {
             this.TokenCache = new DiskCache("tokens", logger);
             this.TokenGetterMap = new Dictionary<string, ITokenGetter>();
+            this.logger = logger;
 
             // Read all token getter settings from configs
             var tokenGetterSettings = new TokenGetterSettings();
@@ -135,50 +141,33 @@ namespace lib
                     config.TokenCacheDurationHours,
                     config.Scopes);
 
-                switch (provider)
-                {
-                    case "EbayAccess":
-                        this.TokenGetterMap[provider].OnTokenValidation += OnEbayAccessTokenValidation;
-                        break;
-                    case "Google":
-                        this.TokenGetterMap[provider].OnTokenValidation += OnGoogleTokenValidation;
-                        break;
-                    default:
-                        break;
-                }
+                //switch (provider)
+                //{
+                //    case "EbayAccess":
+                //        this.TokenGetterMap[provider].OnTokenValidation += OnEbayAccessTokenValidation;
+                //        break;
+                //    case "Google":
+                //        this.TokenGetterMap[provider].OnTokenValidation += OnGoogleTokenValidation;
+                //        break;
+                //    default:
+                //        break;
+                //}
             }
         }
 
-        private bool OnGoogleTokenValidation(ITokenGetter tokenGetter, string token, ILogger logger)
-        {
-            try
-            {
-                var validPayload = GoogleJsonWebSignature.ValidateAsync(
-                    token,
-                    new GoogleJsonWebSignature.ValidationSettings { }).Result;
-            }
-            catch (Exception ex)
-            {
-                logger.LogDebug(ex, $"invalid google auth token");
-                return false;
-            }
+        //private bool OnEbayAccessTokenValidation(ITokenGetter tokenGetter, string token, ILogger logger)
+        //{
+        //    try
+        //    {
+        //        EbayTokenUtils.UserID(token, logger);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogDebug(ex, "access token for ebay is not valid");
+        //        return false;
+        //    }
 
-            return true;
-        }
-
-        private bool OnEbayAccessTokenValidation(ITokenGetter tokenGetter, string token, ILogger logger)
-        {
-            try
-            {
-                EbayTokenUtils.UserID(token, logger);
-            }
-            catch (Exception ex)
-            {
-                logger.LogDebug(ex, "access token for ebay is not valid");
-                return false;
-            }
-
-            return true;
-        }
+        //    return true;
+        //}
     }
 }

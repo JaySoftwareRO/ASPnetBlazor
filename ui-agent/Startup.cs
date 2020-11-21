@@ -60,7 +60,7 @@ namespace ui_agent
             }
         }
 
-        public async void ElectronBootstrap(Microsoft.Extensions.Logging.ILogger logger, ITokenGetters tokenGetters)
+        public async void ElectronBootstrap(ILogger logger, ITokenGetters tokenGetters)
         {
             var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
             {
@@ -170,6 +170,9 @@ namespace ui_agent
                                 options.Title = "Please Confirm";
                                 options.Buttons = new string[] {"Yes, delete all data", "Cancel"};
                                 var result = await Electron.Dialog.ShowMessageBoxAsync(options);
+
+                                Electron.WindowManager.BrowserWindows.First().WebContents.LoadURLAsync("https://signin.ebay.com/ws/eBayISAPI.dll?SignIn&lgout=1").Wait();
+
                                 if (result.Response == 0)
                                 {
                                     tokenGetters.ClearAllData();

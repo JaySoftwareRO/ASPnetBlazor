@@ -8,6 +8,9 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <AssemblyName>treecat</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup>
+    <TypeScriptToolsVersion>4.0</TypeScriptToolsVersion>
+  </PropertyGroup>
   <Target Name="CompileStaticAssets" AfterTargets="AfterBuild">
     <Exec Command="webcompiler -r wwwroot/css" StandardOutputImportance="high" />
   </Target>

@@ -12,6 +12,14 @@
             Welcome to Treecat!
         </span>
 
+        <br />
+
+        <span style="font-size: large">
+            @ViewBag.WelcomeMessage
+        </span>
+
+        <br />
+
         @if (string.IsNullOrWhiteSpace(googleTokenGetter.GetToken().Result))
         {
             <span>

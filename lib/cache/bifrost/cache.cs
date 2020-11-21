@@ -4,6 +4,7 @@ using Grpc.Core;
 using Grpc.Net.Client;
 using lib.bifrost;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Rest;
 using System.Net.Http;
@@ -20,8 +21,11 @@ namespace lib.cache.bifrost
         private ILogger logger;
         private string name;
 
-        public BifrostCache(string address, string name, string authToken, ILogger logger)
+        public BifrostCache(IConfiguration configuration, string name, ITokenGetter tokenGetter, ILogger logger)
         {
+            string address = configuration["Bifrost:Service"];
+            var token = tokenGetter.GetToken();
+
             var httpHandler = new HttpClientHandler();
             // Return `true` to allow certificates that are untrusted/invalid
             httpHandler.ServerCertificateCustomValidationCallback =
@@ -31,7 +35,7 @@ namespace lib.cache.bifrost
             
             var credentials = CallCredentials.FromInterceptor((context, metadata) =>
             {
-                metadata.Add("Authorization", $"{authToken}");
+                metadata.Add("Authorization", $"{token}");
                 return Task.CompletedTask;
             });
 
