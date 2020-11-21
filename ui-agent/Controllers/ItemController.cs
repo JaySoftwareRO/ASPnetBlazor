@@ -70,7 +70,7 @@ namespace ui_agent.Controllers
         public IActionResult ImportEbay()
         {
             var cache = new BifrostCache(this.configuration, "ebay-items", this.tokenGetters.Google, logger);
-            var items = new lib.listers.EbayLister(cache, this.logger, 10000, this.tokenGetters.Ebay).List().Result;
+            var items = new lib.listers.EbayLister(cache, this.logger, 10000, this.tokenGetters.EbayAccess).List().Result;
 
             this.ViewBag.Selected = "ebay";
             return View("importdata", items);

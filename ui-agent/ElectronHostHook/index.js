@@ -5,7 +5,13 @@ exports.HookService = void 0;
 const Electron = require("electron");
 const connector_1 = require("./connector");
 Electron.session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    // EBay requires this agent, otherwise the login process becomes unpredictable
     details.requestHeaders['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36';
+    // We can't login with google unless we set the browser's agent to Chrome
+    var location = new URL(details.url);
+    if (location.hostname.includes("google")) {
+        details.requestHeaders['User-Agent'] = 'Chrome';
+    }
     callback({ cancel: false, requestHeaders: details.requestHeaders });
 });
 class HookService extends connector_1.Connector {

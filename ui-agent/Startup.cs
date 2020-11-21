@@ -171,8 +171,6 @@ namespace ui_agent
                                 options.Buttons = new string[] {"Yes, delete all data", "Cancel"};
                                 var result = await Electron.Dialog.ShowMessageBoxAsync(options);
 
-                                Electron.WindowManager.BrowserWindows.First().WebContents.LoadURLAsync("https://signin.ebay.com/ws/eBayISAPI.dll?SignIn&lgout=1").Wait();
-
                                 if (result.Response == 0)
                                 {
                                     tokenGetters.ClearAllData();
@@ -190,6 +188,8 @@ namespace ui_agent
                                         }
                                     });
                                 }
+
+                                Electron.WindowManager.BrowserWindows.First().WebContents.LoadURLAsync("https://127.0.0.1:19872/item/welcome");
                             }
                         }
                     }

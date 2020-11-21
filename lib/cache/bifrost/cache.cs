@@ -24,7 +24,7 @@ namespace lib.cache.bifrost
         public BifrostCache(IConfiguration configuration, string name, ITokenGetter tokenGetter, ILogger logger)
         {
             string address = configuration["Bifrost:Service"];
-            var token = tokenGetter.GetToken();
+            var token = tokenGetter.GetToken().Result;
 
             var httpHandler = new HttpClientHandler();
             // Return `true` to allow certificates that are untrusted/invalid
