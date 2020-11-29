@@ -10,6 +10,8 @@ using System.Reflection;
 using System.IO;
 using System.Text;
 using System.Data;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace lib.cache.postgresql
 {
@@ -20,14 +22,21 @@ namespace lib.cache.postgresql
             "Could not retrieve information of table with schema '{0}' and " +
             "name '{1}'. Make sure you have the table setup and try again. " +
             "Connection string: {2}";
+        protected string ConnectionString { get; }
+        protected string SchemaName { get; }
+        protected string TableName { get; }
+        protected ISystemClock SystemClock { get; }
+        public ILogger Logger { get; }
 
         public DatabaseOperations(
-            string connectionString, string schemaName, string tableName, bool createInfrastructure, ISystemClock systemClock)
+            string connectionString, string schemaName, string tableName, bool createInfrastructure, ISystemClock systemClock, ILogger logger)
         {
             ConnectionString = connectionString;
             SchemaName = schemaName;
             TableName = tableName;
             SystemClock = systemClock;
+            this.Logger = logger;
+
 			if (createInfrastructure)
 			{
                 CreateDatabaseIfNotExist();
@@ -35,14 +44,6 @@ namespace lib.cache.postgresql
                 CreateTableIfNotExist();
             }
         }
-
-        protected string ConnectionString { get; }
-
-        protected string SchemaName { get; }
-
-        protected string TableName { get; }
-
-        protected ISystemClock SystemClock { get; }
 
         private string ReadScript(string scriptName)
         {
@@ -133,8 +134,9 @@ namespace lib.cache.postgresql
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.StackTrace);
+                    this.Logger.LogWarning(ex, "error when trying to create schema for psql cache");
                 }
+
                 cn.Close();
             }
         }
@@ -142,46 +144,42 @@ namespace lib.cache.postgresql
         // Create the tables and functions if they don't exist
         private void CreateTableIfNotExist()
         {
-
-            var sql = (
-             table: ReadScript("Create_Table_DistCache.sql"),
-             funcDateDiff: ReadScript("Create_Function_DateDiff.sql"),
-             funcDeleteCacheItem: ReadScript("Create_Function_DeleteCacheItemFormat.sql"),
-             funcDeleteExpired: ReadScript("Create_Function_DeleteExpiredCacheItemsFormat.sql"),
-             funcGetCacheItem: ReadScript("Create_Function_GetCacheItemFormat.sql"),
-             funcSetCache: ReadScript("Create_Function_SetCache.sql"),
-             funcUpdateCache: ReadScript("Create_Function_UpdateCacheItemFormat.sql")
-             );
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(FormatName(sql.table));
-            sb.Append(FormatName(sql.funcDateDiff));
-            sb.Append(FormatName(sql.funcGetCacheItem));
-            sb.Append(FormatName(sql.funcSetCache));
-            sb.Append(FormatName(sql.funcUpdateCache));
-            sb.Append(FormatName(sql.funcDeleteCacheItem));
-            sb.Append(FormatName(sql.funcDeleteExpired));
+            var sql = new string[] {
+                ReadScript("Create_Table_DistCache.sql"),
+                ReadScript("Create_Function_DateDiff.sql"),
+                ReadScript("Create_Function_DeleteCacheItemFormat.sql"),
+                ReadScript("Create_Function_DeleteExpiredCacheItemsFormat.sql"),
+                ReadScript("Create_Function_GetCacheItemFormat.sql"),
+                ReadScript("Create_Function_SetCache.sql"),
+                ReadScript("Create_Function_UpdateCacheItemFormat.sql"),
+                ReadScript("Create_Function_ListCacheFormat.sql"),
+             };
 
             using (var cn = new NpgsqlConnection(this.ConnectionString))
             {
                 cn.Open();
-                using (var transaction = cn.BeginTransaction())
+
+                foreach (var script in sql)
                 {
-                    try
+                    using (var transaction = cn.BeginTransaction())
                     {
-                        NpgsqlCommand cmd = new NpgsqlCommand(
-                            cmdText: sb.ToString(),
-                            connection: cn,
-                            transaction: transaction);
-                        cmd.ExecuteNonQuery();
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.StackTrace);
-                        transaction.Rollback();
+                        try
+                        {
+                            NpgsqlCommand cmd = new NpgsqlCommand(
+                                cmdText: script,
+                                connection: cn,
+                                transaction: transaction);
+                            cmd.ExecuteNonQuery();
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.Logger.LogWarning(ex, "error when trying to create objesct for psql cache");
+                            transaction.Rollback();
+                        }
                     }
                 }
+
                 cn.Close();
             }
 
@@ -410,6 +408,42 @@ namespace lib.cache.postgresql
             }
 
             return value;
+        }
+
+        public List<string> GetKeyList()
+        {
+            var result = new List<string>();
+            var utcNow = SystemClock.UtcNow;
+            using (var connection = new NpgsqlConnection(this.ConnectionString))
+            {
+                var command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.ListCacheItemFormat}", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters
+                    .AddParamWithValue("SchemaName", NpgsqlTypes.NpgsqlDbType.Text, SchemaName)
+                    .AddParamWithValue("TableName", NpgsqlTypes.NpgsqlDbType.Text, TableName)
+                    .AddWithValue("UtcNow", NpgsqlTypes.NpgsqlDbType.TimestampTz, utcNow);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+        
+                command = new NpgsqlCommand($"{SchemaName}.{Functions.Names.GetCacheItemFormat}", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters
+                    .AddParamWithValue("SchemaName", NpgsqlTypes.NpgsqlDbType.Text, SchemaName)
+                    .AddParamWithValue("TableName", NpgsqlTypes.NpgsqlDbType.Text, TableName)
+                    .AddWithValue("UtcNow", NpgsqlTypes.NpgsqlDbType.TimestampTz, utcNow);
+
+                var reader = command.ExecuteReader(CommandBehavior.SequentialAccess);
+
+                while (reader.Read())
+                {
+                    var id = reader.GetFieldValue<string>(Columns.Indexes.CacheItemIdIndex);
+                    result.Add(id);
+                }
+            }
+
+            return result;
         }
 
         protected virtual async Task<byte[]> GetCacheItemAsync(string key, bool includeValue)

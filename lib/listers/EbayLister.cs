@@ -9,6 +9,7 @@ using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using lib.cache;
 
 namespace lib.listers
 {
@@ -30,14 +31,14 @@ namespace lib.listers
 
         String requestURL = endpoint + queryString; // "https://api.ebay.com/wsapi";
 
-        IDistributedCache cache;
+        IExtendedDistributedCache cache;
         ILogger logger;
         int liveCallLimit;
         int liveCalls = 0;
         ITokenGetter tokenGetter;
         string accountID;
 
-        public EbayLister(IDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
+        public EbayLister(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;

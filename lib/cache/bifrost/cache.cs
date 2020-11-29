@@ -1,21 +1,20 @@
 ﻿using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Net.Client;
 using lib.bifrost;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Rest;
+using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static lib.bifrost.Cache;
 
 namespace lib.cache.bifrost
 {
-    public class BifrostCache : IDistributedCache
+    public class BifrostCache : IExtendedDistributedCache
     {
         private CacheClient client;
         private ILogger logger;
@@ -159,6 +158,17 @@ namespace lib.cache.bifrost
                 },
                 Cache = this.name
             });
+        }
+
+        public List<string> List()
+        {
+            logger.LogDebug($"listing keys from bifrost cache");
+            var result = this.client.List(new ListRequest
+            {
+                Cache = this.name
+            });
+
+            return result.Keys.ToList();
         }
     }
 }

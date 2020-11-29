@@ -16,6 +16,7 @@
     <None Remove="cache\postgresql\scripts\Create_Function_DeleteCacheItemFormat.sql" />
     <None Remove="cache\postgresql\scripts\Create_Function_DeleteExpiredCacheItemsFormat.sql" />
     <None Remove="cache\postgresql\scripts\Create_Function_GetCacheItemFormat.sql" />
+    <None Remove="cache\postgresql\scripts\Create_Function_ListCacheFormat.sql" />
     <None Remove="cache\postgresql\scripts\Create_Function_SetCache.sql" />
     <None Remove="cache\postgresql\scripts\Create_Function_UpdateCacheItemFormat.sql" />
     <None Remove="cache\postgresql\scripts\Create_Table_DistCache.sql" />
@@ -25,6 +26,7 @@
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_DeleteCacheItemFormat.sql" />
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_DeleteExpiredCacheItemsFormat.sql" />
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_GetCacheItemFormat.sql" />
+    <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_ListCacheFormat.sql" />
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_SetCache.sql" />
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Function_UpdateCacheItemFormat.sql" />
     <EmbeddedResource Include="cache\postgresql\scripts\Create_Table_DistCache.sql" />

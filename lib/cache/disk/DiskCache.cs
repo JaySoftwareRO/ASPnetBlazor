@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Serialization.Json;
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,10 +12,11 @@ using System.Threading.Tasks;
 
 namespace lib.cache.disk
 {
-    public class DiskCache : IDistributedCache
+    public class DiskCache : IExtendedDistributedCache
     {
         private string dir;
         private ILogger logger;
+        private const string cacheVersion = "v2";
 
         public DiskCache(string dir, ILogger logger)
         {
@@ -192,11 +192,55 @@ namespace lib.cache.disk
 
         private string KeyHash(string key)
         {
-            using (SHA256 sha256 = SHA256.Create())
+            var filename = $"{Escape(key)}.{cacheVersion}";
+            return filename;
+        }
+
+        static string Escape(string input)
+        {
+            StringBuilder builder = new StringBuilder(input.Length);
+            for (int i = 0; i < input.Length; i++)
             {
-                byte[] hashValue = sha256.ComputeHash(ASCIIEncoding.ASCII.GetBytes(key));
-                return SimpleBase.Base58.Bitcoin.Encode(hashValue);
+                if (Path.GetInvalidPathChars().Contains(input[i]) || Path.GetInvalidFileNameChars().Contains(input[i]) || input[i] == '%')
+                {
+                    builder.Append(Uri.HexEscape(input[i]));
+                }
+                else
+                {
+                    builder.Append(input[i]);
+                }
             }
-        } 
+            return builder.ToString();
+        }
+
+        static string Unescape(string input)
+        {
+            StringBuilder builder = new StringBuilder(input.Length);
+            int index = 0;
+            while (index < input.Length)
+            {
+                builder.Append(Uri.HexUnescape(input, ref index));
+            }
+            return builder.ToString();
+        }
+
+        public List<string> List()
+        {
+            var cacheKeys = Directory.GetFiles(this.dir, $"*.{cacheVersion}").Select(ck =>Unescape(ck.Remove(ck.Length - cacheVersion.Length - 1))).ToList();
+            var result = new List<string>();
+
+            // TODO: only list items that are not expired
+            foreach (var cacheKey in cacheKeys)
+            {
+                if (this.Expired(cacheKey).Result)
+                {
+                    continue;
+                }
+
+                result.Add(cacheKey);
+            }
+
+            return result;
+        }
     }
 }

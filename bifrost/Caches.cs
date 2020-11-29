@@ -1,7 +1,9 @@
-﻿using lib.cache.postgresql;
+﻿using lib.cache;
+using lib.cache.postgresql;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +13,24 @@ namespace bifrost
 {
     public interface ICaches
     {
-        IDistributedCache Get(string name);
-        void Set(string name, IDistributedCache cache);
+        IExtendedDistributedCache Get(string name);
+        void Set(string name, IExtendedDistributedCache cache);
     }
 
     public class Caches : ICaches
     {
-        private Dictionary<string, IDistributedCache> caches;
+        private Dictionary<string, IExtendedDistributedCache> caches;
         public Caches()
         {
-            this.caches = new Dictionary<string, IDistributedCache>();
+            this.caches = new Dictionary<string, IExtendedDistributedCache>();
         }
 
-        public IDistributedCache Get(string name)
+        public IExtendedDistributedCache Get(string name)
         {
             return this.caches[name];
         }
 
-        public void Set(string name, IDistributedCache cache)
+        public void Set(string name, IExtendedDistributedCache cache)
         {
             this.caches[name] = cache;
         }
@@ -72,7 +74,7 @@ namespace bifrost
 
     public static class CachesServices
     {
-        public static IServiceCollection AddCaches(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCaches(this IServiceCollection services, IConfiguration configuration, ILogger logger)
         {
             var cachesSettings = new DatabaseSettings();
             configuration.GetSection("Data:Database").Bind(cachesSettings);
@@ -94,7 +96,7 @@ namespace bifrost
                         SchemaName = schemaName,
                         TableName = tableName,
                         CreateInfrastructure = createInfrastructure,
-                    });
+                    }, logger);
                     caches.Set(kv.Key, cache);
                 }
             }

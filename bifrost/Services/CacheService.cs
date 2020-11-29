@@ -80,11 +80,28 @@ namespace bifrost
             await cache.RemoveAsync(key);
             return new RemoveReply();
         }
+
+        public override async Task<ListReply> List(ListRequest request, ServerCallContext context)
+        {
+            var cache = this.caches.Get(request.Cache);
+
+            var result = new ListReply();
+            result.Keys.AddRange(cache.List().Select(k => CalculateOriginalKey(k, context)).ToList());
+
+            return result;
+        }
+
         // Key created from the request key and the Google account ID. 
         public string GenerateKey(string key, ServerCallContext context)
         {
             var googleAccountId = context.RequestHeaders.Get("googleprofileid");
             return $"{key}_{googleAccountId.Value}";
+        }
+
+        public string CalculateOriginalKey(string key, ServerCallContext context)
+        {
+            var googleAccountId = context.RequestHeaders.Get("googleprofileid");
+            return key.Remove(key.Length - googleAccountId.Value.Length - 2);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace lib.cache.postgresql
 		// to enable unit testing
 		internal static void AddPostgreSqlCacheServices(IServiceCollection services)
 		{
-			services.Add(ServiceDescriptor.Singleton<IDistributedCache, PostgreSqlCache>());
+			services.Add(ServiceDescriptor.Singleton<IExtendedDistributedCache, PostgreSqlCache>());
 		}
 	}
 }

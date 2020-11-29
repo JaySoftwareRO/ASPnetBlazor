@@ -7,19 +7,20 @@ using System.Threading.Tasks;
 using lib.poshmark_client;
 using System.Linq;
 using Newtonsoft.Json;
+using lib.cache;
 
 namespace lib.listers
 {
     public class PoshmarkLister : Lister
     {
-        IDistributedCache cache;
+        IExtendedDistributedCache cache;
         ILogger logger;
         int liveCallLimit;
         int liveCalls = 0;
         ITokenGetter tokenGetter;
         string accountID;
 
-        public PoshmarkLister(IDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
+        public PoshmarkLister(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;

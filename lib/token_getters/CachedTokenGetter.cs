@@ -1,4 +1,5 @@
-﻿using lib.cache.disk;
+﻿using lib.cache;
+using lib.cache.disk;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,7 +11,7 @@ namespace lib.token_getters
 {
     public class CachedTokenGetter : ITokenGetter
     {
-        private IDistributedCache cache;
+        private IExtendedDistributedCache cache;
         private string cacheTokenKey;
         private string cacheUserIDKey;
         private int cacheHours = 30;
@@ -19,7 +20,7 @@ namespace lib.token_getters
         private List<string> scopes;
 
         public event OnTokenValidationDelegate OnTokenValidation;
-        public CachedTokenGetter(IDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheHours, List<string> scopes)
+        public CachedTokenGetter(IExtendedDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheHours, List<string> scopes)
         {
             this.cache = cache;
             this.cacheTokenKey = string.Format($"{cacheKey}_token");

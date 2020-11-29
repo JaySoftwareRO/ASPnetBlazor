@@ -16,12 +16,13 @@ namespace ui_agent
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public ILogger<Startup> Logger { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
             this.Configuration = configuration;
+            this.Logger = logger;
         }
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

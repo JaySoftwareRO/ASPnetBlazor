@@ -133,6 +133,7 @@ namespace ui_agent.Controllers
             return View("importdata");
         }
 
+        [GoogleAuth]
         public async Task<IActionResult> Inventory()
         {
             // This function returns all the items from the user's TreeCat cache

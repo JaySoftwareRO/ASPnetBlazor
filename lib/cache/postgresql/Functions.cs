@@ -15,8 +15,7 @@ namespace lib.cache.postgresql
             public const string UpdateCacheItemFormat = "UpdateCacheItemFormat";
             public const string DeleteExpiredCacheItemsFormat = "DeleteExpiredCacheItemsFormat";
             public const string GetCacheItemFormat = "GetCacheItemFormat";
-
-
+            public const string ListCacheItemFormat = "ListCacheItemFormat";
         }
     }
 }

@@ -9,6 +9,7 @@ service Cache {
   rpc Refresh (RefreshRequest) returns (RefreshReply);
   rpc Remove (RemoveRequest) returns (RemoveReply);
   rpc Set (SetRequest) returns (SetReply);
+  rpc List (ListRequest) returns (ListReply);
 }
 
 message GetRequest {
@@ -45,6 +46,14 @@ message SetRequest {
 }
 
 message SetReply {
+}
+
+message ListRequest {
+  string cache = 1;
+}
+
+message ListReply {
+  repeated string keys = 1;
 }
 
 message CacheOptions {

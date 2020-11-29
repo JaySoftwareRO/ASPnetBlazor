@@ -12,16 +12,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace bifrost
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public ILogger Logger { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILogger logger)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
+            this.Logger = logger;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -29,7 +32,7 @@ namespace bifrost
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddCaches(Configuration)
+                .AddCaches(Configuration, this.Logger)
                 .AddGrpc(options =>
                 {
                     options.Interceptors.Add<GoogleTokenInterceptor>();

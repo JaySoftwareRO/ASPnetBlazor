@@ -1,5 +1,6 @@
 ﻿using ebaytaxonomy;
 using ebaytaxonomy.Models;
+using lib.cache;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Rest;
@@ -22,13 +23,13 @@ namespace lib.schema_readers
         // https://developer.ebay.com/api-docs/commerce/taxonomy/static/supportedmarketplaces.html
         private const string MarketplaceUSA = "EBAY_US";
 
-        IDistributedCache cache;
+        IExtendedDistributedCache cache;
         ILogger logger;
         int liveCallLimit;
         int liveCalls = 0;
         ITokenGetter tokenGetter;
 
-        public EbaySchemaReader(IDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
+        public EbaySchemaReader(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;

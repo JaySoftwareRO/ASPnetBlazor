@@ -9,10 +9,11 @@ using Microsoft.Extensions.Internal;
 using System.Threading;
 using System.IO;
 using Npgsql;
+using Microsoft.Extensions.Logging;
 
 namespace lib.cache.postgresql
 {
-    public class PostgreSqlCache : IDistributedCache
+    public class PostgreSqlCache : IExtendedDistributedCache
     {
         private static readonly TimeSpan MinimumExpiredItemsDeletionInterval = TimeSpan.FromMinutes(5);
         private static readonly TimeSpan DefaultExpiredItemsDeletionInterval = TimeSpan.FromMinutes(30);
@@ -24,7 +25,7 @@ namespace lib.cache.postgresql
         private readonly Action _deleteExpiredCachedItemsDelegate;
         private readonly TimeSpan _defaultSlidingExpiration;
 
-        public PostgreSqlCache(IOptions<PostgreSqlCacheOptions> options)
+        public PostgreSqlCache(IOptions<PostgreSqlCacheOptions> options, ILogger logger)
         {
             var cacheOptions = options.Value;
 
@@ -69,7 +70,8 @@ namespace lib.cache.postgresql
                    cacheOptions.SchemaName,
                    cacheOptions.TableName,
 				   cacheOptions.CreateInfrastructure,
-                   _systemClock);
+                   _systemClock,
+                   logger);
         }
 
 
@@ -226,6 +228,10 @@ namespace lib.cache.postgresql
                     SlidingExpiration = _defaultSlidingExpiration
                 };
             }
+        }
+        public List<string> List()
+        {
+            return _dbOperations.GetKeyList();
         }
     }
 }
