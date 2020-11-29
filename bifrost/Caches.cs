@@ -74,34 +74,39 @@ namespace bifrost
 
     public static class CachesServices
     {
-        public static IServiceCollection AddCaches(this IServiceCollection services, IConfiguration configuration, ILogger logger)
+        public static IServiceCollection AddCaches(this IServiceCollection services, IConfiguration configuration)
         {
             var cachesSettings = new DatabaseSettings();
             configuration.GetSection("Data:Database").Bind(cachesSettings);
 
-            var caches = new Caches();
-            var duplicate = new CheckDuplicates();
+            return services.AddSingleton<ICaches>((container) => {
+                var logger = container.GetRequiredService<ILogger<Startup>>();
+                var configuration = container.GetRequiredService<IConfiguration>();
 
-            foreach (var kv in cachesSettings.Caches)
-            {
-                var schemaName = kv.Value.Schema; 
-                var tableName = kv.Value.Table;
-                var createInfrastructure = true;
+                var caches = new Caches();
+                var duplicate = new CheckDuplicates();
 
-                if (duplicate.SchemaDuplicates(schemaName) == false)
+                foreach (var kv in cachesSettings.Caches)
                 {
-                    var cache = new PostgreSqlCache(new PostgreSqlCacheOptions()
-                    {
-                        ConnectionString = kv.Value.ConnectionString,
-                        SchemaName = schemaName,
-                        TableName = tableName,
-                        CreateInfrastructure = createInfrastructure,
-                    }, logger);
-                    caches.Set(kv.Key, cache);
-                }
-            }
+                    var schemaName = kv.Value.Schema;
+                    var tableName = kv.Value.Table;
+                    var createInfrastructure = true;
 
-            return services.AddSingleton<ICaches>(caches);
+                    if (duplicate.SchemaDuplicates(schemaName) == false)
+                    {
+                        var cache = new PostgreSqlCache(new PostgreSqlCacheOptions()
+                        {
+                            ConnectionString = kv.Value.ConnectionString,
+                            SchemaName = schemaName,
+                            TableName = tableName,
+                            CreateInfrastructure = createInfrastructure,
+                        }, logger);
+                        caches.Set(kv.Key, cache);
+                    }
+                }
+
+                return caches;
+            });
         }
     }
 }
