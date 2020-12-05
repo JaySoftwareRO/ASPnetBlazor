@@ -19,12 +19,10 @@ namespace bifrost
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public ILogger<Startup> Logger { get; }
 
-        public Startup(ILoggerFactory loggerFactory, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
-            this.Logger = loggerFactory.CreateLogger<Startup>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
