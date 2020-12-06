@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web" ToolsVersion="Current">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <RootNamespace>ui_agent</RootNamespace>
     <FileUpgradeFlags>40</FileUpgradeFlags>
@@ -10,6 +10,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <TypeScriptToolsVersion>4.0</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
   </PropertyGroup>
   <Target Name="CompileStaticAssets" AfterTargets="AfterBuild">
     <Exec Command="webcompiler -r wwwroot/css" StandardOutputImportance="high" />
@@ -31,15 +34,17 @@
   <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="9.31.2" />
     <PackageReference Include="Karambolo.Extensions.Logging.File" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0" />
     <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.9" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
@@ -55,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\lib.csproj" />
+    <ProjectReference Include="..\ui-components\Client\ui-components.Client.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="ebay-auth-config.yaml">

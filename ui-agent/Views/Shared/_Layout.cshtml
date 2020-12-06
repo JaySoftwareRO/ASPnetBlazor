@@ -1,5 +1,5 @@
-﻿@inject lib.ITokenGetters tokenGetters
-@using System.Reflection
+﻿@using System.Reflection 
+@inject lib.ITokenGetters tokenGetters
 
 @{ 
     var ebayTokenGetter = tokenGetters.Ebay;
@@ -52,6 +52,9 @@
         <div class="cell shrink footer">
             <div class="grid-x">
                 <div class="cell">
+                    SUGI O CEAPA
+           
+                    <component type="typeof(ui_components.Client.Components.LoginBar)" param-InitialValue="1" render-mode="WebAssemblyPrerendered" />
 
                     @if (string.IsNullOrWhiteSpace(await googleTokenGetter.GetToken()))
                     {                       
@@ -113,6 +116,7 @@
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/resizable-panel.js" asp-append-version="true"></script>
+    <script src="~/_framework/blazor.webassembly.js"></script>
 
     <script>if (window.module) module = window.module;</script>
 

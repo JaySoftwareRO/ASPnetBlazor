@@ -11,7 +11,7 @@
     "Electron.NET App": {
       "commandName": "Executable",
       "executablePath": "electronize",
-      "commandLineArgs": "start",
+      "commandLineArgs": "start /PublishReadyToRun \"false -p:PublishSingleFile=false -p:PublishTrimmed=false --self-contained=true \n echo \"",
       "workingDirectory": "."
     },
     "IIS Express": {

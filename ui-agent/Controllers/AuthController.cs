@@ -78,6 +78,12 @@ namespace ui_agent.Controllers
             return View();
         }
 
+        [GoogleAuth(failOnError:true)]
+        public IActionResult GoogleOK()
+        {
+            return new OkResult();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

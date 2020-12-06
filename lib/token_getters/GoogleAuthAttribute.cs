@@ -13,6 +13,13 @@ namespace lib.token_getters
     [System.AttributeUsage(System.AttributeTargets.Method)]
     public class GoogleAuthAttribute : ActionFilterAttribute
     {
+        private readonly bool failOnError;
+
+        public GoogleAuthAttribute(bool failOnError = false)
+        {
+            this.failOnError = failOnError;
+        }
+
         public async override void OnActionExecuting(ActionExecutingContext context)
         {
             var tokenGetters = (ITokenGetters)context.HttpContext.RequestServices.GetService(typeof(ITokenGetters));
@@ -20,8 +27,13 @@ namespace lib.token_getters
 
             if (string.IsNullOrWhiteSpace(authToken))
             {
-                tokenGetters.Logger().LogDebug($"google auth token is empty");
-                context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with Google!" });
+                if (!this.failOnError) {
+                    tokenGetters.Logger().LogDebug($"google auth token is empty");
+                    context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with Google!" });
+                    return;
+                }
+
+                context.Result = new UnauthorizedResult();
                 return;
             }
 
@@ -33,8 +45,14 @@ namespace lib.token_getters
             }
             catch (Exception ex)
             {
-                tokenGetters.Logger().LogDebug(ex, $"invalid google auth token");
-                context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with Google!" });
+                if (!this.failOnError)
+                {
+                    tokenGetters.Logger().LogDebug(ex, $"invalid google auth token");
+                    context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with Google!" });
+                    return;
+                }
+
+                context.Result = new UnauthorizedResult();
                 return;
             }
 

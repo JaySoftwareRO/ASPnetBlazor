@@ -140,34 +140,7 @@ namespace lib
                     config.LoginURL,
                     config.TokenCacheDurationHours,
                     config.Scopes);
-
-                //switch (provider)
-                //{
-                //    case "EbayAccess":
-                //        this.TokenGetterMap[provider].OnTokenValidation += OnEbayAccessTokenValidation;
-                //        break;
-                //    case "Google":
-                //        this.TokenGetterMap[provider].OnTokenValidation += OnGoogleTokenValidation;
-                //        break;
-                //    default:
-                //        break;
-                //}
             }
         }
-
-        //private bool OnEbayAccessTokenValidation(ITokenGetter tokenGetter, string token, ILogger logger)
-        //{
-        //    try
-        //    {
-        //        EbayTokenUtils.UserID(token, logger);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.LogDebug(ex, "access token for ebay is not valid");
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
     }
 }
