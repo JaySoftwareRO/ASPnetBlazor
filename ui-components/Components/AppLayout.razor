@@ -1,0 +1,25 @@
+﻿
+<Blazorise.Layout>
+    <Blazorise.LayoutHeader Fixed="true">
+        <NavigationMenu />
+    </Blazorise.LayoutHeader>
+    <Blazorise.LayoutContent>
+        @RenderedBody
+    </Blazorise.LayoutContent>
+    <Blazorise.LayoutFooter Fixed="true">
+        <LoginBar></LoginBar>
+    </Blazorise.LayoutFooter>
+</Blazorise.Layout>
+
+@code {
+    [Parameter]
+    public string Body { get; set; }
+
+    private MarkupString RenderedBody
+    {
+        get
+        {
+            return new MarkupString(this.Body);
+        }
+    }
+}

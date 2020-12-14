@@ -38,6 +38,7 @@ namespace ui_agent
 
                             options.Listen(IPAddress.Loopback, 19871);
                         })
+                        .UseStaticWebAssets()
                         .UseStartup<Startup>()
                         .UseElectron(args);
                 });

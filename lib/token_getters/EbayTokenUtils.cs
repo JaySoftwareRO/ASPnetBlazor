@@ -98,7 +98,7 @@ namespace lib.token_getters
                         Version = "1149"
                     }).GetAwaiter().GetResult();
 
-                    return userInfo.GetUserResponse1.User.UserID;
+                    return userInfo.GetUserResponse1.User.Email;
                 }
                 catch (Exception ex)
                 {

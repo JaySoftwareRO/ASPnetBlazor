@@ -1,7 +1,11 @@
+using Blazorise;
+using Blazorise.AntDesign;
+using Blazorise.Icons.FontAwesome;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using lib;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Net.Http;
 using ui_agent.Services;
 
 namespace ui_agent
@@ -28,6 +33,19 @@ namespace ui_agent
             //services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
             services.AddRazorPages();
+
+            services.AddBlazorise(
+                options =>
+                {
+                    options.ChangeTextOnKeyPress = true;
+                })
+                .AddAntDesignProviders()
+                .AddFontAwesomeIcons();
+
+            services.AddSingleton(new HttpClient
+            {
+                BaseAddress = new Uri(this.Configuration[WebHostDefaults.ServerUrlsKey])
+            });
 
             services
                 .AddTokenGetters()

@@ -58,7 +58,7 @@ namespace lib.listers
             {
                 sellingItems = JsonConvert.DeserializeObject<GetMyeBaySellingResponse>(ASCIIEncoding.UTF8.GetString(cachedSellingItems));
 
-                if (sellingItems.GetMyeBaySellingResponse1 == null)
+                if (sellingItems.GetMyeBaySellingResponse1 == null || sellingItems.GetMyeBaySellingResponse1.ActiveList == null)
                 {
                     await this.cache.RemoveAsync(this.accountID);
                     cachedSellingItems = null;
@@ -103,6 +103,11 @@ namespace lib.listers
 
             List<Item> result = new List<Item>();
 
+            if (sellingItems.GetMyeBaySellingResponse1 == null || sellingItems.GetMyeBaySellingResponse1.ActiveList == null)
+            {
+                return result;
+            }
+
             foreach (var ebayItem in sellingItems.GetMyeBaySellingResponse1.ActiveList.ItemArray)
             {
                 try
@@ -112,7 +117,7 @@ namespace lib.listers
                     treecatItem.ID = ebayItem.ItemID;
                     treecatItem.Provisioner = "eBay";
                     treecatItem.Title = ebayItem.Title;
-                    
+
                     if (ebayItem.BuyItNowPrice != null)
                     {
                         treecatItem.BuyItNowPrice = new AmountType();
@@ -174,7 +179,7 @@ namespace lib.listers
                             }
                         }
                     }
-                    
+
                     treecatItem.AutoPay = ebayItem.AutoPay;
                     treecatItem.AutoPaySpecified = ebayItem.AutoPaySpecified;
                     treecatItem.AvailableForPickupDropOff = ebayItem.AvailableForPickupDropOff;
@@ -189,7 +194,7 @@ namespace lib.listers
                             treecatItem.BestOfferDetails.BestOffer.currencyID = ebayItem.BestOfferDetails.BestOffer.currencyID;
                             treecatItem.BestOfferDetails.BestOffer.Value = ebayItem.BestOfferDetails.BestOffer.Value;
                         }
-                        
+
                         treecatItem.BestOfferDetails.BestOfferCount = ebayItem.BestOfferDetails.BestOfferCount;
                         treecatItem.BestOfferDetails.BestOfferCountSpecified = ebayItem.BestOfferDetails.BestOfferCountSpecified;
                         treecatItem.BestOfferDetails.BestOfferEnabled = ebayItem.BestOfferDetails.BestOfferEnabled;
@@ -396,7 +401,7 @@ namespace lib.listers
                         {
                             treecatItem.BusinessSellerDetails.AdditionalContactInformation = ebayItem.BusinessSellerDetails.AdditionalContactInformation;
                         }
-                        
+
                         treecatItem.BusinessSellerDetails.Any = ebayItem.BusinessSellerDetails.Any;
 
                         if (ebayItem.BusinessSellerDetails.Email != null)
@@ -435,7 +440,7 @@ namespace lib.listers
                             {
                                 treecatItem.BusinessSellerDetails.VATDetails.VATID = ebayItem.BusinessSellerDetails.VATDetails.VATID;
                             }
-                            
+
                             treecatItem.BusinessSellerDetails.VATDetails.VATPercent = ebayItem.BusinessSellerDetails.VATDetails.VATPercent;
                             treecatItem.BusinessSellerDetails.VATDetails.VATPercentSpecified = ebayItem.BusinessSellerDetails.VATDetails.VATPercentSpecified;
 
@@ -461,7 +466,7 @@ namespace lib.listers
                     {
                         treecatItem.BuyerRequirementDetails = new BuyerRequirementDetailsType();
                         treecatItem.BuyerRequirementDetails.Any = ebayItem.BuyerRequirementDetails.Any;
-                        
+
                         if (ebayItem.BuyerRequirementDetails.MaximumItemRequirements != null)
                         {
                             treecatItem.BuyerRequirementDetails.MaximumItemRequirements = new MaximumItemRequirementsType();
@@ -486,7 +491,7 @@ namespace lib.listers
                         treecatItem.BuyerRequirementDetails.ZeroFeedbackScore = ebayItem.BuyerRequirementDetails.ZeroFeedbackScore;
                         treecatItem.BuyerRequirementDetails.ZeroFeedbackScoreSpecified = ebayItem.BuyerRequirementDetails.ZeroFeedbackScoreSpecified;
                     }
-                    
+
 
                     treecatItem.BuyerResponsibleForShipping = ebayItem.BuyerResponsibleForShipping;
                     treecatItem.BuyerResponsibleForShippingSpecified = ebayItem.BuyerResponsibleForShippingSpecified;
@@ -560,12 +565,12 @@ namespace lib.listers
                     treecatItem.ConditionIDSpecified = ebayItem.ConditionIDSpecified;
                     treecatItem.Country = ebayItem.Country;
                     treecatItem.CountrySpecified = ebayItem.CountrySpecified;
-                    
+
                     if (ebayItem.CrossBorderTrade != null)
                     {
                         treecatItem.CrossBorderTrade = ebayItem.CrossBorderTrade;
                     }
-                    
+
                     if (ebayItem.CrossPromotion != null)
                     {
                         treecatItem.CrossPromotions = new CrossPromotionsType();
@@ -604,7 +609,7 @@ namespace lib.listers
                                 treecatItem.CrossPromotions.PromotedItem[i].PositionSpecified = ebayItem.CrossPromotion.PromotedItem[i].PositionSpecified;
                                 treecatItem.CrossPromotions.PromotedItem[i].SelectionType = ebayItem.CrossPromotion.PromotedItem[i].SelectionType;
                                 treecatItem.CrossPromotions.PromotedItem[i].SelectionTypeSpecified = ebayItem.CrossPromotion.PromotedItem[i].SelectionTypeSpecified;
-                                
+
                                 if (ebayItem.CrossPromotion.PromotedItem[i].TimeLeft != null)
                                 {
                                     treecatItem.CrossPromotions.PromotedItem[i].TimeLeft = ebayItem.CrossPromotion.PromotedItem[i].TimeLeft;
@@ -638,7 +643,7 @@ namespace lib.listers
                                             treecatItem.CrossPromotions.PromotedItem[i].PromotionDetails[x].PromotionPrice.currencyID = ebayItem.CrossPromotion.PromotedItem[i].PromotionDetails[x].PromotionPrice.currencyID;
                                             treecatItem.CrossPromotions.PromotedItem[i].PromotionDetails[x].PromotionPrice.Value = ebayItem.CrossPromotion.PromotedItem[i].PromotionDetails[x].PromotionPrice.Value;
                                         }
-                                        
+
                                         treecatItem.CrossPromotions.PromotedItem[i].PromotionDetails[x].PromotionPriceType = ebayItem.CrossPromotion.PromotedItem[i].PromotionDetails[x].PromotionPriceType;
                                         treecatItem.CrossPromotions.PromotedItem[i].PromotionDetails[x].PromotionPriceTypeSpecified = ebayItem.CrossPromotion.PromotedItem[i].PromotionDetails[x].PromotionPriceTypeSpecified;
                                     }
@@ -1412,12 +1417,12 @@ namespace lib.listers
                                         treecatItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x] = new CharacteristicType();
                                         treecatItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].Any = ebayItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].Any;
                                         treecatItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].AttributeID = ebayItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].AttributeID;
-                                        
+
                                         if (ebayItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].DateFormat != null)
                                         {
                                             treecatItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].DateFormat = ebayItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].DateFormat;
                                         }
-                                        
+
                                         if (ebayItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].DisplaySequence != null)
                                         {
                                             treecatItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].DisplayUOM = ebayItem.PrimaryCategory.CharacteristicsSets[i].Characteristics[x].DisplaySequence;
@@ -1512,7 +1517,7 @@ namespace lib.listers
                     {
                         treecatItem.PrivateNotes = ebayItem.PrivateNotes;
                     }
-                    
+
                     if (ebayItem.ProductListingDetails != null)
                     {
                         treecatItem.ProductListingDetails = new ProductListingDetailsType();
@@ -1590,7 +1595,7 @@ namespace lib.listers
                         {
                             treecatItem.ProductListingDetails.ProductReferenceID = ebayItem.ProductListingDetails.ProductReferenceID;
                         }
-                        
+
                         if (ebayItem.ProductListingDetails.StockPhotoURL != null)
                         {
                             treecatItem.ProductListingDetails.StockPhotoURL = ebayItem.ProductListingDetails.StockPhotoURL;
@@ -1604,7 +1609,7 @@ namespace lib.listers
                             treecatItem.ProductListingDetails.TicketListingDetails = new TicketListingDetailsType();
 
                             treecatItem.ProductListingDetails.TicketListingDetails.Any = ebayItem.ProductListingDetails.TicketListingDetails.Any;
-                            
+
                             if (ebayItem.ProductListingDetails.TicketListingDetails.EventTitle != null)
                             {
                                 treecatItem.ProductListingDetails.TicketListingDetails.EventTitle = ebayItem.ProductListingDetails.TicketListingDetails.EventTitle;
@@ -1625,7 +1630,7 @@ namespace lib.listers
                                 treecatItem.ProductListingDetails.TicketListingDetails.Venue = ebayItem.ProductListingDetails.TicketListingDetails.Venue;
                             }
                         }
-                        
+
                         if (ebayItem.ProductListingDetails.UPC != null)
                         {
                             treecatItem.ProductListingDetails.UPC = ebayItem.ProductListingDetails.UPC;
@@ -1738,7 +1743,7 @@ namespace lib.listers
                         {
                             treecatItem.ReturnPolicy.RestockingFeeValueOption = ebayItem.ReturnPolicy.RestockingFeeValueOption;
                         }
-                        
+
                         if (ebayItem.ReturnPolicy.ReturnsAccepted != null)
                         {
                             treecatItem.ReturnPolicy.ReturnsAccepted = ebayItem.ReturnPolicy.ReturnsAccepted;
@@ -1994,7 +1999,7 @@ namespace lib.listers
                         treecatItem.Seller.AboutMePage = ebayItem.Seller.AboutMePage;
                         treecatItem.Seller.AboutMePageSpecified = ebayItem.Seller.AboutMePageSpecified;
                         treecatItem.Seller.Any = ebayItem.Seller.Any;
-                        
+
                         if (ebayItem.Seller.BiddingSummary != null)
                         {
                             treecatItem.Seller.BiddingSummary = new BiddingSummaryType();
@@ -2189,7 +2194,7 @@ namespace lib.listers
                     {
                         treecatItem.SellerProfiles = new SellerProfilesType();
                         treecatItem.SellerProfiles.Any = ebayItem.SellerProfiles.Any;
-                        
+
                         if (ebayItem.SellerProfiles.SellerPaymentProfile != null)
                         {
                             treecatItem.SellerProfiles.SellerPaymentProfile = new SellerPaymentProfileType();
@@ -2253,7 +2258,7 @@ namespace lib.listers
                         treecatItem.SellingStatus.BidderCountSpecified = ebayItem.SellingStatus.BidderCountSpecified;
 
                         if (ebayItem.SellingStatus.BidIncrement != null)
-                        { 
+                        {
                             treecatItem.SellingStatus.BidIncrement = new AmountType();
                             treecatItem.SellingStatus.BidIncrement.currencyID = ebayItem.SellingStatus.BidIncrement.currencyID;
                             treecatItem.SellingStatus.BidIncrement.Value = ebayItem.SellingStatus.BidIncrement.Value;
@@ -2272,7 +2277,7 @@ namespace lib.listers
                             treecatItem.SellingStatus.CurrentPrice.currencyID = ebayItem.SellingStatus.CurrentPrice.currencyID;
                             treecatItem.SellingStatus.CurrentPrice.Value = ebayItem.SellingStatus.CurrentPrice.Value;
                         }
-                        
+
                         if (ebayItem.SellingStatus.FinalValueFee != null)
                         {
                             treecatItem.SellingStatus.FinalValueFee = new AmountType();
@@ -2286,7 +2291,7 @@ namespace lib.listers
                             treecatItem.SellingStatus.HighBidder.AboutMePage = ebayItem.SellingStatus.HighBidder.AboutMePage;
                             treecatItem.SellingStatus.HighBidder.AboutMePageSpecified = ebayItem.SellingStatus.HighBidder.AboutMePageSpecified;
                             treecatItem.SellingStatus.HighBidder.Any = ebayItem.SellingStatus.HighBidder.Any;
-                            
+
                             if (ebayItem.SellingStatus.HighBidder.BiddingSummary != null)
                             {
                                 treecatItem.SellingStatus.HighBidder.BiddingSummary = new BiddingSummaryType();
@@ -2341,7 +2346,7 @@ namespace lib.listers
 
                             treecatItem.SellingStatus.HighBidder.BusinessRole = ebayItem.SellingStatus.HighBidder.BusinessRole;
                             treecatItem.SellingStatus.HighBidder.BusinessRoleSpecified = ebayItem.SellingStatus.HighBidder.BusinessRoleSpecified;
-                           
+
                             if (ebayItem.SellingStatus.HighBidder.BuyerInfo != null)
                             {
                                 treecatItem.SellingStatus.HighBidder.BuyerInfo = new BuyerType();
@@ -2371,7 +2376,7 @@ namespace lib.listers
                                                 treecatItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x] = new TaxIdentifierAttributeType();
                                                 treecatItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x].name = ebayItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x].name;
                                                 treecatItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x].nameSpecified = ebayItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x].nameSpecified;
-                                                
+
                                                 if (ebayItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x].Value != null)
                                                 {
                                                     treecatItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x].Value = ebayItem.SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[y].Attribute[x].Value;
@@ -2392,7 +2397,7 @@ namespace lib.listers
                                             treecatItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y] = new AddressAttributeType();
                                             treecatItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y].type = ebayItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y].type;
                                             treecatItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y].typeSpecified = ebayItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y].typeSpecified;
-                                            
+
                                             if (ebayItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y].Value != null)
                                             {
                                                 treecatItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y].Value = ebayItem.SellingStatus.HighBidder.BuyerInfo.ShippingAddress.AddressAttribute[y].Value;
@@ -2829,7 +2834,7 @@ namespace lib.listers
                                         treecatItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.Any = ebayItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.Any;
                                         treecatItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.Status = ebayItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.Status;
                                         treecatItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.StatusSpecified = ebayItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.StatusSpecified;
-                                        
+
                                         if (ebayItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.SellerThirdPartyUsername != null)
                                         {
                                             treecatItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.SellerThirdPartyUsername = ebayItem.SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails.SellerThirdPartyUsername;
@@ -2862,7 +2867,7 @@ namespace lib.listers
                                     treecatItem.SellingStatus.HighBidder.SellerInfo.RecoupmentPolicyConsent.Any = ebayItem.SellingStatus.HighBidder.SellerInfo.RecoupmentPolicyConsent.Any;
                                     treecatItem.SellingStatus.HighBidder.SellerInfo.RecoupmentPolicyConsent.Site = ebayItem.SellingStatus.HighBidder.SellerInfo.RecoupmentPolicyConsent.Site;
                                 }
-                                
+
                                 if (ebayItem.SellingStatus.HighBidder.SellerInfo.SchedulingInfo != null)
                                 {
                                     treecatItem.SellingStatus.HighBidder.SellerInfo.SchedulingInfo = new SchedulingInfoType();
@@ -2874,7 +2879,7 @@ namespace lib.listers
                                     treecatItem.SellingStatus.HighBidder.SellerInfo.SchedulingInfo.MinScheduledMinutes = ebayItem.SellingStatus.HighBidder.SellerInfo.SchedulingInfo.MinScheduledMinutes;
                                     treecatItem.SellingStatus.HighBidder.SellerInfo.SchedulingInfo.MinScheduledMinutesSpecified = ebayItem.SellingStatus.HighBidder.SellerInfo.SchedulingInfo.MinScheduledMinutesSpecified;
                                 }
-                                
+
                                 if (ebayItem.SellingStatus.HighBidder.SellerInfo.SellereBayPaymentProcessConsent != null)
                                 {
                                     treecatItem.SellingStatus.HighBidder.SellerInfo.SellereBayPaymentProcessConsent = new SellereBayPaymentProcessConsentCodeType();
@@ -3073,7 +3078,7 @@ namespace lib.listers
                                         treecatItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y] = new AddressAttributeType();
                                         treecatItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y].type = ebayItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y].type;
                                         treecatItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y].typeSpecified = ebayItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y].typeSpecified;
-                                        
+
                                         if (ebayItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y].Value != null)
                                         {
                                             treecatItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y].Value = ebayItem.SellingStatus.HighBidder.ShippingAddress.AddressAttribute[y].Value;
@@ -3272,7 +3277,7 @@ namespace lib.listers
                         treecatItem.SellingStatus.LeadCountSpecified = ebayItem.SellingStatus.LeadCountSpecified;
                         treecatItem.SellingStatus.ListingStatus = ebayItem.SellingStatus.ListingStatus;
                         treecatItem.SellingStatus.ListingStatusSpecified = ebayItem.SellingStatus.ListingStatusSpecified;
-                        
+
                         if (ebayItem.SellingStatus.MinimumToBid != null)
                         {
                             treecatItem.SellingStatus.MinimumToBid = new AmountType();
@@ -3333,7 +3338,7 @@ namespace lib.listers
                         treecatItem.ShippingDetails.Any = ebayItem.ShippingDetails.Any;
                         treecatItem.ShippingDetails.ApplyShippingDiscount = ebayItem.ShippingDetails.ApplyShippingDiscount;
                         treecatItem.ShippingDetails.ApplyShippingDiscountSpecified = ebayItem.ShippingDetails.ApplyShippingDiscountSpecified;
-                        
+
                         if (ebayItem.ShippingDetails.CalculatedShippingDiscount != null)
                         {
                             treecatItem.ShippingDetails.CalculatedShippingDiscount = new CalculatedShippingDiscountType();
@@ -3396,24 +3401,24 @@ namespace lib.listers
                             }
                         }
 
-                        
+
 
                         if (ebayItem.ShippingDetails.CalculatedShippingRate != null)
                         {
                             treecatItem.ShippingDetails.CalculatedShippingRate = new CalculatedShippingRateType();
-                            
+
                             if (ebayItem.ShippingDetails.CalculatedShippingRate.InternationalPackagingHandlingCosts != null)
                             {
                                 treecatItem.ShippingDetails.CalculatedShippingRate.InternationalPackagingHandlingCosts = new AmountType();
                                 treecatItem.ShippingDetails.CalculatedShippingRate.InternationalPackagingHandlingCosts.currencyID = ebayItem.ShippingDetails.CalculatedShippingRate.InternationalPackagingHandlingCosts.currencyID;
                                 treecatItem.ShippingDetails.CalculatedShippingRate.InternationalPackagingHandlingCosts.Value = ebayItem.ShippingDetails.CalculatedShippingRate.InternationalPackagingHandlingCosts.Value;
                             }
-                            
+
                             if (ebayItem.ShippingDetails.CalculatedShippingRate.OriginatingPostalCode != null)
                             {
                                 treecatItem.ShippingDetails.CalculatedShippingRate.OriginatingPostalCode = ebayItem.ShippingDetails.CalculatedShippingRate.OriginatingPostalCode;
                             }
-                            
+
                             if (ebayItem.ShippingDetails.CalculatedShippingRate.PackagingHandlingCosts != null)
                             {
                                 treecatItem.ShippingDetails.CalculatedShippingRate.PackagingHandlingCosts = new AmountType();
@@ -3430,7 +3435,7 @@ namespace lib.listers
 
                         treecatItem.ShippingDetails.ChangePaymentInstructions = ebayItem.ShippingDetails.ChangePaymentInstructions;
                         treecatItem.ShippingDetails.ChangePaymentInstructionsSpecified = ebayItem.ShippingDetails.ChangePaymentInstructionsSpecified;
-                        
+
                         if (ebayItem.ShippingDetails.CODCost != null)
                         {
                             treecatItem.ShippingDetails.CODCost = new AmountType();
@@ -3449,7 +3454,7 @@ namespace lib.listers
                         {
                             treecatItem.ShippingDetails.ExcludeShipToLocation = ebayItem.ShippingDetails.ExcludeShipToLocation;
                         }
-                        
+
                         if (ebayItem.ShippingDetails.FlatShippingDiscount != null)
                         {
                             treecatItem.ShippingDetails.FlatShippingDiscount = new FlatShippingDiscountType();
@@ -3518,7 +3523,7 @@ namespace lib.listers
                         treecatItem.ShippingDetails.GlobalShippingSpecified = ebayItem.ShippingDetails.GlobalShippingSpecified;
                         treecatItem.ShippingDetails.InsuranceWanted = ebayItem.ShippingDetails.InsuranceWanted;
                         treecatItem.ShippingDetails.InsuranceWantedSpecified = ebayItem.ShippingDetails.InsuranceWantedSpecified;
-                        
+
                         if (ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount != null)
                         {
                             treecatItem.ShippingDetails.InternationalCalculatedShippingDiscount = new CalculatedShippingDiscountType();
@@ -3544,7 +3549,7 @@ namespace lib.listers
                                     {
                                         treecatItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].DiscountProfileName = ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].DiscountProfileName;
                                     }
-                                    
+
                                     if (ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].EachAdditionalAmount != null)
                                     {
                                         treecatItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].EachAdditionalAmount = new AmountType();
@@ -3558,12 +3563,12 @@ namespace lib.listers
                                         treecatItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].EachAdditionalAmountOff.currencyID = ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].EachAdditionalAmountOff.currencyID;
                                         treecatItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].EachAdditionalAmountOff.Value = ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].EachAdditionalAmountOff.Value;
                                     }
-                                    
+
                                     if (ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].MappedDiscountProfileID != null)
                                     {
                                         treecatItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].MappedDiscountProfileID = ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].MappedDiscountProfileID;
                                     }
-                                    
+
                                     if (ebayItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].WeightOff != null)
                                     {
                                         treecatItem.ShippingDetails.InternationalCalculatedShippingDiscount.DiscountProfile[y].WeightOff = new MeasureType();
@@ -3644,7 +3649,7 @@ namespace lib.listers
 
                         treecatItem.ShippingDetails.InternationalPromotionalShippingDiscount = ebayItem.ShippingDetails.InternationalPromotionalShippingDiscount;
                         treecatItem.ShippingDetails.InternationalPromotionalShippingDiscountSpecified = ebayItem.ShippingDetails.InternationalPromotionalShippingDiscountSpecified;
-                        
+
                         if (ebayItem.ShippingDetails.InternationalShippingDiscountProfileID != null)
                         {
                             treecatItem.ShippingDetails.InternationalShippingDiscountProfileID = ebayItem.ShippingDetails.InternationalShippingDiscountProfileID;
@@ -3690,7 +3695,7 @@ namespace lib.listers
                                     treecatItem.ShippingDetails.InternationalShippingServiceOption[y].ShippingInsuranceCost.currencyID = ebayItem.ShippingDetails.InternationalShippingServiceOption[y].ShippingInsuranceCost.currencyID;
                                     treecatItem.ShippingDetails.InternationalShippingServiceOption[y].ShippingInsuranceCost.Value = ebayItem.ShippingDetails.InternationalShippingServiceOption[y].ShippingInsuranceCost.Value;
                                 }
-                                
+
                                 if (ebayItem.ShippingDetails.InternationalShippingServiceOption[y].ShipToLocation != null)
                                 {
                                     treecatItem.ShippingDetails.InternationalShippingServiceOption[y].ShipToLocation = ebayItem.ShippingDetails.InternationalShippingServiceOption[y].ShipToLocation;
@@ -3707,7 +3712,7 @@ namespace lib.listers
                         {
                             treecatItem.ShippingDetails.PaymentInstructions = ebayItem.ShippingDetails.PaymentInstructions;
                         }
-                        
+
                         if (ebayItem.ShippingDetails.PromotionalShippingDiscountDetails != null)
                         {
                             treecatItem.ShippingDetails.PromotionalShippingDiscountDetails = new PromotionalShippingDiscountDetailsType();
@@ -3716,7 +3721,7 @@ namespace lib.listers
                             treecatItem.ShippingDetails.PromotionalShippingDiscountDetails.DiscountNameSpecified = ebayItem.ShippingDetails.PromotionalShippingDiscountDetails.DiscountNameSpecified;
                             treecatItem.ShippingDetails.PromotionalShippingDiscountDetails.ItemCount = ebayItem.ShippingDetails.PromotionalShippingDiscountDetails.ItemCount;
                             treecatItem.ShippingDetails.PromotionalShippingDiscountDetails.ItemCountSpecified = ebayItem.ShippingDetails.PromotionalShippingDiscountDetails.ItemCountSpecified;
-                            
+
                             if (ebayItem.ShippingDetails.PromotionalShippingDiscountDetails.OrderAmount != null)
                             {
                                 treecatItem.ShippingDetails.PromotionalShippingDiscountDetails.OrderAmount = new AmountType();
@@ -3731,12 +3736,12 @@ namespace lib.listers
                                 treecatItem.ShippingDetails.PromotionalShippingDiscountDetails.ShippingCost.Value = ebayItem.ShippingDetails.PromotionalShippingDiscountDetails.ShippingCost.Value;
                             }
                         }
-                        
+
                         if (ebayItem.ShippingDetails.RateTableDetails != null)
                         {
                             treecatItem.ShippingDetails.RateTableDetails = new RateTableDetailsType();
                             treecatItem.ShippingDetails.RateTableDetails.Any = ebayItem.ShippingDetails.RateTableDetails.Any;
-                            
+
                             if (ebayItem.ShippingDetails.RateTableDetails.DomesticRateTable != null)
                             {
                                 treecatItem.ShippingDetails.RateTableDetails.DomesticRateTable = ebayItem.ShippingDetails.RateTableDetails.DomesticRateTable;
@@ -3751,7 +3756,7 @@ namespace lib.listers
                             {
                                 treecatItem.ShippingDetails.RateTableDetails.InternationalRateTable = ebayItem.ShippingDetails.RateTableDetails.InternationalRateTable;
                             }
-                            
+
                             if (ebayItem.ShippingDetails.RateTableDetails.InternationalRateTableId != null)
                             {
                                 treecatItem.ShippingDetails.RateTableDetails.InternationalRateTableId = ebayItem.ShippingDetails.RateTableDetails.InternationalRateTableId;
@@ -3791,7 +3796,7 @@ namespace lib.listers
                             {
                                 treecatItem.ShippingDetails.ShipmentTrackingDetails[y] = new ShipmentTrackingDetailsType();
                                 treecatItem.ShippingDetails.ShipmentTrackingDetails[y].Any = ebayItem.ShippingDetails.ShipmentTrackingDetails[y].Any;
-                                
+
                                 if (ebayItem.ShippingDetails.ShipmentTrackingDetails[y].ShipmentLineItem != null)
                                 {
                                     treecatItem.ShippingDetails.ShipmentTrackingDetails[y].ShipmentLineItem = new ShipmentLineItemType();
@@ -3834,7 +3839,7 @@ namespace lib.listers
                                 {
                                     treecatItem.ShippingDetails.ShipmentTrackingDetails[y].ShipmentTrackingNumber = ebayItem.ShippingDetails.ShipmentTrackingDetails[y].ShipmentTrackingNumber;
                                 }
-                                
+
                                 if (ebayItem.ShippingDetails.ShipmentTrackingDetails[y].ShippingCarrierUsed != null)
                                 {
                                     treecatItem.ShippingDetails.ShipmentTrackingDetails[y].ShippingCarrierUsed = ebayItem.ShippingDetails.ShipmentTrackingDetails[y].ShippingCarrierUsed;
@@ -3875,12 +3880,12 @@ namespace lib.listers
                                     treecatItem.ShippingDetails.ShippingServiceOptions[z].ImportCharge.currencyID = ebayItem.ShippingDetails.ShippingServiceOptions[z].ImportCharge.currencyID;
                                     treecatItem.ShippingDetails.ShippingServiceOptions[z].ImportCharge.Value = ebayItem.ShippingDetails.ShippingServiceOptions[z].ImportCharge.Value;
                                 }
-                                
+
                                 if (ebayItem.ShippingDetails.ShippingServiceOptions[z].LogisticPlanType != null)
                                 {
                                     treecatItem.ShippingDetails.ShippingServiceOptions[z].LogisticPlanType = ebayItem.ShippingDetails.ShippingServiceOptions[z].LogisticPlanType;
                                 }
-                                
+
                                 if (ebayItem.ShippingDetails.ShippingServiceOptions[z].ShippingInsuranceCost != null)
                                 {
                                     treecatItem.ShippingDetails.ShippingServiceOptions[z].ShippingInsuranceCost = new AmountType();
@@ -3911,7 +3916,7 @@ namespace lib.listers
                                         treecatItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ScheduledDeliveryTimeMaxSpecified = ebayItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ScheduledDeliveryTimeMaxSpecified;
                                         treecatItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ScheduledDeliveryTimeMin = ebayItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ScheduledDeliveryTimeMin;
                                         treecatItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ScheduledDeliveryTimeMinSpecified = ebayItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ScheduledDeliveryTimeMinSpecified;
-                                        
+
                                         if (ebayItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ShippingTrackingEvent != null)
                                         {
                                             treecatItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ShippingTrackingEvent = ebayItem.ShippingDetails.ShippingServiceOptions[z].ShippingPackageInfo[y].ShippingTrackingEvent;
@@ -4199,12 +4204,12 @@ namespace lib.listers
                         }
                     }
 
-                    
+
                     if (ebayItem.SubTitle != null)
                     {
                         treecatItem.SubTitle = ebayItem.SubTitle;
                     }
-                    
+
                     if (ebayItem.TaxCategory != null)
                     {
                         treecatItem.TaxCategory = ebayItem.TaxCategory;
@@ -4266,7 +4271,7 @@ namespace lib.listers
                                 {
                                     treecatItem.Variations.ModifyNameList[y].Name = ebayItem.Variations.ModifyNameList[y].Name;
                                 }
-                                
+
                                 if (ebayItem.Variations.ModifyNameList[y].NewName != null)
                                 {
                                     treecatItem.Variations.ModifyNameList[y].NewName = ebayItem.Variations.ModifyNameList[y].NewName;
@@ -4281,7 +4286,7 @@ namespace lib.listers
                             {
                                 treecatItem.Variations.Pictures[y] = new PicturesType();
                                 treecatItem.Variations.Pictures[y].Any = ebayItem.Variations.Pictures[y].Any;
-                                
+
                                 if (ebayItem.Variations.Pictures[y].VariationSpecificName != null)
                                 {
                                     treecatItem.Variations.Pictures[y].VariationSpecificName = ebayItem.Variations.Pictures[y].VariationSpecificName;
@@ -4300,7 +4305,7 @@ namespace lib.listers
                                         {
                                             treecatItem.Variations.Pictures[y].VariationSpecificPictureSet[z].ExternalPictureURL = ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].ExternalPictureURL;
                                         }
-                                        
+
                                         if (ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].GalleryURL != null)
                                         {
                                             treecatItem.Variations.Pictures[y].VariationSpecificPictureSet[z].GalleryURL = ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].GalleryURL;
@@ -4310,7 +4315,7 @@ namespace lib.listers
                                         {
                                             treecatItem.Variations.Pictures[y].VariationSpecificPictureSet[z].PictureURL = ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].PictureURL;
                                         }
-                                        
+
                                         if (ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].VariationSpecificValue != null)
                                         {
                                             treecatItem.Variations.Pictures[y].VariationSpecificPictureSet[z].VariationSpecificValue = ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].VariationSpecificValue;
@@ -4328,7 +4333,7 @@ namespace lib.listers
                                                 {
                                                     treecatItem.Variations.Pictures[y].VariationSpecificPictureSet[z].ExtendedPictureDetails.PictureURLs[x].eBayPictureURL = ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].ExtendedPictureDetails.PictureURLs[x].eBayPictureURL;
                                                 }
-                                                
+
                                                 if (ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].ExtendedPictureDetails.PictureURLs[x].ExternalPictureURL != null)
                                                 {
                                                     treecatItem.Variations.Pictures[y].VariationSpecificPictureSet[z].ExtendedPictureDetails.PictureURLs[x].ExternalPictureURL = ebayItem.Variations.Pictures[y].VariationSpecificPictureSet[z].ExtendedPictureDetails.PictureURLs[x].ExternalPictureURL;
@@ -4394,7 +4399,7 @@ namespace lib.listers
                                 {
                                     treecatItem.Variations.Variation[y].SellingManagerProductInventoryStatus = new SellingManagerProductInventoryStatusType();
                                     treecatItem.Variations.Variation[y].SellingManagerProductInventoryStatus.Any = ebayItem.Variations.Variation[y].SellingManagerProductInventoryStatus.Any;
-                                    
+
                                     if (ebayItem.Variations.Variation[y].SellingManagerProductInventoryStatus.AverageSellingPrice != null)
                                     {
                                         treecatItem.Variations.Variation[y].SellingManagerProductInventoryStatus.AverageSellingPrice = new AmountType();
@@ -4426,7 +4431,7 @@ namespace lib.listers
                                     treecatItem.Variations.Variation[y].SellingStatus.BidderCountSpecified = ebayItem.Variations.Variation[y].SellingStatus.BidderCountSpecified;
 
                                     if (ebayItem.Variations.Variation[y].SellingStatus.BidIncrement != null)
-                                    { 
+                                    {
                                         treecatItem.Variations.Variation[y].SellingStatus.BidIncrement = new AmountType();
                                         treecatItem.Variations.Variation[y].SellingStatus.BidIncrement.currencyID = ebayItem.Variations.Variation[y].SellingStatus.BidIncrement.currencyID;
                                         treecatItem.Variations.Variation[y].SellingStatus.BidIncrement.Value = ebayItem.Variations.Variation[y].SellingStatus.BidIncrement.Value;
@@ -4512,7 +4517,7 @@ namespace lib.listers
 
                                         treecatItem.Variations.Variation[y].SellingStatus.HighBidder.BusinessRole = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.BusinessRole;
                                         treecatItem.Variations.Variation[y].SellingStatus.HighBidder.BusinessRoleSpecified = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.BusinessRoleSpecified;
-                                        
+
                                         if (ebayItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo != null)
                                         {
                                             treecatItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo = new BuyerType();
@@ -4534,7 +4539,7 @@ namespace lib.listers
                                                             treecatItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x] = new TaxIdentifierAttributeType();
                                                             treecatItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x].name = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x].name;
                                                             treecatItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x].nameSpecified = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x].nameSpecified;
-                                                            
+
                                                             if (ebayItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x].Value != null)
                                                             {
                                                                 treecatItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x].Value = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.BuyerInfo.BuyerTaxIdentifier[z].Attribute[x].Value;
@@ -4919,7 +4924,7 @@ namespace lib.listers
 
                                         treecatItem.Variations.Variation[y].SellingStatus.HighBidder.RegistrationDate = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.RegistrationDate;
                                         treecatItem.Variations.Variation[y].SellingStatus.HighBidder.RegistrationDateSpecified = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.RegistrationDateSpecified;
-                                        
+
                                         if (ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo != null)
                                         {
                                             treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo = new SellerType();
@@ -4996,7 +5001,7 @@ namespace lib.listers
                                                 treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.Any = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.Any;
                                                 treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.CheckoutRedirectProStores = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.CheckoutRedirectProStores;
                                                 treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.CheckoutRedirectProStoresSpecified = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.CheckoutRedirectProStoresSpecified;
-                                                
+
                                                 if (ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails != null)
                                                 {
                                                     treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.ProStoresPreference.ProStoresDetails = new ProStoresDetailsType();
@@ -5242,7 +5247,7 @@ namespace lib.listers
                                             treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSeller = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSeller;
 
                                             if (ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSellerDetails != null)
-                                            { 
+                                            {
                                                 treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSellerDetails = new TopRatedSellerDetailsType();
                                                 treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSellerDetails.Any = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSellerDetails.Any;
                                                 treecatItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSellerDetails.TopRatedProgram = ebayItem.Variations.Variation[y].SellingStatus.HighBidder.SellerInfo.TopRatedSellerDetails.TopRatedProgram;
@@ -5498,7 +5503,7 @@ namespace lib.listers
                                     treecatItem.Variations.Variation[y].SellingStatus.SecondChanceEligibleSpecified = ebayItem.Variations.Variation[y].SellingStatus.SecondChanceEligibleSpecified;
                                     treecatItem.Variations.Variation[y].SellingStatus.SoldAsBin = ebayItem.Variations.Variation[y].SellingStatus.SoldAsBin;
                                     treecatItem.Variations.Variation[y].SellingStatus.SoldAsBinSpecified = ebayItem.Variations.Variation[y].SellingStatus.SoldAsBinSpecified;
-                                    
+
                                     if (ebayItem.Variations.Variation[y].SellingStatus.SuggestedBidValues != null)
                                     {
                                         treecatItem.Variations.Variation[y].SellingStatus.SuggestedBidValues.BidValue = new AmountType[ebayItem.Variations.Variation[y].SellingStatus.SuggestedBidValues.BidValue.Length];
@@ -5532,7 +5537,7 @@ namespace lib.listers
 
                                 treecatItem.Variations.Variation[y].UnitsAvailable = ebayItem.Variations.Variation[y].UnitsAvailable;
                                 treecatItem.Variations.Variation[y].UnitsAvailableSpecified = ebayItem.Variations.Variation[y].UnitsAvailableSpecified;
-                                
+
                                 if (ebayItem.Variations.Variation[y].VariationProductListingDetails != null)
                                 {
                                     treecatItem.Variations.Variation[y].VariationProductListingDetails = new VariationProductListingDetailsType();
@@ -5712,7 +5717,7 @@ namespace lib.listers
                     logger.LogInformation("Error listing eBay items: " + e.ToString());
                 }
             }
-
+          
             return result;
         }
 

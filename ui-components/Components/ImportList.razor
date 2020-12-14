@@ -1,0 +1,60 @@
+﻿@using lib
+@inject NavigationManager NavigationManager
+
+
+<DataGrid Data="@Items" TItem="Item">
+    <DataGridCommandColumn TItem="Item" />
+
+    <DataGridColumn TItem="Item" Field="@nameof(Item.MainImageURL)" Caption="Image" Editable="false">
+        <DisplayTemplate>
+            <Image Style="height: 1em; width: 1em" Source="@(context.MainImageURL)"></Image>
+        </DisplayTemplate>
+    </DataGridColumn>
+    <DataGridColumn TItem="Item" Field="@nameof(Item.Title)" Caption="Title" Editable="true" />
+    <DataGridColumn TItem="Item" Field="@nameof(Item.SKU)" Caption="SKU" Editable="true" />
+    <DataGridColumn TItem="Item" Field="@nameof(Item.Price)" Caption="Price" Editable="true" />
+    <DataGridColumn TItem="Item" Field="@nameof(Item.Quantity)" Caption="Quantity" Editable="true" />
+    <DataGridCommandColumn TItem="Item" />
+</DataGrid>
+
+<DropdownList TItem="ProviderModel"
+              Data="@myDdlData"
+              TextField="@((item)=>item.Name)"
+              ValueField="@((item)=>item.Value)"
+              SelectedValue="@selectedDropValue"
+              SelectedValueChanged="@ProviderChangedHandler"
+              Color="Color.Primary">
+    @selectedDropValue
+</DropdownList>
+
+@code{
+
+    [Parameter]
+    public IEnumerable<Item> Items { get; set; }
+
+    public class ProviderModel
+    {
+        public String Name { get; set; }
+        public string Value { get; set; }
+    }
+
+    static string[] ProviderList = { "EBay", "Poshmark" };
+    IEnumerable<ProviderModel> myDdlData = ProviderList.Select(
+        x => new ProviderModel { Name = x, Value = x });
+
+    object selectedDropValue { get; set; } = "EBay";
+
+    void ProviderChangedHandler(object newValue)
+    {
+        selectedDropValue = newValue;
+        switch (selectedDropValue.ToString())
+        {
+            case "ebay":
+                NavigationManager.NavigateTo("/item/importebay");
+                break;
+            case "poshmark":
+                NavigationManager.NavigateTo("/item/importposhmark");
+                break;
+        }
+    }
+}

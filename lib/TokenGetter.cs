@@ -34,11 +34,13 @@ namespace lib
 
         Task<string> GetUserID();
 
+        Task<string> GetUsername();
+
         string LoginURL();
 
         List<string> Scopes();
 
-        Task Set(string token, string userID);
+        Task Set(string token, string userID, string username);
     }
 
     public interface ITokenGetters

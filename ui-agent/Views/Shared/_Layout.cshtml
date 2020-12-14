@@ -1,13 +1,5 @@
-﻿@using System.Reflection 
-@inject lib.ITokenGetters tokenGetters
-
-@{ 
-    var ebayTokenGetter = tokenGetters.Ebay;
-    var poshmarkTokenGetter = tokenGetters.Poshmark;
-    var ebayAccessTokenGetter = tokenGetters.EbayAccess;
-    var googleTokenGetter = tokenGetters.Google;
-}
-
+﻿@using System.IO;
+@using System.Text.Encodings.Web;
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -20,111 +12,31 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <title>@ViewData["Title"] - TreeCat</title>
-    <link rel="stylesheet" href="~/css/app.css" />
-    <link rel="stylesheet" href="~/css/debug.css" />
-    <link rel="import" href="menus">
+    @*<link rel="stylesheet" href="~/css/app.css" />*@
+    <link rel="stylesheet" href="/css/debug.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.0.0/antd.css" integrity="sha256-nzhI/tsi9npc5ir08wCgBpg43SEIrc7crRJLsHE0/60=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+
+    <link href="/_content/Blazorise/blazorise.css" rel="stylesheet" />
+    <link href="/_content/Blazorise.AntDesign/blazorise.antdesign.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div class="grid-y grid-frame">
-        <div class="cell shrink header medium-cell-block-container">
-            <div class="top-bar">
-                <div class="top-bar-left">
-                    <ul class="dropdown menu" data-dropdown-menu>
-                        <li class="menu-text thin-border-right"><i class="fas fa-cat"></i> TreeCat</li>
-                        <li><a href="~/item/inventory">Inventory</a></li>
-                        <li><a href="~/item/importebay">Import Data</a></li>
-                        <li><a href="#">Field Mappings</a></li>
-                        <li><a href="~/item/add">Add Item</a></li>
-                    </ul>
-                </div>
-                <div class="top-bar-right">
-                    <ul class="menu">
-                    </ul>
-                </div>
-            </div>
-        </div>
 
-        <div class="cell medium-auto medium-cell-block-container">
-            @RenderBody()
-        </div>
+    @{ StringWriter strWriter = new StringWriter();
+        RenderBody().WriteTo(strWriter, HtmlEncoder);
+        string body = strWriter.ToString(); }
+    <component type="typeof(ui_components.Components.AppLayout)"
+               param-body="@body"
+               render-mode="WebAssemblyPrerendered" />
 
-        <div class="cell shrink footer">
-            <div class="grid-x">
-                <div class="cell">
-                    SUGI O CEAPA
-           
-                    <component type="typeof(ui_components.Client.Components.LoginBar)" param-InitialValue="1" render-mode="WebAssemblyPrerendered" />
+    <script src="/_content/Blazorise/blazorise.js"></script>
+    <script src="/_content/Blazorise.AntDesign/blazorise.antdesign.js"></script>
+    <script src="/_framework/blazor.webassembly.js"></script>
+    <script src="/_framework/blazor.boot.json"></script>
 
-                    @if (string.IsNullOrWhiteSpace(await googleTokenGetter.GetToken()))
-                    {                       
-                        <span class="label alert data-tooltip" title="Treecat not logged in.">
-                            <i class="fas fa-stop"></i> Treecat not logged in.
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="label success data-tooltip" title="Treecat logged in.">
-                            <i class="fas fa-info"></i> @googleTokenGetter.GetUserID().Result
-                        </span>
-
-                        @if (string.IsNullOrWhiteSpace(await ebayTokenGetter.GetToken()))
-                        {
-                            <a href="@ebayTokenGetter.LoginURL()@string.Join(' ', @ebayAccessTokenGetter.Scopes())">
-                                <span class="label alert data-tooltip" title="Ebay not logged in.">
-                                    <i class="fas fa-exclamation-triangle"></i> Ebay not logged in.
-                                </span>
-                            </a>
-                        }
-                        else
-                        {
-                            <span class="label success data-tooltip" title="Ebay logged in.">
-                                <i class="fas fa-info"></i> Ebay logged in.
-                            </span>
-                        }
-
-                        @if (string.IsNullOrWhiteSpace(await poshmarkTokenGetter.GetToken()) || string.IsNullOrWhiteSpace(await poshmarkTokenGetter.GetUserID()))
-                        {
-                            <a href="@poshmarkTokenGetter.LoginURL()">
-                                <span class="label alert data-tooltip" title="Poshmark not logged in.">
-                                    <i class="fas fa-exclamation-triangle"></i> Poshmark not logged in.
-                                </span>
-                            </a>
-                        }
-                        else
-                        {
-                            <span class="label success data-tooltip" title="Poshmark logged in.">
-                                <i class="fas fa-info"></i> Poshmark logged in.
-                            </span>
-                        }
-                    }
-
-
-                    <span class="label info data-tooltip float-right" title="12 items left to sync.">
-                        <i class="fas fa-info"></i> Version @Assembly.GetExecutingAssembly().GetName().Version.ToString()
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
-
-    <script src="~/lib/jquery/src/jquery.js"></script>
-    <script src="~/lib/foundation/js/foundation.js"></script>
-    <script src="~/lib/font-awesome/js/all.js"></script>
-
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/resizable-panel.js" asp-append-version="true"></script>
-    <script src="~/_framework/blazor.webassembly.js"></script>
-
-    <script>if (window.module) module = window.module;</script>
-
-    <script>
-        $(document).ready(function () {
-            $(document).foundation();
-        })
-    </script>
+    <script src="/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("scripts", required: false)
 </body>

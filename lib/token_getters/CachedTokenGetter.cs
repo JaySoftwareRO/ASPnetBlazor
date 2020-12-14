@@ -14,6 +14,7 @@ namespace lib.token_getters
         private IExtendedDistributedCache cache;
         private string cacheTokenKey;
         private string cacheUserIDKey;
+        private string cacheUsernameKey;
         private int cacheHours = 30;
         private string loginURL;
         private ILogger logger;
@@ -25,13 +26,14 @@ namespace lib.token_getters
             this.cache = cache;
             this.cacheTokenKey = string.Format($"{cacheKey}_token");
             this.cacheUserIDKey = string.Format($"{cacheKey}_userid");
+            this.cacheUsernameKey = string.Format($"{cacheKey}_username");
             this.cacheHours = cacheHours;
             this.loginURL = loginURL;
             this.logger = logger;
             this.scopes = scopes;
         }
 
-        public async Task Set(string token, string userID)
+        public async Task Set(string token, string userID, string username)
         {
             this.logger.LogDebug($"recording token and user in {this.cacheTokenKey} cache");
             await this.cache.SetStringAsync(
@@ -45,6 +47,14 @@ namespace lib.token_getters
             await this.cache.SetStringAsync(
                 this.cacheUserIDKey,
                 userID,
+                new DistributedCacheEntryOptions()
+                {
+                    AbsoluteExpiration = DateTime.Now + TimeSpan.FromHours(this.cacheHours)
+                });
+
+            await this.cache.SetStringAsync(
+                this.cacheUsernameKey,
+                username,
                 new DistributedCacheEntryOptions()
                 {
                     AbsoluteExpiration = DateTime.Now + TimeSpan.FromHours(this.cacheHours)
@@ -78,6 +88,12 @@ namespace lib.token_getters
         public string LoginURL()
         {
             return this.loginURL;
+        }
+
+        public async Task<string> GetUsername()
+        {
+            this.logger.LogDebug($"getting username in {this.cacheUsernameKey} cache");
+            return await this.cache.GetStringAsync(this.cacheUsernameKey);
         }
     }
 }

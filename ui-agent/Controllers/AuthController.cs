@@ -35,7 +35,7 @@ namespace ui_agent.Controllers
         public async Task<IActionResult> GoogleDone([FromBody] GoogleProfileModel loginData)
         {
             // Save the auth token in the cache
-            await this.tokenGetters.Google.Set(loginData.IDToken, loginData.Email);
+            await this.tokenGetters.Google.Set(loginData.IDToken, loginData.Email, loginData.Email);
 
             return null;
         }
@@ -43,8 +43,8 @@ namespace ui_agent.Controllers
         public async Task<IActionResult> EbayAccept(string code)
         {
             var token = EbayTokenUtils.TokenFromCode(code, this.logger);
-            await this.tokenGetters.Ebay.Set(token.RefreshToken, string.Empty);
-            await this.tokenGetters.EbayAccess.Set(token.AccessToken, token.UserID);
+            await this.tokenGetters.Ebay.Set(token.RefreshToken, string.Empty, string.Empty);
+            await this.tokenGetters.EbayAccess.Set(token.AccessToken, token.UserID, token.UserID);
 
             return RedirectToAction("welcome", "item");
         }
@@ -61,7 +61,7 @@ namespace ui_agent.Controllers
 
             if (!string.IsNullOrWhiteSpace(accessToken.Key))
             {
-                await this.tokenGetters.Poshmark.Set(accessToken.Value as string, userID.Value as string);
+                await this.tokenGetters.Poshmark.Set(accessToken.Value as string, userID.Value as string, userID.Value as string);
 
                 return RedirectToAction("welcome", "item");
             }
@@ -80,6 +80,18 @@ namespace ui_agent.Controllers
 
         [GoogleAuth(failOnError:true)]
         public IActionResult GoogleOK()
+        {
+            return new OkResult();
+        }
+
+        [EBayAuth(failOnError: true)]
+        public IActionResult EBayOK()
+        {
+            return new OkResult();
+        }
+
+        [PoshmarkAuth(failOnError: true)]
+        public IActionResult PoshmarkOK()
         {
             return new OkResult();
         }

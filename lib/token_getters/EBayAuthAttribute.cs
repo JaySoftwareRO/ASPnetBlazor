@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace lib.token_getters
 {
@@ -13,7 +14,19 @@ namespace lib.token_getters
     [System.AttributeUsage(System.AttributeTargets.Method)]
     public class EBayAuthAttribute : ActionFilterAttribute
     {
-        public async override void OnActionExecuting(ActionExecutingContext context)
+        private readonly bool failOnError;
+
+        public EBayAuthAttribute(bool failOnError = false)
+        {
+            this.failOnError = failOnError;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            this.OnActionExecutionAsync(context, null).Wait();
+        }
+
+        public async override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var tokenGetters = (ITokenGetters)context.HttpContext.RequestServices.GetService(typeof(ITokenGetters));
 
@@ -29,8 +42,14 @@ namespace lib.token_getters
 
                 if (string.IsNullOrWhiteSpace(refreshToken))
                 {
-                    tokenGetters.Logger().LogDebug("ebay refresh token is empty - redirecting to login page");
-                    context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with EBay!" });
+                    if (!this.failOnError)
+                    {
+                        tokenGetters.Logger().LogDebug("ebay refresh token is empty - redirecting to login page");
+                        context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with EBay!" });
+                        return;
+                    }
+
+                    context.Result = new UnauthorizedResult();
                     return;
                 }
 
@@ -41,16 +60,25 @@ namespace lib.token_getters
                 {
                     tokenGetters.Logger().LogDebug("couldn't get an access token from the refresh token for ebay; invalidating refresh token and redirecting to login page");
 
-                    await tokenGetters.Ebay.Set("", "");
-                    context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with EBay!" });
+                    if (!this.failOnError)
+                    {
+                        await tokenGetters.Ebay.Set("", "", "");
+                        context.Result = new RedirectToActionResult("welcome", "item", new { welcomeMessage = "You have not logged in with EBay!" });
+                        return;
+                    }
+
+                    context.Result = new UnauthorizedResult();
                     return;
                 }
 
                 tokenGetters.Logger().LogDebug("setting new ebay access token");
-                await tokenGetters.Ebay.Set(newAccessToken.AccessToken, newAccessToken.UserID);
+                await tokenGetters.Ebay.Set(newAccessToken.AccessToken, newAccessToken.UserID, newAccessToken.UserID);
             }
 
             // Verify the access token with EBay
+            // ...
+
+            await next();
         }
     }
 }

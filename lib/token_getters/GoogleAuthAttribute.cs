@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace lib.token_getters
 {
@@ -20,7 +21,12 @@ namespace lib.token_getters
             this.failOnError = failOnError;
         }
 
-        public async override void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            this.OnActionExecutionAsync(context, null).Wait();
+        }
+
+        public async override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var tokenGetters = (ITokenGetters)context.HttpContext.RequestServices.GetService(typeof(ITokenGetters));
             var authToken = await tokenGetters.Google.GetToken();
@@ -57,6 +63,9 @@ namespace lib.token_getters
             }
 
             // Validate the token with bifrost
+            // ...
+
+            await next();
         }
     }
 }
