@@ -4,12 +4,7 @@
 
 namespace ebayinventory.Models
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
 
     /// <summary>
     /// This type is used to specify one to five eBay listings that will be

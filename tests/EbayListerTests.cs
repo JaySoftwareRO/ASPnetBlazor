@@ -1,16 +1,3 @@
-using lib.cache;
-using lib.cache.bifrost;
-using lib.cache.disk;
-using lib.token_getters;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
-using System.IO;
-using System.Net;
-using System.Reflection.Metadata.Ecma335;
 using Xunit;
 
 namespace tests

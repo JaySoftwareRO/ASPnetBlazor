@@ -1,6 +1,10 @@
 # bifrost
 
 
+## ebay test users
+
+TESTUSER_TTINAGI_THOR
+
 ## build
 
 ```

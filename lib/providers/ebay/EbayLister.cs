@@ -8,48 +8,78 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
 using lib.cache;
+using Microsoft.Extensions.Configuration;
+using lib.token_getters;
 
-namespace lib.listers
+namespace lib.providers.ebay
 {
-    public class EbayLister : Lister
+    public class EbayProvider : Lister
     {
         // https://developer.ebay.com/api-docs/commerce/taxonomy/static/supportedmarketplaces.html
-        // private const string MarketplaceUSA = "EBAY_US";
+        // MarketplaceUSA = "EBAY_US" = "0"
+        private static readonly string marketplaceIDUSA = "0";
+        private static readonly string productionEndpoint = "https://api.ebay.com/wsapi";
+        private static readonly string sandboxEndpoint = "https://api.sandbox.ebay.com/wsapi";
+        private static readonly string appID = "VladIova-Treecat-SBX-6bce464fb-92785135";
+        private static readonly string version = "1149";
+        private static readonly string routing = "new";
 
-        // TODO: vladi: all of these should be configurable
-        // Define the endpoint (e.g., the Sandbox Gateway URI)
-        private static string endpoint = "https://api.ebay.com/wsapi";
+        private string mode;
 
-        // Define the query string parameters.
-        private static string queryString = "?callname=GetMyeBaySelling"
-                            + "&siteid=0"
-                            + "&appid=VladIova-Treecat-SBX-6bce464fb-92785135"
-                            + "&version=1149"
-                            + "&Routing=new";
+        private string CallParams(string callName) {
+            return $"?callname={callName}&siteid={marketplaceIDUSA}&appid={appID}&version={version}&Routing={routing}";
+        }
 
-        String requestURL = endpoint + queryString; // "https://api.ebay.com/wsapi";
+        private string CallURL(string callName)
+        {
+            switch (mode)
+            {
+                case "production":
+                    return $"{productionEndpoint}{CallParams(callName)}";
+                case "test":
+                    return $"{sandboxEndpoint}{CallParams(callName)}";
+                default:
+                    throw new Exception($"invalid ebay provider mode '{this.mode}'");
+            }
+        }
+
+        private string CallGetMyEbaySelling() { return this.CallURL("GetMyeBaySelling"); }
 
         IExtendedDistributedCache cache;
         ILogger logger;
         int liveCallLimit;
         int liveCalls = 0;
-        ITokenGetter tokenGetter;
+        TokenGetter tokenGetter;
         string accountID;
 
-        public EbayLister(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
+        public EbayProvider(ILogger logger, ITokenGetters tokenGetters)
         {
-            this.cache = cache;
             this.logger = logger;
-            this.liveCallLimit = liveCallLimit;
-            this.tokenGetter = tokenGetter;
+            this.liveCallLimit = tokenGetters.EbayAccess.Config.EbayLiveCallLimit;
+            this.tokenGetter = tokenGetters.EbayAccess;
             this.accountID = tokenGetter.GetUserID().Result;
+            this.mode = tokenGetters.EbayAccess.Config.EbayMode;
         }
+
+        public async Task<List<Item>> List2()
+        {
+            // Get an address
+
+            // Check cache
+
+            // Make ebay request
+
+            // Save to cache
+
+            // Return
+            return null;
+        }
+
         public async Task<List<Item>> List()
         {
             eBayAPIInterfaceClient client = new eBayAPIInterfaceClient();
-            client.Endpoint.Address = new EndpointAddress(requestURL);
+            client.Endpoint.Address = new EndpointAddress(this.CallGetMyEbaySelling());
 
             var cachedSellingItems = await this.cache.GetAsync(this.accountID);
             GetMyeBaySellingResponse sellingItems = new GetMyeBaySellingResponse();

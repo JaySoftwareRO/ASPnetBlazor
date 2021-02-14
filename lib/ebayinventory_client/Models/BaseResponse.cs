@@ -4,12 +4,8 @@
 
 namespace ebayinventory.Models
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
 
     /// <summary>
     /// This is the base response of the

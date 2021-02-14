@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using lib.poshmark_client;
-using System.Linq;
 using Newtonsoft.Json;
 using lib.cache;
+using lib.token_getters;
 
 namespace lib.listers
 {
@@ -17,10 +17,10 @@ namespace lib.listers
         ILogger logger;
         int liveCallLimit;
         int liveCalls = 0;
-        ITokenGetter tokenGetter;
+        TokenGetter tokenGetter;
         string accountID;
 
-        public PoshmarkLister(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
+        public PoshmarkLister(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, TokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;
@@ -97,9 +97,10 @@ namespace lib.listers
 
         public async Task<List<string>> ImportTreecatIDs(dynamic itemsToImport, List<Item> userPoshmarkCachedItems)
         {
+            var count = itemsToImport.PoshmarkIDs.Count;
             List<string> cachedTreecatPoshmarkIDs = new List<string>();
             List<string> treecatIDs = new List<string>();
-            for (int i = 0; itemsToImport.PoshmarkIDs.Count > i; i++)
+            for (int i = 0; count > i; i++)
             {
                 // New TREECAT ID using Guid
                 Guid treecatItemID = Guid.NewGuid();

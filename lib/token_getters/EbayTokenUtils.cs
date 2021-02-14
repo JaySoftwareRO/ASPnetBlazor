@@ -4,11 +4,8 @@ using ebayws;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.Text;
 
 namespace lib.token_getters
 {

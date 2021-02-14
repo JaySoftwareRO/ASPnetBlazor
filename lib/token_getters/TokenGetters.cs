@@ -1,71 +1,21 @@
-﻿using Google.Apis.Auth;
-using lib.cache.disk;
-using lib.token_getters;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using lib.cache.disk;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
-namespace lib
+namespace lib.token_getters
 {
-    public class TokenGetterConfig
-    {
-        public string LoginURL { get; set; }
-        public string CacheKey { get; set; }
-        public List<string> Scopes { get; set; }
-        public int TokenCacheDurationHours { get; set; }
-    }
-
-    public class TokenGetterSettings
-    {
-        public Dictionary<string, TokenGetterConfig> TokenGetters { get; set; }
-    }
-
-    public delegate bool OnTokenValidationDelegate(ITokenGetter tokenGetter, string token, ILogger logger);
-
-    public interface ITokenGetter
-    {
-        Task<string> GetToken();
-
-        Task<string> GetUserID();
-
-        Task<string> GetUsername();
-
-        string LoginURL();
-
-        List<string> Scopes();
-
-        Task Set(string token, string userID, string username);
-    }
-
-    public interface ITokenGetters
-    {
-        ITokenGetter Ebay { get; }
-        ITokenGetter EbayAccess { get; }
-        ITokenGetter Mercari { get; }
-        ITokenGetter Poshmark { get; }
-        ITokenGetter Amazon { get; }
-        ITokenGetter Google { get; }
-
-        void ClearAllData();
-        ILogger Logger();
-    }
-
     public class TokenGetters : ITokenGetters
     {
-        public ITokenGetter Amazon {
+        public TokenGetter Amazon {
             get
             {
                 return this.TokenGetterMap[MethodBase.GetCurrentMethod().Name.Replace("get_", "")];
             }
         }
 
-        public ITokenGetter Ebay
+        public TokenGetter Ebay
         {
             get
             {
@@ -73,7 +23,7 @@ namespace lib
             }
         }
 
-        public ITokenGetter EbayAccess
+        public TokenGetter EbayAccess
         {
             get
             {
@@ -81,7 +31,7 @@ namespace lib
             }
         }
 
-        public ITokenGetter Mercari
+        public TokenGetter Mercari
         {
             get
             {
@@ -89,7 +39,7 @@ namespace lib
             }
         }
 
-        public ITokenGetter Poshmark
+        public TokenGetter Poshmark
         {
             get
             {
@@ -97,7 +47,7 @@ namespace lib
             }
         }
 
-        public ITokenGetter Google
+        public TokenGetter Google
         {
             get
             {
@@ -105,7 +55,7 @@ namespace lib
             }
         }
 
-        private Dictionary<string, ITokenGetter> TokenGetterMap;
+        private Dictionary<string, TokenGetter> TokenGetterMap;
         private DiskCache TokenCache;
         private readonly ILogger logger;
 
@@ -122,7 +72,7 @@ namespace lib
         public TokenGetters(ILogger logger, IConfiguration configuration)
         {
             this.TokenCache = new DiskCache("tokens", logger);
-            this.TokenGetterMap = new Dictionary<string, ITokenGetter>();
+            this.TokenGetterMap = new Dictionary<string, TokenGetter>();
             this.logger = logger;
 
             // Read all token getter settings from configs
@@ -135,13 +85,10 @@ namespace lib
                 var config = kv.Value;
 
                 logger.LogDebug($"registering token provider for {provider}");
-                this.TokenGetterMap[provider] = new CachedTokenGetter(
+                this.TokenGetterMap[provider] = new TokenGetter(
                     this.TokenCache, 
                     logger, 
-                    config.CacheKey, 
-                    config.LoginURL,
-                    config.TokenCacheDurationHours,
-                    config.Scopes);
+                    config);
             }
         }
     }

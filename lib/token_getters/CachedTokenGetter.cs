@@ -1,15 +1,13 @@
 ﻿using lib.cache;
-using lib.cache.disk;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace lib.token_getters
 {
-    public class CachedTokenGetter : ITokenGetter
+    public class TokenGetter
     {
         private IExtendedDistributedCache cache;
         private string cacheTokenKey;
@@ -21,17 +19,20 @@ namespace lib.token_getters
         private List<string> scopes;
 
         public event OnTokenValidationDelegate OnTokenValidation;
-        public CachedTokenGetter(IExtendedDistributedCache cache, ILogger logger, string cacheKey, string loginURL, int cacheHours, List<string> scopes)
+        public TokenGetter(IExtendedDistributedCache cache, ILogger logger, TokenGetterConfig config)
         {
             this.cache = cache;
-            this.cacheTokenKey = string.Format($"{cacheKey}_token");
-            this.cacheUserIDKey = string.Format($"{cacheKey}_userid");
-            this.cacheUsernameKey = string.Format($"{cacheKey}_username");
-            this.cacheHours = cacheHours;
-            this.loginURL = loginURL;
+            this.cacheTokenKey = string.Format($"{config.CacheKey}_token");
+            this.cacheUserIDKey = string.Format($"{config.CacheKey}_userid");
+            this.cacheUsernameKey = string.Format($"{config.CacheKey}_username");
+            this.cacheHours = config.TokenCacheDurationHours;
+            this.loginURL = config.LoginURL;
             this.logger = logger;
-            this.scopes = scopes;
+            this.scopes = config.Scopes;
+            this.Config = config;
         }
+
+        public TokenGetterConfig Config { get; set; }
 
         public async Task Set(string token, string userID, string username)
         {

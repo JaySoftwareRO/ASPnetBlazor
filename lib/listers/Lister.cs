@@ -1,8 +1,5 @@
 ﻿using ebayws;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 // Lists all items for a provider

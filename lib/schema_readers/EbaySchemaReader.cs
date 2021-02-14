@@ -1,18 +1,15 @@
 ﻿using ebaytaxonomy;
 using ebaytaxonomy.Models;
 using lib.cache;
+using lib.token_getters;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Rest;
 using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,9 +24,9 @@ namespace lib.schema_readers
         ILogger logger;
         int liveCallLimit;
         int liveCalls = 0;
-        ITokenGetter tokenGetter;
+        TokenGetter tokenGetter;
 
-        public EbaySchemaReader(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, ITokenGetter tokenGetter)
+        public EbaySchemaReader(IExtendedDistributedCache cache, ILogger logger, int liveCallLimit, TokenGetter tokenGetter)
         {
             this.cache = cache;
             this.logger = logger;
@@ -105,7 +102,7 @@ namespace lib.schema_readers
                                 {
                                     ProviderDefinition = new Dictionary<string, object>
                                 {
-                                    { Providers.EBay, aspect },
+                                    { "ebay", aspect },
                                 }
                                 }
                             }

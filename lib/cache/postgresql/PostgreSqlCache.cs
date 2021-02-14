@@ -2,13 +2,9 @@
 using System;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Internal;
 using System.Threading;
-using System.IO;
-using Npgsql;
 using Microsoft.Extensions.Logging;
 
 namespace lib.cache.postgresql

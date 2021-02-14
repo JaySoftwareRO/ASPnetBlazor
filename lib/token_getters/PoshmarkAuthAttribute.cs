@@ -1,11 +1,6 @@
-﻿using Google.Apis.Auth;
-using Microsoft.AspNetCore.HostFiltering;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace lib.token_getters

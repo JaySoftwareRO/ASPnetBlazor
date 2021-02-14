@@ -16,8 +16,6 @@
  *  *
  */
 
-using System;
-
 namespace eBay.ApiClient.Auth.OAuth2.Model
 {
     public enum TokenType

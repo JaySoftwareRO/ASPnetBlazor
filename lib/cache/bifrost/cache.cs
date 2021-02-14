@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static lib.bifrost.Cache;
+using lib.token_getters;
 
 namespace lib.cache.bifrost
 {
@@ -20,7 +21,7 @@ namespace lib.cache.bifrost
         private ILogger logger;
         private string name;
 
-        public BifrostCache(IConfiguration configuration, string name, ITokenGetter tokenGetter, ILogger logger)
+        public BifrostCache(IConfiguration configuration, string name, TokenGetter tokenGetter, ILogger logger)
         {
             string address = configuration["Bifrost:Service"];
             var token = tokenGetter.GetToken().Result;

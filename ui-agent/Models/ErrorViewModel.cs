@@ -1,5 +1,3 @@
-using System;
-
 namespace ui_agent.Models
 {
     public class ErrorViewModel

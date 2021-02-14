@@ -3,14 +3,13 @@
 
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace lib.cache.postgresql
 {
-	/// <summary>
-	/// Extension methods for setting up PostgreSql distributed cache services in an <see cref="IServiceCollection" />.
-	/// </summary>
-	public static class PostGreSqlCachingServicesExtensions
+    /// <summary>
+    /// Extension methods for setting up PostgreSql distributed cache services in an <see cref="IServiceCollection" />.
+    /// </summary>
+    public static class PostGreSqlCachingServicesExtensions
 	{
 		/// <summary>
 		/// Adds Community Microsoft PostgreSql distributed caching services to the specified <see cref="IServiceCollection" />.

@@ -1,14 +1,9 @@
 ﻿using lib;
 using lib.token_getters;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ui_agent.Services
 {
@@ -21,12 +16,12 @@ namespace ui_agent.Services
                 throw new ArgumentNullException(nameof(services));
             }
 
-            return services.AddSingleton<ITokenGetters, lib.TokenGetters>((container) =>
+            return services.AddSingleton<ITokenGetters, lib.token_getters.TokenGetters>((container) =>
             {
                 var logger = container.GetRequiredService<ILogger<Startup>>();
                 var configuration = container.GetRequiredService<IConfiguration>();
 
-                return new lib.TokenGetters(logger, configuration);
+                return new lib.token_getters.TokenGetters(logger, configuration);
             });
         }
     }

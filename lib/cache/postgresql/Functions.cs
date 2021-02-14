@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace lib.cache.postgresql
+﻿namespace lib.cache.postgresql
 {
     internal static class Functions
     {

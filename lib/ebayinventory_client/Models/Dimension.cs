@@ -4,12 +4,7 @@
 
 namespace ebayinventory.Models
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
 
     /// <summary>
     /// This type is used to specify the dimensions (and the unit used to

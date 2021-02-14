@@ -4,12 +4,7 @@
 
 namespace ebayinventory.Models
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
 
     /// <summary>
     /// The seller-defined Stock-Keeping Unit (SKU) of each inventory item

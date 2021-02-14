@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace lib.cache.postgresql
 {

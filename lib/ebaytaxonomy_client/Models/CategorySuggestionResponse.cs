@@ -4,12 +4,8 @@
 
 namespace ebaytaxonomy.Models
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
 
     /// <summary>
     /// This type contains an array of suggested category tree nodes that are

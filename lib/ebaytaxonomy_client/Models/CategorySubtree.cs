@@ -4,12 +4,7 @@
 
 namespace ebaytaxonomy.Models
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Microsoft.Rest;
-    using Microsoft.Rest.Serialization;
 
     /// <summary>
     /// This type contains information about a particular subtree of a

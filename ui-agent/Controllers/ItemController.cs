@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ui_agent.Models;
-using lib.poshmark_client;
 using Microsoft.Extensions.Configuration;
 using lib.cache.bifrost;
 using lib;
 using lib.token_getters;
 using System.Text;
-using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
+using lib.providers.ebay;
 
 namespace ui_agent.Controllers
 {
@@ -70,7 +67,7 @@ namespace ui_agent.Controllers
         public IActionResult ImportEbay()
         {
             var cache = new BifrostCache(this.configuration, "ebay-items", this.tokenGetters.Google, logger);
-            var items = new lib.listers.EbayLister(cache, this.logger, 10000, this.tokenGetters.EbayAccess).List().Result;
+            var items = new EbayProvider(this.logger, this.tokenGetters).List().Result;
 
             this.ViewBag.Selected = "ebay";
             return View("importdata", items);
@@ -91,10 +88,10 @@ namespace ui_agent.Controllers
 
                     // Get the user's EBAY items from cache
                     var ebayCache = new BifrostCache(this.configuration, "ebay-items", this.tokenGetters.Google, logger);
-                    var userEbayCachedItems = new lib.listers.EbayLister(ebayCache, this.logger, 10000, this.tokenGetters.EbayAccess).List().Result;
+                    var userEbayCachedItems = new EbayProvider(this.logger, this.tokenGetters).List().Result;
 
                     //Set the user's TREECAT items in cache, returns the cached items.
-                    List<string> treecatIDs = new lib.listers.EbayLister(treecatServiceCache, this.logger, 10000, this.tokenGetters.EbayAccess).ImportTreecatIDs(itemsToImport, userEbayCachedItems).Result;
+                    List<string> treecatIDs = new EbayProvider(this.logger, this.tokenGetters).ImportTreecatIDs(itemsToImport, userEbayCachedItems).Result;
 
                     logger.LogInformation($"SUCCESSFULLY imported {treecatIDs.Count} items into TreeCat.");
 
