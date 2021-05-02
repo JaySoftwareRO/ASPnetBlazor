@@ -1,0 +1,67 @@
+﻿
+.thumb40 {
+    max-height: 40px;
+}
+
+.thumb100 {
+    max-height: 100px;
+}
+
+
+/*
+ - Dark UI settings
+.debug {
+    border: 1px solid magenta;
+    background-color: greenyellow;
+}
+
+.callout {
+    background-color: #f4f1d6;
+    color: black;
+}
+
+td a {
+    color: blue;
+}
+
+.blue-link {
+    color: blue;
+}
+
+.status-sold {
+    background-color: #77dd77;  Green 
+    color: black;
+}
+
+.status-problem {
+    background-color: #ff6961;  Red 
+    color: white;
+}
+
+.status-unlisted {
+    background-color: #FDFD96;  Yellow 
+    color: black;
+}
+
+.selected {
+    background-color: white;
+    color: black;
+}
+
+.required {
+    color: #ff6961;  Red 
+}
+
+.caption-description {
+    color: darkgrey;
+    font-size: .8rem;
+}
+
+.button {
+    padding: .5rem;
+}
+
+.zero-margin {
+    margin: 0;
+}
+    */

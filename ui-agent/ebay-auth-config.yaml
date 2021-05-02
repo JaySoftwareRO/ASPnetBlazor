@@ -1,0 +1,11 @@
+﻿name: ebay-config
+api.sandbox.ebay.com:
+    appid: VladIova-Treecat-SBX-6bce464fb-92785135
+    certid: SBX-bce464fbf634-a826-42db-b4ad-8d25
+    devid: 6dd29086-cbf4-4dfe-8581-56e4a05a0ac6
+    redirecturi: Vlad_Iovanov-VladIova-Treeca-bdnyexm
+api.ebay.com:
+    appid: VladIova-Treecat-PRD-4bcdaddba-89642d26
+    certid: PRD-bcdaddbadcd0-0bbd-4bd5-8cbe-80dc
+    devid: 6dd29086-cbf4-4dfe-8581-56e4a05a0ac6
+    redirecturi: Vlad_Iovanov-VladIova-Treeca-vehtia

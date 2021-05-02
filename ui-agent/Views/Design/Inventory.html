@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Inventory</title>
+
+	<link rel="stylesheet" href="../../wwwroot/css/app.css" />
+	<link rel="stylesheet" href="../../wwwroot/lib/foundation-icons/foundation-icons.css" />
+	<link rel="stylesheet" href="../../wwwroot/css/debug.css" />
+</head>
+
+<body>
+	<div class="grid-y grid-frame">
+		<div class="cell shrink header medium-cell-block-container">
+			<div class="top-bar">
+				<div class="top-bar-left">
+					<ul class="dropdown menu" data-dropdown-menu>
+						<li class="menu-text">
+							<a href="dashboard.html">
+								<i class="fi-paw" style="font-size: 16px"></i>
+								TreeCat
+							</a>
+						</li>
+						<li><a href="#">Inventory</a></li>
+						<li><a href="ImportData.html">Import Data</a></li>
+						<li><a href="FieldMapping.html">Field Mappings</a></li>
+						<li><a href="AddItem.html">Add Item</a></li>
+					</ul>
+				</div>
+				<div class="top-bar-right">
+					<a href="Setup.html"><i class="fi-widget" style="font-size: 20px"></i></a>
+				</div>
+			</div>
+		</div>
+
+		<!--THIS IS WHERE PAGE-SPECIFIC CONTENT STARTS-->
+
+		<!-- Controls -->
+		<div class="cell shrink medium-cell-block-container">
+			<div class="grid-x grid-margin-x align-middle">
+				<div class="cell shrink">
+					<div class="button-group">
+						<span class="input-group-label">Bulk Action</span>
+						<button class="dropdown button arrow-only" data-toggle="bulk-action-dropdown" />
+						<div class="dropdown-pane" data-position="bottom" data-alignment="right"
+							style="text-align: left;" id="bulk-action-dropdown" data-dropdown>
+							<a href="#">Bulk Delete</a><br />
+							<a href="#">Bulk Edit</a><br />
+							<hr />
+							<a href="#">Unlist Everywhere</a><br />
+							<a href="#">Relist on Same Platforms</a><br />
+						</div>
+					</div>
+				</div>
+				<div class="cell shrink">
+					<div class="input-group">
+						<span class="input-group-label">Platform Filter</span>
+						<select class="input-group-field">
+							<option value="*">All</option>
+							<option value="amazon">Amazon</option>
+							<option value="eBay">eBay</option>
+							<option value="Etsy">Etsy</option>
+							<option value="Poshmart">Poshmart</option>
+							<option value="Mercari">Mercari</option>
+							<option value="Emag">Emag</option>
+						</select>
+					</div>
+				</div>
+				<div class="cell shrink">
+					<div class="input-group">
+						<span class="input-group-label">Show</span>
+						<select class="input-group-field">
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+						<span class="input-group-label">Rows</span>
+					</div>
+				</div>
+				<div class="cell shrink">
+					<div class="primary button-group">
+						<a class="button"><i class="fi-arrow-up" style="font-size: 24px"></i></a>
+						<a class="button"><i class="fi-arrow-down" style="font-size: 24px"></i></a>
+					</div>
+				</div>
+				<div class="cell shrink">
+					<div class="input-group">
+						<input class="input-group-field" placeholder="Search" type="text" />
+						<select class="input-group-field">
+							<option value="*">All Fields</option>
+							<option value="Title">Title</option>
+							<option value="SKU">SKU</option>
+							<option value="Description">Description</option>
+						</select>
+						<div class="input-group-button">
+							<button type="button" class="button full-height float-right">
+								<i class="fi-magnifying-glass" style="font-size: 14px;"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="cell full-height medium-auto medium-cell-block-container">
+			<!-- Main data section -->
+
+			<table class="scroll">
+				<thead>
+					<tr>
+						<th><input type="checkbox"></th>
+						<th>Flag</th>
+						<th>Image</th>
+						<th>Product Name</th>
+						<th>Listings</th>
+						<th>SKU</th>
+						<th>Price</th>
+						<th>Qty</th>
+						<th>Created</th>
+						<th>Follow-up Link</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="status-sold">
+						<td><input type="checkbox"></td>
+						<td>Sold</td>
+						<td><img class="thumb40" src="../../wwwroot/images/Sony_remote controle 2.jpg"></td>
+						<td><a href="EditItem.html" target="_blank">Sony Remote Control RMT-811</a></td>
+						<td>
+							<a href="https://www.ebay.com/itm/Genuine-Sony-Camcorder-Camera-Remote-Control-RMT-811-Tested-And-Works/184131178352?hash=item2adf12cf70:g:T~MAAOSwQLZeIPp8:sc:USPSFirstClass!02465!US!-1&autorefresh=true"
+								target="_blank">
+								<img src="../../wwwroot/images/ebay-thumb.png">
+							</a>
+							<a href="https://www.etsy.com/listing/489851311/universal-portable-remote-control?ga_order=most_relevant&ga_search_type=all&ga_view_type=gallery&ga_search_query=remote+control&ref=sr_gallery-1-10&organic_search_click=1"
+								target="_blank">
+								<img src="../../wwwroot/images/etsy-thumb.png">
+							</a>
+						</td>
+						<td>RSW003</td>
+						<td>$7.34</td>
+						<td>1</td>
+						<td>2020-04-02</td>
+						<td><a href="#" target="_blank">eBay Sale</a></td>
+					</tr>
+					<tr class="status-unlisted">
+						<td scope="col"><input type="checkbox"></td>
+						<td>Unlisted</td>
+						<td><img class="thumb40" src="../../wwwroot/images/Toshiba remote control 1.jpg"></td>
+						<td><a href="#" target="_blank">Toshiba Remote Control CT-8027</a></td>
+						<td>
+						</td>
+						<td>RSW002</td>
+						<td>$5.24</td>
+						<td>1</td>
+						<td>2020-02-04</td>
+						<td><a href="#" target="_blank">Edit Record</a></td>
+					</tr>
+					<tr class="status-problem">
+						<td scope="col"><input type="checkbox"></td>
+						<td>Problem</td>
+						<td><img class="thumb40" src="../../wwwroot/images/Toshiba remote control 1.jpg"></td>
+						<td><a href="#" target="_blank">Toshiba Remote Control CT-8027</a></td>
+						<td>
+							<a href="https://www.amazon.com/Calvas-Control-24V4210U-23HLV87B-COMBINATION/dp/B07RC94LS9/ref=sr_1_3?dchild=1&keywords=Toshiba+Remote+Control+CT-8027&qid=1595414259&sr=8-3"
+								target="_blank">
+								<img src="../../wwwroot/images/amazon-thumb.png"></a>
+							<a href="https://www.ebay.com/itm/TOSHIBA-Genuine-OEM-CT-8027-Remote-Control-TESTED/193498913565?hash=item2d0d6f1b1d:g:B0UAAOSw-gBe2ZqN"
+								target="_blank">
+								<img src="../../wwwroot/images/ebay-thumb.png"></a>
+						</td>
+						<td>RSW002</td>
+						<td>$5.24</td>
+						<td>1</td>
+						<td>2020-02-04</td>
+						<td><a href="#" target="_blank">Fix Record</a></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+		<!-- THIS IS WHERE PAGE-SPECIFIC CONTENT ENDS -->
+
+		<div class="cell shrink footer">
+			<div class="grid-x">
+				<div class="cell">
+					<span class="label success data-tooltip" title="Logged in as Odin.">
+						<i class="fi-unlock" style="font-size: 14px;"></i> Odin
+					</span>
+					<span class="label alert float-right">
+						<i class="fi-alert" style="font-size: 14px;"></i> Failed to sync items.
+					</span>
+					<span class="label warning data-tooltip float-right" title="14 items left to sync.">
+						<i class="fi-info" style="font-size: 14px;"></i> 14
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+		integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/js/foundation.min.js"></script>
+
+	<script src="../../wwwroot/js/site.js" asp-append-version="true"></script>
+	<script src="../../wwwroot/js/resizable-panel.js" asp-append-version="true"></script>
+
+	<script>if (window.module) module = window.module;</script>
+
+</body>
+
+</html>

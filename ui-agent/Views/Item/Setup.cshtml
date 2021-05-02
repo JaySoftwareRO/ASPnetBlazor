@@ -1,0 +1,86 @@
+﻿<!-- Controls -->
+<!-- Row of search criteria -->
+
+<div class="cell medium-auto medium-cell-block-container">
+    <div class="grid-x grid-padding-x">
+        <div class="cell shrink">
+            <h4>Configuration</h4>
+            <hr>
+            <h5>Basic Settings</h5>
+            <hr>
+            <h5>Platforms</h5>
+            <ul style="list-style: none;">
+                <li>EBay</li>
+                <li>Etsy</li>
+                <li>Mercari</li>
+                <li>Amazon</li>
+                <li>Poshmark</li>
+                <li>Emag</li>
+            </ul>
+        </div>
+        <div class="cell resizable-left-panel-handle"></div>
+        <div class="cell auto">
+            <div class="callout medium-12">
+
+                <div class="large-12 cell">
+                    <h5>Basic Settings</h5>
+                </div>
+                <div class="large-6 medium-6 cell">
+                    <label>Auto-delist after sale:</label>
+                    <input type="radio" name="auto-delist" value="Yes" id="autoDelistYes"><label for="autoDelistYes">Auto De-list from All Platforms</label>
+                    <input type="radio" name="auto-delist" value="No" id="autoDelistNo" checked><label for="autoDelistNo">Manual De-list</label>
+                </div>
+                <div class="large-4 medium-4 cell">
+                    <div class="grid-x">
+                        <label>Listing Status Check Frequency</label>
+                        <div class="input-group">
+                            <input type="text" placeholder="[whole number]" class="input-group-field" />
+                            <span class="input-group-label">minutes</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="large-6 medium-6 cell">
+                    <label>Sale Detection Mechanism:</label>
+                    <input type="radio" name="sale-detection-selection" value="API" id="sale-detection-API" checked><label for="sale-detection-API">API</label>
+                    <input type="radio" name="sale-detection-selection" value="Email" id="sale-detection-Email"><label for="sale-detection-Email">Email</label>
+                </div>
+                <div class="large-4 medium-4 cell">
+                    <label>POP E-mail Server</label>
+                    <input type="text" />
+                </div>
+                <div class="large-3 medium-4 cell">
+                    <label>E-mail Address</label>
+                    <input type="text" />
+                </div>
+                <div class="large-3 medium-4 cell">
+                    <label>E-mail Password</label>
+                    <input type="password" />
+                </div>
+            </div>
+            <div class="callout medium-12">
+
+                <div class="large-12 cell">
+                    <h5>eBay Setup</h5>
+                </div>
+                <div class="large-3 medium-4 cell">
+                    <label>eBay User ID</label>
+                    <input type="text" />
+                </div>
+                <div class="large-3 medium-4 cell">
+                    <label>eBay Password</label>
+                    <input type="password" />
+                </div>
+                <div class="cell large-12 medium-12">
+                    <label>
+                        eBay Token:
+                        <textarea placeholder="paste current eBay token"></textarea>
+                    </label>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>

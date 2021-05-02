@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Electron.NET App": {
+      "commandName": "Executable",
+      "executablePath": "electronize",
+      "commandLineArgs": "start /PublishReadyToRun \"false -p:PublishSingleFile=false -p:PublishTrimmed=false --self-contained=true \n echo \"",
+      "workingDirectory": "."
+    },
+    "ui_agent": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:19871",
+      "applicationUrl": "http://localhost:19871"
+    }
+  }
+}

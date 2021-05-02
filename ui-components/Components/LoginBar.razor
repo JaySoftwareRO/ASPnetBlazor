@@ -1,0 +1,70 @@
+﻿@using System.Net.Http
+@inject HttpClient Http
+@inject lib.token_getters.ITokenGetters tokenGetters
+@inject NavigationManager NavigationManager
+
+@if (googleLoggedIn)
+{
+    <Badge Style="color: darkgreen; background-color: lightgreen">TreeCat Logged In as @googleUsername</Badge>
+
+    @if (ebayLoggedIn)
+    {
+        <Badge Style="color: darkgreen; background-color: lightgreen">EBay Logged In as @ebayUsername</Badge>
+    }
+    else
+    {
+        <Button Type="ButtonType.Link" To="@tokenGetters.Ebay.LoginURL()" Color="Color.Danger">Ebay Not Logged In</Button>
+    }
+
+    @if (poshmarkLoggedIn)
+    {
+        <Badge Style="color: darkgreen; background-color: lightgreen">Poshmark Logged In as @poshmarkUsername</Badge>
+    }
+    else
+    {
+        <Button Type="ButtonType.Link" To="@tokenGetters.Poshmark.LoginURL()" Color="Color.Danger">Poshmark Not Logged In</Button>
+    }
+}
+else
+{
+    <Label Color="Color.Danger">TreeCat Not Logged In</Label>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+}
+
+@code {
+    private bool googleLoggedIn = false;
+    private bool poshmarkLoggedIn = false;
+    private bool ebayLoggedIn = false;
+    private string googleUsername = string.Empty;
+    private string ebayUsername = string.Empty;
+    private string poshmarkUsername = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        googleLoggedIn = await IsGoogleLoggedIn();
+        ebayLoggedIn = await IsEBayLoggedIn();
+        poshmarkLoggedIn = await IsPoshmarkLoggedIn();
+
+        if (googleLoggedIn) { googleUsername = await tokenGetters.Google.GetUsername(); }
+        if (ebayLoggedIn) { ebayUsername = await tokenGetters.Ebay.GetUsername(); }
+        if (poshmarkLoggedIn) { poshmarkUsername = await tokenGetters.Poshmark.GetUsername(); }
+    }
+
+    private async Task<bool> IsGoogleLoggedIn()
+    {
+        var response = await Http.GetAsync("/auth/googleok");
+        return response.StatusCode == System.Net.HttpStatusCode.OK;
+    }
+
+    private async Task<bool> IsEBayLoggedIn()
+    {
+        var response = await Http.GetAsync("/auth/ebayok");
+        return response.StatusCode == System.Net.HttpStatusCode.OK;
+    }
+
+    private async Task<bool> IsPoshmarkLoggedIn()
+    {
+        var response = await Http.GetAsync("/auth/poshmarkok");
+        return response.StatusCode == System.Net.HttpStatusCode.OK;
+    }
+}

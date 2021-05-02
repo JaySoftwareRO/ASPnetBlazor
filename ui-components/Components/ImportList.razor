@@ -1,0 +1,31 @@
+﻿@using lib
+@inject NavigationManager NavigationManager
+
+<div>
+    <Check TValue="bool" @bind-Checked="@ShowEbay">EBay</Check>
+    <Check TValue="bool" @bind-Checked="@ShowPoshmark">Poshmark</Check>
+
+    <DataGrid Data="@Items" TItem="Item">
+        <DataGridCommandColumn TItem="Item" />
+
+        <DataGridColumn TItem="Item" Field="@nameof(Item.MainImageURL)" Caption="Image" Editable="false">
+            <DisplayTemplate>
+                <Image Style="height: 1em; width: 1em" Source="@(context.MainImageURL)"></Image>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn TItem="Item" Field="@nameof(Item.Title)" Caption="Title" Editable="true" />
+        <DataGridColumn TItem="Item" Field="@nameof(Item.SKU)" Caption="SKU" Editable="true" />
+        <DataGridColumn TItem="Item" Field="@nameof(Item.Price)" Caption="Price" Editable="true" />
+        <DataGridColumn TItem="Item" Field="@nameof(Item.Quantity)" Caption="Quantity" Editable="true" />
+        <DataGridCommandColumn TItem="Item" />
+    </DataGrid>
+</div>
+
+@code{
+    [Parameter]
+    public bool ShowEbay { get; set; }
+    [Parameter]
+    public bool ShowPoshmark { get; set; }
+    [Parameter]
+    public IEnumerable<Item> Items { get; set; }
+}

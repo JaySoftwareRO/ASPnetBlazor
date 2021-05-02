@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TreeCat Inventory</title>
+	<!-- Bootstrap -->
+	<link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+	<style>
+		th {background-color: chartreuse;}
+		img {max-height: 40px; }
+	</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container"> <a class="navbar-brand" href="#">TreeCat</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span
+					class="navbar-toggler-icon"></span> </button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"> <a class="nav-link" href="#">Dashboard </a> </li>
+					<li class="nav-item active"> <a class="nav-link" href="#">Inventory </a> </li>
+					<li class="nav-item"> <a class="nav-link" href="ItemDetail.html">Item Detail</a> </li>
+					<li class="nav-item"> <a class="nav-link" href="FieldMapping.html">Field Mapping</a> </li>
+					<li class="nav-item"><a class="nav-link" href="ItemImport.html">Item Import</a></li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Settings</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+	<hr>
+	<h2 class="text-center">Inventory</h2>
+	<hr>
+	<div class="container">
+		<div class="row text-center">
+			<table width="100%" cellspacing="1" cellpadding="1">
+				<tbody>
+					<tr>
+						<td>Show
+							<select id="per_page_list_limit">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<option value="250">250</option>
+							</select>
+							entries
+						</td>
+						<td>
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#"
+										id="bulkActionsDropdown" role="button" data-toggle="dropdown"
+										aria-haspopup="true" aria-expanded="false">Bulk Actions</a>
+									<div class="dropdown-menu" aria-labelledby="navbarDropdown"> <a
+											class="dropdown-item" href="#">Delete</a> <a class="dropdown-item"
+											href="#">Bulk edit</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">Unlist everywhere</a>
+									</div>
+								</li>
+								<!--- <li class="nav-item"> <a class="nav-link disabled" href="#">Disabled</a> </li> --->
+							</ul>
+						</td>
+						<td>
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#"
+										id="filtersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false">Filters</a>
+									<div class="dropdown-menu" aria-labelledby="navbarDropdown"> <a
+											class="dropdown-item" href="#">Remove All Filters</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">Listed on: _(dropdown)_</a> 
+										<a class="dropdown-item" href="#">Unlisted</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">Category Change Errors</a>
+									</div>
+								</li>
+							</ul>
+						</td>
+						<td>
+							<button>Show All</button>
+						</td>
+						<td>
+							<img src="images/amazon-thumb.png">
+							<img src="images/ebay-thumb.png">
+							<img src="images/etsy-thumb.png">
+							<img src="images/poshmark-thumb.PNG">
+							<img src="images/mercari-thumb.png">
+							<img src="images/emag-thumb.png">
+						</td>
+						<td><label for="search">Search:</label>
+							<input type="search" name="search" id="search"></td>
+						<td>
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#"
+										id="searchFieldsDropdown" role="button" data-toggle="dropdown"
+										aria-haspopup="true" aria-expanded="false">Search All</a>
+									<div class="dropdown-menu" aria-labelledby="navbarDropdown"> <a
+											class="dropdown-item" href="#">Name</a> <a class="dropdown-item"
+											href="#">SKU</a> </div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table width="100%" border="1" cellspacing="1" cellpadding="1">
+				<tbody>
+					<tr>
+						<th scope="col"><input type="checkbox"></th>
+						<th scope="col">IMAGE</th>
+						<th scope="col">PRODUCT NAME <img src="images/SortingWidget.png"></th>
+						<th scope="col">LISTINGS <img src="images/SortingWidget.png"></th>
+						<th scope="col">SKU <img src="images/SortingWidget.png"></th>
+						<th scope="col">QTY <img src="images/SortingWidget.png"></th>
+						<th scope="col">CREATED <img src="images/SortingWidget.png"></th>
+						<th scope="col">ACTIONS</th>
+						<th scope="col">+</th>
+					</tr>
+					<tr>
+						<td scope="col"><input type="checkbox"></td>
+						<td><img src="images/Toshiba remote control 1.jpg"></td>
+						<td>Toshiba Remote Control CT-8027</td>
+						<td>
+							<img src="images/amazon-thumb.png">
+							<img src="images/ebay-thumb.png">
+						</td>
+						<td>RSW002</td>
+						<td>1</td>
+						<td>2020-02-04</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox"></td>
+						<td><img src="images/Sony_remote controle 2.jpg"></td>
+						<td>Sony Remote Control RMT-811</td>
+						<td>
+							<img src="images/ebay-thumb.png">
+							<img src="images/etsy-thumb.png">
+							
+						</td>
+						<td>RSW003</td>
+						<td>1</td>
+						<td>2020-04-02</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<hr>
+	<footer class="text-center">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<p>Copyright © TreeCat. All rights reserved.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap-4.4.1.js"></script>
+</body>
+
+</html>

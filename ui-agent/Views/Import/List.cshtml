@@ -1,0 +1,7 @@
+﻿@model List<lib.Item>
+
+<component type = "typeof(ui_components.Components.ImportList)"
+           param-items= "@Model"
+           param-showebay="@ViewBag.EBay"
+           param-showposhmark="@ViewBag.Poshmark"
+           render-mode= "WebAssemblyPrerendered" />

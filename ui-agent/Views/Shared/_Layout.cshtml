@@ -1,0 +1,47 @@
+﻿@using System.IO;
+@using System.Text.Encodings.Web;
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="501536790386-08ji30eeiro735ghn6r305e7j3r34ur6.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <title>@ViewData["Title"] - TreeCat</title>
+    @*<link rel="stylesheet" href="~/css/app.css" />*@
+    <link rel="stylesheet" href="/css/debug.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.0.0/antd.css" integrity="sha256-nzhI/tsi9npc5ir08wCgBpg43SEIrc7crRJLsHE0/60=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+
+    <link href="/_content/Blazorise/blazorise.css" rel="stylesheet" />
+    <link href="/_content/Blazorise.AntDesign/blazorise.antdesign.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    @{ StringWriter strWriter = new StringWriter();
+        RenderBody().WriteTo(strWriter, HtmlEncoder);
+        string body = strWriter.ToString(); }
+    <component type="typeof(ui_components.Components.AppLayout)"
+               param-body="@body"
+               render-mode="WebAssemblyPrerendered" />
+
+    <script src="/_content/Blazorise/blazorise.js"></script>
+    <script src="/_content/Blazorise.AntDesign/blazorise.antdesign.js"></script>
+    <script src="/_framework/blazor.webassembly.js"></script>
+    <script src="/_framework/blazor.boot.json"></script>
+
+    <script src="/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>
+
+
+

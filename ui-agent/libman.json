@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "jsdelivr",
+      "library": "bootstrap@4.4.1",
+      "destination": "wwwroot/lib/bootstrap"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "foundation-sites@6.6.3",
+      "destination": "wwwroot/lib/foundation"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery@3.5.1",
+      "destination": "wwwroot/lib/jquery"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@5.13.0",
+      "destination": "wwwroot/lib/font-awesome"
+    }
+  ]
+}

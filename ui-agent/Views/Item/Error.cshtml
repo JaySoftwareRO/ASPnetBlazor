@@ -1,0 +1,19 @@
+﻿@{ ViewData["Title"] = "An error has occurred"; }
+
+<div class="grid-x full-height">
+    <div class="cell auto medium-cell-block-y">
+        <span>
+            There was an error in the @ViewBag.Path page
+        </span>
+        <br />
+        <span>
+            Message: @ViewBag.Error.Message
+        </span>
+        <br />
+        <span> Stack trace: </span>
+        <br />
+        <pre>
+@ViewBag.Error.StackTrace
+        </pre>
+    </div>
+</div>

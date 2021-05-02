@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Pages\**" />
+    <Compile Remove="Properties\**" />
+    <Compile Remove="Shared\**" />
+    <Compile Remove="wwwroot\css\bootstrap\**" />
+    <Compile Remove="wwwroot\css\open-iconic\**" />
+    <Content Remove="Pages\**" />
+    <Content Remove="Properties\**" />
+    <Content Remove="Shared\**" />
+    <Content Remove="wwwroot\css\bootstrap\**" />
+    <Content Remove="wwwroot\css\open-iconic\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <EmbeddedResource Remove="Shared\**" />
+    <EmbeddedResource Remove="wwwroot\css\bootstrap\**" />
+    <EmbeddedResource Remove="wwwroot\css\open-iconic\**" />
+    <None Remove="Pages\**" />
+    <None Remove="Properties\**" />
+    <None Remove="Shared\**" />
+    <None Remove="wwwroot\css\bootstrap\**" />
+    <None Remove="wwwroot\css\open-iconic\**" />
+    <_WebToolingArtifacts Remove="Properties\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="App.razor" />
+    <Content Remove="wwwroot\css\app.css" />
+    <Content Remove="wwwroot\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazorise" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.AntDesign" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.Charts" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.Components" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.DataGrid" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.RichTextEdit" Version="0.9.2.4" />
+    <PackageReference Include="Blazorise.TreeView" Version="0.9.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.1" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\lib\lib.csproj" />
+  </ItemGroup>
+
+</Project>
